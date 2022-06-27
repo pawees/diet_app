@@ -5,9 +5,9 @@ part 'user.g.dart';
 @JsonSerializable(fieldRename: FieldRename.snake)
 class Game {
   const Game({
-    this.count,
-    // this.next,
-    // this.previous,
+    this.refresh,
+    this.access,
+    this.user_id,
     // required this.results,
     // this.seoTitle,
     // this.seoDescription,
@@ -20,11 +20,11 @@ class Game {
     // this.nofollowCollections,
   });
 
-  final int? count;
-  // final String? next;
+  final String? refresh;
+  final String? access;
   // final int? previous;
   // final List<Result> results;
-  // final String? seoTitle;
+  final String? user_id;
   // final String? seoDescription;
   // final String? seoKeywords;
   // final String? seoH1;

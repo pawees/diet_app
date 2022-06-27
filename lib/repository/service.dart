@@ -1,20 +1,72 @@
 import 'dart:convert';
 import 'models/user.dart';
-
+import 'package:http/http.dart' as http;
+import 'package:jsonrpc2/jsonrpc2.dart';
 // import 'package:flutter_dotenv/flutter_dotenv.dart';
 // import 'package:http/http.dart' as http;
-// import 'package:http/http.dart';
+import 'package:http/http.dart';
 // import 'package:infogames/repository/models/model_barrel.dart';
 // import 'package:infogames/repository/models/result_error.dart';
 
-class GameService {
-  // GameService({
-  //   http.Client? httpClient,
-  //   this.baseUrl = 'https://api.rawg.io/api',
-  // }) : _httpClient = httpClient ?? http.Client();
+class HttpServerProxy extends ServerProxyBase {
+  /// customHeaders, for jwts and other niceties
+  Map<String, String> customHeaders;
 
-  // final String baseUrl;
-  // final Client _httpClient;
+  /// constructor. superize properly
+  HttpServerProxy(url, [this.customHeaders = const <String, String>{}])
+      : super(url);
+
+  /// Return a Future with the JSON-RPC response
+  @override
+  Future<String> transmit(String package) async {
+    /// This is HttpRequest from dart:html
+    var headers = {'Content-Type': 'application/json; charset=UTF-8'};
+    if (customHeaders.isNotEmpty) {
+      headers.addAll(customHeaders);
+    }
+
+    // useful for debugging!
+    // print(package);
+    var resp =
+        await http.post(Uri.parse(resource), body: package, headers: headers);
+
+    var body = resp.body;
+    if (resp.statusCode == 204 || body.isEmpty) {
+      return ''; // we'll return an empty string for null response
+    } else {
+      return body;
+    }
+  }
+
+  // optionally, mirror remote API
+  // Future echo(dynamic aThing) async {
+  //   var resp = await call('echo', [aThing]);
+  //   return resp;
+  // }
+}
+
+/// see the documentation in [BatchServerProxyBase]
+class HttpBatchServerProxy extends BatchServerProxyBase {
+  @override
+  dynamic proxy;
+
+  /// constructor
+  HttpBatchServerProxy(String url, [customHeaders = const <String, String>{}]) {
+    proxy = HttpServerProxy(url, customHeaders);
+  }
+}
+
+class GameService {
+  Future<Game> getToken() async {
+    Map details = {'username': 'pawell', 'password': 'zaqxsw123'};
+    var proxy = HttpServerProxy('https://task.it-o.ru/api/');
+    final response = await proxy.call("token", details);
+    // json.decode(response);
+    // return response;
+    return Game.fromJson(
+      response,
+    );
+  }
 
   // Uri getUrl({
   //   required String url,
@@ -32,7 +84,7 @@ class GameService {
   //   );
   // }
 
-  // Future<Game> getGames() async {
+  // Future<Game> getToken() async {
   //   final response = await _httpClient.get(
   //     getUrl(url: 'games'),
   //   );

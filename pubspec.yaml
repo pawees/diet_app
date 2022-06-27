@@ -37,6 +37,8 @@ dependencies:
   json_annotation: ^4.5.0
   lo_form: ^0.1.2
   extended_masked_text: ^2.3.1
+  jsonrpc2: ^3.0.1
+  http: ^0.13.4
 
 dev_dependencies:
   flutter_test:

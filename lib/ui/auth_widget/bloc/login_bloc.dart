@@ -23,9 +23,21 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   Future<void> _isAuth(LoginEvent e, Emitter emit) async {
     // do some check user for authorization
     // emit(AuthorizeState(msg: "login_sucess"));
+    // emit(state.copyWith(status: LoginStatus.loading));
+    // await Future.delayed(const Duration(seconds: 1));
+    // final login = await appRepository.getToken();
+    // emit(state.copyWith(status: LoginStatus.authorizeProc));
     emit(state.copyWith(status: LoginStatus.loading));
-    await Future.delayed(const Duration(seconds: 1));
-    emit(state.copyWith(status: LoginStatus.authorizeProc));
+    try {
+      // final loginToken = await Repository.getToken();
+      emit(state.copyWith(status: LoginStatus.loading));
+      await Future.delayed(const Duration(seconds: 2));
+      final login = await appRepository.getToken();
+      emit(state.copyWith(status: LoginStatus.success));
+    } catch (error, stacktrace) {
+      print(error);
+      emit(state.copyWith(status: LoginStatus.error));
+    }
   }
 
   Future<void> _loginEventHandler(LoginEvent e, Emitter emit) async {

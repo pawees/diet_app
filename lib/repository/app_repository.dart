@@ -8,7 +8,7 @@ class GameRepository {
     required this.service,
   });
   final GameService service;
-
+  Future<Game> getToken() async => service.getToken();
   // Future<Game> getGames() async => service.getGames();
   // Future get_all() async => true;
 
