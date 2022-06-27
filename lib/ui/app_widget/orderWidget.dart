@@ -162,7 +162,7 @@ class _NewOrderWidgetState extends State<NoNewOrderWidget> {
       child: Column(
         children: [
           const SizedBox(
-            height: 16,
+            height: 17,
           ),
 
       ],),
