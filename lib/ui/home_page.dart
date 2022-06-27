@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:game_app_training/ui/app_widget/bloc/app_bloc.dart';
 import 'package:game_app_training/ui/home_layout.dart';
 import 'package:game_app_training/repository/app_repository.dart';
 import 'package:game_app_training/repository/service.dart';
@@ -25,17 +26,18 @@ class HomePage extends StatelessWidget {
                   IsAuth(),
                 ),
             ),
-            // BlocProvider<AppBloc>(
-            //   create: (context) => CategoryBloc(
-            //     gameRepository: context.read<GameRepository>(),
-            //   )..add(
-            //       GetCategories(),
-            //     ),
-            // ),
+            BlocProvider<AppBloc>(
+              create: (context) => AppBloc(
+                appRepository: context.read<GameRepository>(),
+              )..add(
+                  AppInitialEvent(),
+                ),
+            ),
           ],
           child: HomeLayout(),
         ),
       ),
+      
     );
   }
 }

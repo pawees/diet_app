@@ -6,3 +6,6 @@ abstract class AppEvent extends Equatable {
   @override
   List<Object> get props => [];
 }
+class AppInitialEvent extends AppEvent {}
+class TapOrderNavEvent extends AppEvent {}
+class TapProfileNavEvent extends AppEvent {}

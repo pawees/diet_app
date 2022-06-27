@@ -21,6 +21,8 @@ class MyApp extends StatelessWidget {
       title: 'Info Games',
       theme: ThemeData(
         primarySwatch: Colors.green,
+        bottomNavigationBarTheme:
+         BottomNavigationBarThemeData(selectedItemColor: Colors.green,unselectedItemColor: Colors.grey)
       ),
       home: const HomePage(),
     );
