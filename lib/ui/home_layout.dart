@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:game_app_training/ui/app_widget/bloc/app_bloc.dart';
 import 'package:game_app_training/ui/app_widget/navigator.dart';
+import 'package:game_app_training/ui/app_widget/orderCreateWidget.dart';
 import 'package:game_app_training/ui/auth_widget/authScreenWidget.dart';
 import 'package:game_app_training/ui/auth_widget/authErrorWidget.dart';
 import 'package:game_app_training/ui/auth_widget/authPreloaderWidget.dart';
@@ -26,7 +27,7 @@ class HomeLayout extends StatelessWidget {
               width: MediaQuery.of(context).size.width,
               child: AuthScreenWidget());
         }
-        if (loginBloc.state.status.isSuccess) {
+        if (loginBloc.state.status.isSuccess && appBloc.state.status.isInitial) {
           return NavigatorBar();
         } 
         if (loginBloc.state.status.isError) {
@@ -47,7 +48,10 @@ class HomeLayout extends StatelessWidget {
               }
          if (loginBloc.state.status.isSuccess && appBloc.state.status.isProfile) {
           return NavigatorBar();
-              }      
+              }
+         if (loginBloc.state.status.isSuccess && appBloc.state.status.isCreate) {
+          return OrderCreateWidget();
+              }                 
         else {
           return const SizedBox();
         }

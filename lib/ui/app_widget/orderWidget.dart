@@ -67,7 +67,7 @@ class _NoNewOrderWidgetState extends State<NoNewOrderWidget> {
     final appBloc = BlocProvider.of<AppBloc>(context);
 
     void _createEvent(){
-      // appBloc.add(TapCreateOrderEvent());
+      appBloc.add(TapCreateOrderEvent());
     }
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 18),

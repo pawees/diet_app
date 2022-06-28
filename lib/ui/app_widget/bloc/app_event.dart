@@ -9,3 +9,4 @@ abstract class AppEvent extends Equatable {
 class AppInitialEvent extends AppEvent {}
 class TapOrderNavEvent extends AppEvent {}
 class TapProfileNavEvent extends AppEvent {}
+class TapCreateOrderEvent extends AppEvent {}

@@ -18,10 +18,15 @@ class AppBloc extends Bloc<AppEvent, AppState> {
     on<AppEvent>(_getOrders);
     on<AppInitialEvent>(_getOrdersNew);
     on<TapProfileNavEvent>(_getProfile);
+    on<TapCreateOrderEvent>(_getCreate);
+  }
+  Future<void> _getCreate(TapCreateOrderEvent e, Emitter emit) async {
+  // load data and send with state variable
+  List data = ["Хирургия(Взрослые),Хирургия(Взрослые),Хирургия(Взрослые),Хирургия(Взрослые),Хирургия(Взрослые),Хирургия(Взрослые),"];
+  emit(state.copyWith(status: AppStatus.create)); // create data field
 
 
   }
-
   Future<void> _getOrders(AppEvent e, Emitter emit) async {
     // do some check user for authorization
     // emit(AuthorizeState(msg: "login_sucess"));
@@ -36,10 +41,10 @@ class AppBloc extends Bloc<AppEvent, AppState> {
 }
 
   Future<void> _getProfile(TapProfileNavEvent e, Emitter emit) async {
-  // do some check user for authorization
-  // emit(AuthorizeState(msg: "login_sucess"));
+
   emit(state.copyWith(status: AppStatus.loading));
   await Future.delayed(const Duration(seconds: 1));
   emit(state.copyWith(status: AppStatus.profile));
+
 }
 }

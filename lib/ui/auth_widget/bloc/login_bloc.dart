@@ -29,25 +29,25 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     // do some check user for authorization
     // emit(AuthorizeState(msg: "login_sucess"));
     // emit(state.copyWith(status: LoginStatus.loading));
-    // await Future.delayed(const Duration(seconds: 1));
+    await Future.delayed(const Duration(seconds: 2));
     // final login = await appRepository.getToken();
     // emit(state.copyWith(status: LoginStatus.authorizeProc));
-    emit(state.copyWith(status: LoginStatus.loading));
-    try {
-      // final loginToken = await Repository.getToken();
-      emit(state.copyWith(status: LoginStatus.loading));
-      await Future.delayed(const Duration(seconds: 2));
-     final login = await appRepository.getToken();
+    // emit(state.copyWith(status: LoginStatus.loading));
+    emit(state.copyWith(status: LoginStatus.success));
+    // try {
+    //   // final loginToken = await Repository.getToken();
+    //   emit(state.copyWith(status: LoginStatus.loading));
+    //   await Future.delayed(const Duration(seconds: 2));
+    //   final login = await appRepository.getToken();
+    //   await _token.token_data.setAccessToken('z1asd434');
+    //   var qwe = await _token.token_data.getAccessToken();
+    //   var q11 = '132';
       
-      await _token.token_data.setAccessToken('z1asd434');
-      var qwe = await _token.token_data.getAccessToken();
-      var q11 = '132';
-      
-      // emit(state.copyWith(status: LoginStatus.success));
-    } catch (error, stacktrace) {
-      print(error);
-      emit(state.copyWith(status: LoginStatus.error));
-    }
+    //   // emit(state.copyWith(status: LoginStatus.success));
+    // } catch (error, stacktrace) {
+    //   print(error);
+    //   emit(state.copyWith(status: LoginStatus.error));
+    // }
   }
 
   Future<void> _loginEventHandler(LoginEvent e, Emitter emit) async {
