@@ -39,6 +39,7 @@ dependencies:
   extended_masked_text: ^2.3.1
   jsonrpc2: ^3.0.1
   http: ^0.13.4
+  flutter_secure_storage: ^4.2.1
 
 dev_dependencies:
   flutter_test:

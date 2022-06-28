@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:game_app_training/repository/app_repository.dart';
+import 'package:game_app_training/repository/session.dart';
 
 part 'login_event.dart';
 part 'login_state.dart';
@@ -12,8 +13,12 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     on<LoginEvent>(_loginEventHandler);
     _initial();
   }
+  
   final GameRepository appRepository;
+  final _token = SessionState();
 
+
+  
   void _initial() {
     on<AuthorizeEvent>(_loginButtonTapped);
     on<ShowSnackBarEvent>(_showSnackBarTapped);
@@ -32,8 +37,13 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       // final loginToken = await Repository.getToken();
       emit(state.copyWith(status: LoginStatus.loading));
       await Future.delayed(const Duration(seconds: 2));
-      final login = await appRepository.getToken();
-      emit(state.copyWith(status: LoginStatus.success));
+     final login = await appRepository.getToken();
+      
+      await _token.token_data.setAccessToken('z1asd434');
+      var qwe = await _token.token_data.getAccessToken();
+      var q11 = '132';
+      
+      // emit(state.copyWith(status: LoginStatus.success));
     } catch (error, stacktrace) {
       print(error);
       emit(state.copyWith(status: LoginStatus.error));
