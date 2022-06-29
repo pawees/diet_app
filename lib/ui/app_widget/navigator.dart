@@ -62,7 +62,15 @@ class _NavigatorBarState extends State<NavigatorBar> {
       return ProfileWidget();
     }
     if (state.status.isCreate){
-      return OrderCreateWidget();
+      return OrderCreateWidget(places: state.places!);
+    }
+    if (state.status.isLoading){
+      return Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Container(child: Center(child: CircularProgressIndicator()),),
+        ],
+      );
     }
     
   }

@@ -1,10 +1,10 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:game_app_training/repository/app_repository.dart';
+import 'package:game_app_training/repository/session.dart';
 
 part 'app_event.dart';
 part 'app_state.dart';
-
 class AppBloc extends Bloc<AppEvent, AppState> {
   AppBloc({
     required this.appRepository,
@@ -13,6 +13,8 @@ class AppBloc extends Bloc<AppEvent, AppState> {
   }
   
   final GameRepository appRepository;
+  final _token = SessionState();
+
 
   void _initial() {
     on<AppEvent>(_getOrders);
@@ -21,9 +23,19 @@ class AppBloc extends Bloc<AppEvent, AppState> {
     on<TapCreateOrderEvent>(_getCreate);
   }
   Future<void> _getCreate(TapCreateOrderEvent e, Emitter emit) async {
-  // load data and send with state variable
-  List data = ["Хирургия(Взрослые),Хирургия(Взрослые),Хирургия(Взрослые),Хирургия(Взрослые),Хирургия(Взрослые),Хирургия(Взрослые),"];
-  emit(state.copyWith(status: AppStatus.create)); // create data field
+  var access_token = await _token.token_data.getAccessToken();
+    emit(state.copyWith(status: AppStatus.loading));
+    await Future.delayed(const Duration(seconds: 2));
+  // final places = await appRepository.getPlaces(access_token!);
+
+  // this is plug,like data were received 
+   final List<String> data = ["Хирургия(Взрослые)","Наркология(Взрослые)","Детское(Дети,Роженицы)","Травматология(Взрослые)",
+  "Хирургия(Взрослые)","Наркология(Взрослые)","Детское(Дети,Роженицы)","Травматология(Взрослые)",
+  "Хирургия(Взрослые)","Наркология(Взрослые)","Детское(Дети,Роженицы)","Травматология(Взрослые)",];
+  //
+
+  emit(state.copyWith(status: AppStatus.create,
+                       places: data)); // create data field
 
 
   }

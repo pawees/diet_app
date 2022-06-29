@@ -50,7 +50,7 @@ class HomeLayout extends StatelessWidget {
           return NavigatorBar();
               }
          if (loginBloc.state.status.isSuccess && appBloc.state.status.isCreate) {
-          return OrderCreateWidget();
+          return OrderCreateWidget(places: appBloc.state.places!, );
               }                 
         else {
           return const SizedBox();

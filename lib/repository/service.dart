@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
 import 'models/user.dart';
+import 'models/places.dart';
+
 import 'package:http/http.dart' as http;
 import 'package:jsonrpc2/jsonrpc2.dart';
 // import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -24,6 +26,7 @@ class HttpServerProxy extends ServerProxyBase {
   Future<String> transmit(String package) async {
     /// This is HttpRequest from dart:html
     var headers = {'Content-Type': 'application/json; charset=UTF-8'};
+
     if (customHeaders.isNotEmpty) {
       headers.addAll(customHeaders);
     }
@@ -60,16 +63,29 @@ class HttpBatchServerProxy extends BatchServerProxyBase {
 }
 
 class GameService {
-  Future<Game> getToken() async {
-    Map details = {'username': 'pawell', 'password': 'zaqxsw123'};
-    var proxy = HttpServerProxy('https://task.it-o.ru/api/');
+  Future<User> getToken() async {
+    Map details = {'username': 'ИвановИИ', 'password': '12345678'};
+    var proxy = HttpServerProxy('http://diet.web-dev.lite.grp/api/auth/json_rpc/');
     final response = await proxy.call("token", details);
     // json.decode(response);
     // return response;
-    return Game.fromJson(
+    return User.fromJson(
       response,
     );
   }
+  Future<Places> getPlaces(String accessToken) async {
+    Map details = {};
+    Map<String, String> token_header = {'Authorization':'Bearer $accessToken'};
+    var proxy = HttpServerProxy('http://diet.web-dev.lite.grp/api/auth/json_rpc/',token_header);
+    final response = await proxy.call("get_customer_info ", details);
+    // json.decode(response);
+    // return response;
+    var q = 1 ;
+    return Places();
+    // return Places.fromJson(
+    //   response,
+    // );
+    }
 
   // Uri getUrl({
   //   required String url,

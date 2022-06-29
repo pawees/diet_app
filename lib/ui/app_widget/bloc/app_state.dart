@@ -12,17 +12,23 @@ extension AppStatusX on AppStatus {
 }
 
 class AppState extends Equatable {
-  const AppState({this.status = AppStatus.initial});
+  const AppState({
+    this.status = AppStatus.initial,
+    List<String>? places,}) : places = places ?? const [];
+  
   final AppStatus status;
+  final List<String>? places;
 
   @override
-  List<Object?> get props => [status];
+  List<Object?> get props => [status,places];
 
   AppState copyWith({
     AppStatus? status,
+    List<String>? places,
   }) {
     return AppState(
       status: status ?? this.status,
+      places: places ?? this.places,
     );
   }
 }
