@@ -1,6 +1,7 @@
 import 'package:game_app_training/ui/app_widget/bloc/app_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:game_app_training/ui/app_widget/menuWidget.dart';
 import 'package:game_app_training/ui/app_widget/orderCreateWidget.dart';
 import 'package:game_app_training/ui/app_widget/orderWidget.dart';
 import 'package:game_app_training/ui/app_widget/profileWidget.dart';
@@ -63,6 +64,9 @@ class _NavigatorBarState extends State<NavigatorBar> {
     }
     if (state.status.isCreate){
       return OrderCreateWidget(places: state.places!);
+    }
+     if (state.status.isSelected){
+      return MenuChoiseWidget();
     }
     if (state.status.isLoading){
       return Column(

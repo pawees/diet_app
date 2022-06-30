@@ -10,3 +10,8 @@ class AppInitialEvent extends AppEvent {}
 class TapOrderNavEvent extends AppEvent {}
 class TapProfileNavEvent extends AppEvent {}
 class TapCreateOrderEvent extends AppEvent {}
+class TapNextDateEvent extends AppEvent {
+  int count;
+  TapNextDateEvent(this.count);
+}
+class GetMenuEvent extends AppEvent{}
