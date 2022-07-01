@@ -17,12 +17,14 @@ extension AppStatusX on AppStatus {
 
 class AppState extends Equatable {
   const AppState({
+    int? selected_id,
     this.status = AppStatus.initial,
-    List<String>? places,
-    String? date,}) : places = places ?? const [], date = date ?? '' ;
+    List<Places>? places,
+    String? date,}) : places = const [Places.empty], date = date ?? '',selected_id = selected_id ?? 0 ;
   
+  final int selected_id;
   final AppStatus status;
-  final List<String>? places;
+  final List<Places>? places;
   final String? date;
 
   @override
@@ -30,15 +32,16 @@ class AppState extends Equatable {
 
   AppState copyWith({
     AppStatus? status,
-    List<String>? places,
+    List<Places>? places,
     String? date,
+    int? selected_id,
 
   }) {
     return AppState(
       status: status ?? this.status,
       places: places ?? this.places,
       date: date ?? this.date,
-
+      selected_id: selected_id ?? this.selected_id,
     );
   }
 }

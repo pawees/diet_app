@@ -1,24 +1,25 @@
 
-class Places {
-  final String id;
+class Diets {
   final String name;
+  final int count;
 
-  const Places({required this.id, required this.name});
 
- static const Places empty = Places(
-    id: '0',
+  const Diets({required this.count, required this.name});
+
+ static const Diets empty = Diets(
+    count: 0,
     name: 'unknow');
   
   //constructor that convert json to object instance
-  factory Places.fromJson(Map<String, dynamic> json) {
-    return Places(id: json['id'] as String,
+  factory Diets.fromJson(Map<String, dynamic> json) {
+    return Diets(count: json['count'] as int,
                 name: json['name'] as String,
                 );
     }
 
   //a method that convert object to json
   Map<String, dynamic> toJson() => {
-    'uid_1c': id,
     'name': name,
+    'count': count,
   };
 }

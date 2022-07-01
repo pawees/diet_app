@@ -63,7 +63,7 @@ class _NavigatorBarState extends State<NavigatorBar> {
       return ProfileWidget();
     }
     if (state.status.isCreate){
-      return OrderCreateWidget(places: state.places!);
+      return OrderCreateWidget(places: state.places);
     }
      if (state.status.isSelected){
       return MenuChoiseWidget();

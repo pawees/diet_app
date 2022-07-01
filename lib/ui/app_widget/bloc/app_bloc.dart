@@ -1,7 +1,9 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:game_app_training/repository/app_repository.dart';
+import 'package:game_app_training/repository/models/places.dart';
 import 'package:game_app_training/repository/session.dart';
+import 'package:game_app_training/ui/app_widget/orderCreateWidget.dart';
 
 import 'package:jiffy/jiffy.dart';
 
@@ -37,10 +39,14 @@ class AppBloc extends Bloc<AppEvent, AppState> {
    final List<String> data = ["Хирургия(Взрослые)","Наркология(Взрослые)","Детское(Дети,Роженицы)","Травматология(Взрослые)",
   "Хирургия(Взрослые)","Наркология(Взрослые)","Детское(Дети,Роженицы)","Травматология(Взрослые)",
   "Хирургия(Взрослые)","Наркология(Взрослые)","Детское(Дети,Роженицы)","Травматология(Взрослые)",];
+  
+  final Map<String,String> data2 = {'id':'1','name':"Хирургия(Взрослые)"};
   //
+  final places = [Places.fromJson(data2)];
+
 
   emit(state.copyWith(status: AppStatus.create,
-                       places: data)); // create data field
+                       places: places)); // create data field
 
 
   }
@@ -72,9 +78,7 @@ Future<void> _nextDate(TapNextDateEvent e, Emitter emit) async {
 
 }
 Future<void> _getMenu(GetMenuEvent e, Emitter emit) async {
-    emit(state.copyWith(status: AppStatus.selected));
+    emit(state.copyWith(status: AppStatus.selected, selected_id: e.id));
 }
-
-
 
 }

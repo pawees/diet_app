@@ -2,46 +2,58 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:game_app_training/ui/app_widget/bloc/app_bloc.dart';
 import 'package:game_app_training/ui/theme/styles.dart';
+import 'package:game_app_training/ui/theme/main_buttons.dart';
 
-List<MenuRowData> menuNames = [
-  MenuRowData('ОВД'),
-  MenuRowData('Зонд'),
-  MenuRowData('ОВД2'),
-  MenuRowData('ЩД'),
-  MenuRowData('НКД'),
-  MenuRowData('ОВДм'),
-  MenuRowData('ОВД'),
-  MenuRowData('ЩД1'),
-  MenuRowData('ОВдр'),
-  MenuRowData('ЩДб/м'),
-  MenuRowData('Х1'),
-  MenuRowData('ВБД1'),]; //FIXME: create model
+import 'package:game_app_training/repository/models/diets.dart';
 
-class MenuRowData {
-  final String text;
 
-  MenuRowData(this.text);
-}
+List<Diets> menuNames = [
+  Diets(name: 'ОВД', count: 0),
+  Diets(name:'Зонд',count:0),
+  Diets(name:'ОВД2',count:0),
+  Diets(name:'ЩД',count:0),
+  Diets(name:'НКД',count:0),
+  Diets(name:'ОВДм',count:0),
+  Diets(name:'ОВД',count:0),
+  Diets(name:'ЩД1',count:0),
+  Diets(name:'ОВдр',count:0),
+  Diets(name:'ЩДб/м',count:0),
+  Diets(name:'Х1',count:0),
+  Diets(name:'ВБД1',count:0),
+  ]; 
 
-class _MenuRowWidget extends StatelessWidget {
-  final List<MenuRowData> menuRow;
-  const _MenuRowWidget({Key? key,required this.menuRow,}) : super(key: key);
+
+
+// class _MenuRowWidget extends StatelessWidget {
+//   final List<Diets> menuRow;
+//   const _MenuRowWidget({Key? key,required this.menuRow,}) : super(key: key);
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Column(
+//       children: menuRow.map((data) => _MenuWidgetRow(data: data)).toList(),
+//     );
+    
+//   }
+// }
+
+class _countBuilder extends StatelessWidget {
+  const _countBuilder({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: menuRow.map((data) => _MenuWidgetRow(data: data)).toList(),
-    );
+    return Text('0');
     
   }
 }
 
-
-
 class _MenuWidgetRow extends StatelessWidget {
-  const _MenuWidgetRow({Key? key,
-  required this.data}) : super(key: key);
-  final MenuRowData data;
+  const _MenuWidgetRow({
+    Key? key,
+    required this.data,
+    required this.selected}) : super(key: key);
+  final Diets data;
+  final int selected;
   
    @override
   Widget build(BuildContext context) {
@@ -49,15 +61,16 @@ class _MenuWidgetRow extends StatelessWidget {
       padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
       child: Column(
         children: [
-
           Row(
             mainAxisSize: MainAxisSize.max,
             children: [
               Icon(Icons.info,color: Colors.blue,),
               SizedBox(width: 15),
-              Expanded(child: Text(data.text,style: header2(),)),
-              Icon(Icons.plus_one),
-              Icon(Icons.plus_one),
+              Expanded(child: Text(data.name, style: header2(),)),
+              IconButton(icon: Icon(Icons.countertops), onPressed: (){print(selected);},),
+              _countBuilder(),
+              IconButton(icon: Icon(Icons.plus_one), onPressed: (){print(selected);},),
+
             ],
           ),
           SizedBox(height: 28,),
@@ -74,22 +87,17 @@ class MenuChoiseWidget extends StatelessWidget {
 
  @override
   Widget build(BuildContext context) {
-    final styleBtn = ButtonStyle(
-        backgroundColor: MaterialStateProperty.all(Colors.orange),
-        foregroundColor: MaterialStateProperty.all(Colors.white),
-        textStyle: MaterialStateProperty.all(
-            TextStyle(fontSize: 17, fontWeight: FontWeight.w600)),
-        shape: MaterialStateProperty.all(RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(11.0),
-        )));
+    _on_pressed(){};
+    
     return BlocBuilder<AppBloc,AppState>(
       builder: (context,state) {
+        var ioi = state.places![state.selected_id];
         return Scaffold(
           appBar:AppBar(
-            title: const Center(
+            title: Center(
               child: Text(
-                  'Терапия(взрослое)',//FIXME:hardcode
-              style: TextStyle(
+                  ioi.name,
+              style: const TextStyle(
                 color: Colors.black, fontSize: 20, fontWeight: FontWeight.w500),
           )),),
           body: Padding(
@@ -99,35 +107,25 @@ class MenuChoiseWidget extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                  SizedBox(height: 25,),
-                 Text('Рацион',style: header1(),),
+                 Text('Рацион', style: header1(),),
                  SizedBox(height: 28,),
                  Container(
-                  height: 305,
-                   child: _MenuRowWidget(menuRow: menuNames),
+                  height: 455,
+                   child: ListView.builder(
+                    // child: _MenuRowWidget(menuRow: menuNames),
+                    shrinkWrap: true,
+                    itemBuilder: (context, index) {
+                          return _MenuWidgetRow(data: menuNames[index], selected: index);
+                          },
+                    itemCount: menuNames.length
+                    ),
                  ),
-                 Expanded(child: Text('Итого рацион',style: header1(),)),
-                 Text('6'),
-                 Container(
-                      height: 52,
-                      width: double.infinity,
-                      child: ElevatedButton(
-              style: styleBtn,
-              onPressed: (){},
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  // ImageIcon(AssetImage('assets/images/icon.png'),
-                  // ),
-                  Icon(
-                     Icons.add,
-                color: Colors.white,
-                size: 24.0,
-                  ),
-                  SizedBox(width: 10),
-                  const Text('Готово'),
-                ],
-              ),
-                      ),)
+                //  Expanded(child: Text('Итого рацион',style: header1(),)),
+                //  Text('6'),
+                //  Container(
+                //       height: 52,
+                //       width: double.infinity,
+                //       child: mainBtn(context, _on_pressed) )
             
             
                 ],

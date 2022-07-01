@@ -5,7 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:game_app_training/ui/app_widget/bloc/app_bloc.dart';
 import 'package:jiffy/jiffy.dart';
 import 'package:game_app_training/ui/theme/styles.dart';
-
+import 'package:game_app_training/repository/models/places.dart';
 
 class OrderCreateWidget extends StatelessWidget {
   const OrderCreateWidget({
@@ -13,7 +13,7 @@ class OrderCreateWidget extends StatelessWidget {
     required this.places,
     }) : super(key: key);
     
-    final List<String> places;
+    final places;
   
   @override
   Widget build(BuildContext context) {
@@ -54,7 +54,7 @@ class OrderCreateWidget extends StatelessWidget {
                       shrinkWrap: true,
                       // physics: NeverScrollableScrollPhysics(),
                       itemBuilder: (context, index) {
-                          return Places(data: places[index],);
+                          return PlacesWidget(data: places[index], selected: index);
                           },
                       itemCount: places.length,),
                 ),
@@ -68,16 +68,17 @@ class OrderCreateWidget extends StatelessWidget {
 
 }
 
-class Places extends StatelessWidget {
-  const Places({Key? key, required this.data,}) : super(key: key);
-  final String data;
+class PlacesWidget extends StatelessWidget {
+  const PlacesWidget({Key? key, required this.data, required this.selected}) : super(key: key);
+ final data;
+ final int selected;
   
   @override
   Widget build(BuildContext context) {
     final appBloc = BlocProvider.of<AppBloc>(context);
 
     _get_menu(){
-      appBloc.add(GetMenuEvent());//probaly need some id.
+      appBloc.add(GetMenuEvent(selected));//probaly need some id.
     }
 
     return GestureDetector(
@@ -88,7 +89,7 @@ class Places extends StatelessWidget {
         SizedBox(height: 12.5,),
         Row(
            children: [
-             Expanded(child: Text(data)),
+             Expanded(child: Text(data.name)),
              SizedBox.fromSize(size:Size.fromRadius(13),child: FittedBox(child: Icon(Icons.chevron_right_sharp))),]
              ),
         SizedBox(height: 12.5,),

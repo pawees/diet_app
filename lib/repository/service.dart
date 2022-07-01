@@ -81,10 +81,9 @@ class GameService {
     // json.decode(response);
     // return response;
     var q = 1 ;
-    return Places();
-    // return Places.fromJson(
-    //   response,
-    // );
+    return Places.fromJson(
+      response,
+    );
     }
 
   // Uri getUrl({

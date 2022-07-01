@@ -14,4 +14,7 @@ class TapNextDateEvent extends AppEvent {
   int count;
   TapNextDateEvent(this.count);
 }
-class GetMenuEvent extends AppEvent{}
+class GetMenuEvent extends AppEvent{
+  int id;
+  GetMenuEvent(this.id);
+}
