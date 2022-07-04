@@ -1,14 +1,14 @@
 
 class Diets {
   final String name;
-  final int count;
+  int count;
 
 
-  const Diets({required this.count, required this.name});
+  Diets({required this.count, required this.name});
 
- static const Diets empty = Diets(
-    count: 0,
-    name: 'unknow');
+//  static const Diets empty = Diets(
+//     count: 0,
+//     name: 'unknow');
   
   //constructor that convert json to object instance
   factory Diets.fromJson(Map<String, dynamic> json) {

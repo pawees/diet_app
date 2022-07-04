@@ -27,6 +27,7 @@ class AppBloc extends Bloc<AppEvent, AppState> {
     on<TapCreateOrderEvent>(_getCreate);
     on<TapNextDateEvent>(_nextDate);
     on<GetMenuEvent>(_getMenu);
+    on<ChangeCountEvent>(_changeCount);
 
   }
   Future<void> _getCreate(TapCreateOrderEvent e, Emitter emit) async {
@@ -79,6 +80,11 @@ Future<void> _nextDate(TapNextDateEvent e, Emitter emit) async {
 }
 Future<void> _getMenu(GetMenuEvent e, Emitter emit) async {
     emit(state.copyWith(status: AppStatus.selected, selected_id: e.id));
+}
+
+Future<void> _changeCount(ChangeCountEvent e, Emitter emit) async {
+  emit(state.copyWith(status: AppStatus.create,));
+  emit(state.copyWith(status: AppStatus.selected));
 }
 
 }

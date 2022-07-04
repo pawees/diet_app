@@ -18,3 +18,7 @@ class GetMenuEvent extends AppEvent{
   int id;
   GetMenuEvent(this.id);
 }
+class ChangeCountEvent extends AppEvent{
+  int id;
+  ChangeCountEvent(this.id);
+}
