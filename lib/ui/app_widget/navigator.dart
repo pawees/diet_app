@@ -80,6 +80,9 @@ class _NavigatorBarState extends State<NavigatorBar> {
     }
     if (state.status.isPreRequestOrder){
       return PreRequestWidget();
+    }
+    if (state.status.isNewOrder){
+      return OrderWidget();
     } 
     
   }
