@@ -1,11 +1,13 @@
+import 'package:game_app_training/repository/models/diets.dart';
 
 class Places {
-  final String id;
-  final String name;
+  String id;
+  String name;
+  List<Diets>? diets;
 
-  const Places({required this.id, required this.name});
+  Places({required this.id, required this.name,this.diets});
 
- static const Places empty = Places(
+ static Places empty = Places(
     id: '0',
     name: 'unknow');
   

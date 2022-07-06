@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:game_app_training/ui/app_widget/bloc/app_bloc.dart';
 import 'package:game_app_training/ui/app_widget/navigator.dart';
 import 'package:game_app_training/ui/app_widget/orderCreateWidget.dart';
+import 'package:game_app_training/ui/app_widget/preRequestWidget.dart';
 import 'package:game_app_training/ui/auth_widget/authScreenWidget.dart';
 import 'package:game_app_training/ui/auth_widget/authErrorWidget.dart';
 import 'package:game_app_training/ui/auth_widget/authPreloaderWidget.dart';
@@ -51,7 +52,10 @@ class HomeLayout extends StatelessWidget {
               }
          if (loginBloc.state.status.isSuccess && appBloc.state.status.isCreate) {
           return OrderCreateWidget(places: appBloc.state.places!, );
-              }                 
+              }
+         if (loginBloc.state.status.isSuccess && appBloc.state.status.isPreRequestOrder){
+          return PreRequestWidget();
+         }                
         else {
           return const SizedBox();
         }

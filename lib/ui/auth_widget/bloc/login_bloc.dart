@@ -29,15 +29,18 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     // do some check user for authorization
     // emit(AuthorizeState(msg: "login_sucess"));
     emit(state.copyWith(status: LoginStatus.loading));
+    await Future.delayed(const Duration(seconds: 2));
+    emit(state.copyWith(status: LoginStatus.success));
     // await Future.delayed(const Duration(seconds: 2));
-    try {
-         final login = await appRepository.getToken();
-         await _token.token_data.setAccessToken(login.access);
-         emit(state.copyWith(status: LoginStatus.success));
-    }catch(error){
-      print(error);
-      emit(state.copyWith(status: LoginStatus.error));
-    }
+    
+    // try {
+    //      final login = await appRepository.getToken();
+    //      await _token.token_data.setAccessToken(login.access);
+    //      emit(state.copyWith(status: LoginStatus.success));
+    // }catch(error){
+    //   print(error);
+    //   emit(state.copyWith(status: LoginStatus.error));
+    // }
    
     // emit(state.copyWith(status: LoginStatus.authorizeProc));
     // emit(state.copyWith(status: LoginStatus.loading));

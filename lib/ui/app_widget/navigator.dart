@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:game_app_training/ui/app_widget/menuWidget.dart';
 import 'package:game_app_training/ui/app_widget/orderCreateWidget.dart';
 import 'package:game_app_training/ui/app_widget/orderWidget.dart';
+import 'package:game_app_training/ui/app_widget/preRequestWidget.dart';
 import 'package:game_app_training/ui/app_widget/profileWidget.dart';
 
 
@@ -73,9 +74,13 @@ class _NavigatorBarState extends State<NavigatorBar> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Container(child: Center(child: CircularProgressIndicator()),),
+     
         ],
       );
     }
+    if (state.status.isPreRequestOrder){
+      return PreRequestWidget();
+    } 
     
   }
 }

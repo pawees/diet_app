@@ -5,6 +5,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:game_app_training/repository/service.dart';
 import 'package:game_app_training/ui/home_page.dart';
 import 'package:game_app_training/utils/app_bloc_oserver.dart';
+import 'package:hive/hive.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
 // import 'package:flutter_dotenv/flutter_dotenv.dart';
 class MyHttpOverrides extends HttpOverrides {
@@ -16,6 +18,9 @@ class MyHttpOverrides extends HttpOverrides {
  }
 }
 Future main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Hive.initFlutter();
+
   // await dotenv.load(fileName: "assets/.env");
   HttpOverrides.global = MyHttpOverrides();
   BlocOverrides.runZoned(

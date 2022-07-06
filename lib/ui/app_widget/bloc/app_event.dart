@@ -22,3 +22,11 @@ class ChangeCountEvent extends AppEvent{
   int id;
   ChangeCountEvent(this.id);
 }
+class NextPlaceEvent extends AppEvent{
+  int? id;
+  NextPlaceEvent(this.id);
+}
+class FormOrderEvent extends AppEvent{
+  Order order;
+  FormOrderEvent(this.order);
+}
