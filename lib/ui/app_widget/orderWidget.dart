@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:game_app_training/ui/app_widget/bloc/app_bloc.dart';
+import 'package:game_app_training/ui/theme/main_buttons.dart';
 
 
 class OrderWidget extends StatelessWidget {
@@ -28,16 +29,15 @@ class OrderWidget extends StatelessWidget {
 
 }
 
-class NoNewOrderWidget extends StatefulWidget {
-  const NoNewOrderWidget({Key? key}) : super(key: key);
+
+class ToggleOrdersWidget extends StatefulWidget {
+  const ToggleOrdersWidget({Key? key}) : super(key: key);
 
   @override
-  State<NoNewOrderWidget> createState() => _NoNewOrderWidgetState();
+  State<ToggleOrdersWidget> createState() => _ToggleOrdersWidgetState();
 }
 
-
-class _NoNewOrderWidgetState extends State<NoNewOrderWidget> {
-  
+class _ToggleOrdersWidgetState extends State<ToggleOrdersWidget> {
   List<bool> isSelected = [true, false];
   void _onChanged(int index){
     setState(() {
@@ -47,36 +47,16 @@ class _NoNewOrderWidgetState extends State<NoNewOrderWidget> {
       } else {
         isSelected[buttonIndex] = false;
       }
-      }
-              });
-
-}
+        }
+          });
+          }
   @override
   Widget build(BuildContext context) {
-        final styleBtn = ButtonStyle(
-        backgroundColor: MaterialStateProperty.all(Colors.orange),
-        foregroundColor: MaterialStateProperty.all(Colors.white),
-        textStyle: MaterialStateProperty.all(
-            TextStyle(fontSize: 17, fontWeight: FontWeight.w600)),
-        shape: MaterialStateProperty.all(RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(11.0),
-        )));
     final style = TextStyle(fontSize: 13, fontWeight: FontWeight.w600);
     final children = [Text('Новая заявка', style: style), Text('Исполненные заявки',style: style),];
     final width = MediaQuery.of(context).size.width * 0.9 / max(1, children.length);
     final appBloc = BlocProvider.of<AppBloc>(context);
-
-    void _createEvent(){
-      appBloc.add(TapCreateOrderEvent());
-    }
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 18),
-      child: Column(
-        children: [
-          const SizedBox(
-            height: 16,
-          ),
-          Center(
+    return Center(
             child: Container(
               decoration: BoxDecoration(color: Color.fromARGB(255, 244, 246, 249),
                   border: Border.all(color: Color.fromARGB(255, 244, 246, 249), width: 0.1),
@@ -96,11 +76,19 @@ class _NoNewOrderWidgetState extends State<NoNewOrderWidget> {
                   ),
               ),
             ),
-          ),
-          SizedBox(
-            height: 37,
-          ),
-          Container(
+          );
+    
+  }
+}
+
+
+
+class NoNewOrdersWidget extends StatelessWidget {
+  const NoNewOrdersWidget({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
             height: 188,
             width: double.infinity,
             decoration:
@@ -123,11 +111,22 @@ class _NoNewOrderWidgetState extends State<NoNewOrderWidget> {
               SizedBox(height: 25,),
               Container(child: Text('Новых заявок нет',style: TextStyle(fontSize: 24,fontWeight: FontWeight.w400),),),
             ]),
-          ),
-         SizedBox(
-            height: 32,
-          ),
-          Container(
+          );
+    
+  }
+}
+
+
+class CreateBtnWidget extends StatelessWidget {
+  const CreateBtnWidget({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final appBloc = BlocProvider.of<AppBloc>(context);
+    void _createEvent(){
+      appBloc.add(TapCreateOrderEvent());
+    }
+    return  Container(
           height: 52,
           width: double.infinity,
           child: ElevatedButton(
@@ -148,37 +147,105 @@ class _NoNewOrderWidgetState extends State<NoNewOrderWidget> {
               ],
             ),
           ),
-    )],),
     );
     
   }
 }
 
-class _NewOrderWidgetState extends State<NoNewOrderWidget> {
+
+class NewOrdersWidget extends StatelessWidget {
+  const NewOrdersWidget({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return  Container(
+            height: 188,
+            width: double.infinity,
+            decoration:
+            BoxDecoration(color: Color.fromARGB(255, 242, 244, 247),
+                  border: Border.all(color: Color.fromARGB(255, 242, 244, 247), width: 0.1),
+                  borderRadius: BorderRadius.all(Radius.circular(10)),
+            ),
+            child: Column(
+              children: [
+              SizedBox(height: 40,),
+              Container(
+                width:42,
+                height:52,
+                child: 
+                FittedBox(
+                  fit:BoxFit.cover,
+                  child: 
+                  ImageIcon(AssetImage('assets/images/order.png'),
+                  color: Color.fromARGB(255,178, 184, 191),))),
+              SizedBox(height: 25,),
+              Container(child: Text('Новых заявоки есть',style: TextStyle(fontSize: 24,fontWeight: FontWeight.w400),),),
+            ]),
+          );
+  }
+}
+
+
+class _isNoNewPageWidget extends StatelessWidget {
+  const _isNoNewPageWidget({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
+      padding: const EdgeInsets.symmetric(horizontal: 18),
       child: Column(
         children: [
           const SizedBox(
-            height: 17,
+            height: 16,
           ),
-
-      ],),
+          ToggleOrdersWidget(),
+          SizedBox(
+            height: 37,
+          ),
+          NoNewOrdersWidget(),
+         SizedBox(
+            height: 32,
+          ),
+          CreateBtnWidget(),
+        ],
+    ),
     );
-    
   }
 }
 
-   _buildScreensWidget( AppState state) {
-      return NoNewOrderWidget();
 
-    // if (state.status.isOrder){
-    //   return NoNewOrderWidget();
-    // }
-    // if (state.status.isProfile){
-    //   return NewOrderWidget();
-    // }
-    
+class _isNewPageWidget extends StatelessWidget {
+  const _isNewPageWidget({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 18),
+      child: Column(
+        children: [
+          const SizedBox(
+            height: 16,
+          ),
+          ToggleOrdersWidget(),
+          SizedBox(
+            height: 37,
+          ),
+          CreateBtnWidget(),
+
+          NewOrdersWidget(),
+         SizedBox(
+            height: 32,
+          ),
+        ],
+    ),
+    );
+  }
+}
+
+   
+   _buildScreensWidget( AppState state) {
+      return state.status.isNewOrder ?
+      _isNewPageWidget() : 
+      _isNoNewPageWidget();
+
   }

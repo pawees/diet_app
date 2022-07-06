@@ -30,3 +30,4 @@ class FormOrderEvent extends AppEvent{
   Order order;
   FormOrderEvent(this.order);
 }
+class HaveNewOrderEvent extends AppEvent{}

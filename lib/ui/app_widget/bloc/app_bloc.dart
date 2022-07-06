@@ -32,6 +32,7 @@ class AppBloc extends Bloc<AppEvent, AppState> {
     on<ChangeCountEvent>(_changeCount);
     on<NextPlaceEvent>(_nextPlace);
     on<FormOrderEvent>(_formOrder);
+    on<HaveNewOrderEvent>(_haveNewOrder);
 
   }
   Future<void> _getCreate(TapCreateOrderEvent e, Emitter emit) async {
@@ -104,7 +105,9 @@ Future<void> _formOrder(FormOrderEvent e, Emitter emit) async {
     //save to db;
     //
     emit(state.copyWith(status: AppStatus.pre_req_order));
-
+}
+Future<void> _haveNewOrder(HaveNewOrderEvent e , Emitter emit) async {
+  emit(state.copyWith(status: AppStatus.have_new_order));
 
 }
 

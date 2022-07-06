@@ -1,6 +1,6 @@
 part of 'app_bloc.dart';
 
-enum AppStatus { initial,profile, order, error, loading, create, next_date, selected, next_page, pre_req_order}
+enum AppStatus { initial,profile, order, error, loading, create, next_date, selected, next_page, pre_req_order,have_new_order}
 
 extension AppStatusX on AppStatus {
   bool get isInitial => this == AppStatus.initial;
@@ -13,6 +13,7 @@ extension AppStatusX on AppStatus {
   bool get isSelected => this == AppStatus.selected;
   bool get isNextPage => this == AppStatus.next_page;
   bool get isPreRequestOrder => this == AppStatus.pre_req_order;
+  bool get isNewOrder => this == AppStatus.have_new_order;
 }
 
 class AppState extends Equatable {
