@@ -9,7 +9,10 @@ abstract class AppEvent extends Equatable {
 class AppInitialEvent extends AppEvent {}
 class TapOrderNavEvent extends AppEvent {}
 class TapProfileNavEvent extends AppEvent {}
-class TapCreateOrderEvent extends AppEvent {}
+class TapCreateOrderEvent extends AppEvent {
+  AppStatus? prev_status;
+  TapCreateOrderEvent(this.prev_status);
+}
 class TapNextDateEvent extends AppEvent {
   int count;
   TapNextDateEvent(this.count);
@@ -31,3 +34,4 @@ class FormOrderEvent extends AppEvent{
   FormOrderEvent(this.order);
 }
 class HaveNewOrderEvent extends AppEvent{}
+class PreviousScreenEvent extends AppEvent{}

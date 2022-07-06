@@ -124,7 +124,7 @@ class CreateBtnWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final appBloc = BlocProvider.of<AppBloc>(context);
     void _createEvent(){
-      appBloc.add(TapCreateOrderEvent());
+      appBloc.add(TapCreateOrderEvent(appBloc.state.status));
     }
     return  Container(
           height: 52,

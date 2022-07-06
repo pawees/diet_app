@@ -33,6 +33,7 @@ class AppBloc extends Bloc<AppEvent, AppState> {
     on<NextPlaceEvent>(_nextPlace);
     on<FormOrderEvent>(_formOrder);
     on<HaveNewOrderEvent>(_haveNewOrder);
+    on<PreviousScreenEvent>(_previousScreen);
 
   }
   Future<void> _getCreate(TapCreateOrderEvent e, Emitter emit) async {
@@ -56,7 +57,8 @@ class AppBloc extends Bloc<AppEvent, AppState> {
 
 
   emit(state.copyWith(status: AppStatus.create,
-                       places: places)); // create data field
+                       places: places,
+                       previous: e.prev_status)); // create data field
 
 
   }
@@ -108,7 +110,9 @@ Future<void> _formOrder(FormOrderEvent e, Emitter emit) async {
 }
 Future<void> _haveNewOrder(HaveNewOrderEvent e , Emitter emit) async {
   emit(state.copyWith(status: AppStatus.have_new_order));
-
 }
-
+Future<void> _previousScreen(PreviousScreenEvent e, Emitter emit) async {
+  AppStatus prev_status = state.previous;
+  emit(state.copyWith(status: prev_status));
+}
 }

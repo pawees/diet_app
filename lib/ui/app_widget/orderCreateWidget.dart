@@ -17,16 +17,26 @@ class OrderCreateWidget extends StatelessWidget {
   
   @override
   Widget build(BuildContext context) {
+    final appBloc = BlocProvider.of<AppBloc>(context);
+    _on_pressed(){
+      appBloc.add(PreviousScreenEvent());
+    }
     return BlocBuilder<AppBloc,AppState>(
       builder: (context,state) {
         return Scaffold(
           appBar:AppBar(
-            title: const Center(
+            leading:  IconButton(
+              icon: ImageIcon(AssetImage('assets/images/chevron.png')),
+              onPressed: _on_pressed,),
+            title: Transform(
+              transform:  Matrix4.translationValues( MediaQuery.of(context).size.width/6, 0.0, 0.0),
               child: Text(
                   'Новая заявка',
               style: TextStyle(
                 color: Colors.black, fontSize: 20, fontWeight: FontWeight.w500),
-          )),),
+                      ),
+            ),
+          ),
           body: Padding(
             padding: const EdgeInsets.fromLTRB(17, 5, 30, 5),
             child: Column(
