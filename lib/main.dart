@@ -17,9 +17,23 @@ class MyHttpOverrides extends HttpOverrides {
          (X509Certificate cert, String host, int port) => true;
  }
 }
+Future<void> register_adapters() async {
+  print('plague.del this');
+    // if (!Hive.isAdapterRegistered(0)) {
+    //   // Hive.registerAdapter(DietsAdapter());
+    // }
+    // if (!Hive.isAdapterRegistered(1)) {
+    //   // Hive.registerAdapter(PlacesHiveAdapter());
+    // }
+    // if (!Hive.isAdapterRegistered(2)) {
+    //   // Hive.registerAdapter(OrderAdapter());
+    // }
+
+}
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Hive.initFlutter();
+  await register_adapters();
 
   // await dotenv.load(fileName: "assets/.env");
   HttpOverrides.global = MyHttpOverrides();
