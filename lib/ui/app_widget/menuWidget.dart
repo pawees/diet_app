@@ -14,20 +14,7 @@ import 'package:game_app_training/repository/models/order.dart';
 List<Places> listPlaces = [];
 
 
-List<Diets> menuNames = [
-  Diets(name: 'ОВД', count: 0),
-  Diets(name:'Зонд',count:0),
-  Diets(name:'ОВД2',count:0),
-  Diets(name:'ЩД',count:0),
-  Diets(name:'НКД',count:0),
-  Diets(name:'ОВДм',count:0),
-  Diets(name:'ОВД',count:0),
-  Diets(name:'ЩД1',count:0),
-  Diets(name:'ОВдр',count:0),
-  Diets(name:'ЩДб/м',count:0),
-  Diets(name:'Х1',count:0),
-  Diets(name:'ВБД1',count:0),
-  ]; 
+List<Diets> menuNames = Diets.fetchAll(); 
 
 
 
@@ -90,30 +77,21 @@ class SummaryAndBtnWidget extends StatelessWidget {
     _next_place(){
       //checking for null diets count,if null drop error.
       listPlaces.add(Places(id: '1', name: 'ok', diets: menuNames));//id-name - hardcode
+      menuNames = Diets.fetchAll();
       int len = state!.places!.length - 1;
       int cur = state!.selected_id;
       int next = cur + 1;
       appBloc.add(NextPlaceEvent(next));
-      // collect order data,probably_clean model,opened next page///
-      // Place(id:id_place,diets,)
-      // Place(add to state)
-      // Next screen.give true status if common count !=0.
-      // Render Ok check(if status:true => render)
     };
-    _formed_order(){
 
+    _formed_order(){
+      //check list count not null
+       listPlaces.add(Places(id: '1', name: 'ok', diets: menuNames));//id-name - hardcode
+      menuNames = Diets.fetchAll(); 
       Order order = Order(id:'130-re3-2', places: listPlaces);
       appBloc.add(FormOrderEvent(order));
-      //create event sendOrderRequest -> send_req -> save in hive.
-      //new screen display
-
-
-
-      // check,that last item index,and add event to formed order.
-      // all data keep state.
-      //formed order page. ^)mean render data from state then save it all in Hive and formed Json
-
     }
+    
     if (state!.places!.length - 1 == state!.selected_id) {
       return Column(
       children: [

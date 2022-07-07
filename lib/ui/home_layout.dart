@@ -54,7 +54,7 @@ class HomeLayout extends StatelessWidget {
           return OrderCreateWidget(places: appBloc.state.places!, );
               }
          if (loginBloc.state.status.isSuccess && appBloc.state.status.isPreRequestOrder){
-          return PreRequestWidget();
+          return PreRequestWidget(order: appBloc.state.order!,date:appBloc.state.date!);
          }                
         else {
           return const SizedBox();

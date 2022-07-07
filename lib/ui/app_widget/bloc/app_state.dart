@@ -18,13 +18,18 @@ extension AppStatusX on AppStatus {
 
 class AppState extends Equatable {
   const AppState({
+    Order? order,
     this.previous = AppStatus.initial,
     String? agency,
     bool? is_filled,
     int? selected_id,
     this.status = AppStatus.initial,
     List<Places>? places,
-    String? date,}) : places = places ?? const [], date = date ?? '', agency = agency ?? '',selected_id = selected_id ?? 0, is_filled = is_filled ?? false ;
+    String? date,}) : places = places ?? const [],
+                                date = date ?? '', agency = agency ?? '',
+                                selected_id = selected_id ?? 0, 
+                                is_filled = is_filled ?? false,
+                                order = order ?? null ;
   
   final bool is_filled;
   final int selected_id;
@@ -33,10 +38,10 @@ class AppState extends Equatable {
   final List<Places>? places;
   final String? date;
   final String? agency;
-  
+  final Order? order;
 
   @override
-  List<Object?> get props => [status,previous,places,date,agency];
+  List<Object?> get props => [status,previous,places,date,agency,order];
 
   AppState copyWith({
     AppStatus? status,
@@ -46,6 +51,7 @@ class AppState extends Equatable {
     int? selected_id,
     bool? is_filled,
     String? agency,
+    Order? order,
 
   }) {
     return AppState(
@@ -56,6 +62,7 @@ class AppState extends Equatable {
       agency: agency ?? this.agency,
       selected_id: selected_id ?? this.selected_id,
       is_filled: is_filled ?? this.is_filled,
+      order: order ?? this.order
     );
   }
 }

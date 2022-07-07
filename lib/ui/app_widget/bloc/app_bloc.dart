@@ -99,14 +99,15 @@ Future<void> _changeCount(ChangeCountEvent e, Emitter emit) async {
 }
 
 Future<void> _nextPlace(NextPlaceEvent e, Emitter emit) async {
+//get list in event,check that list have count>0;is_filled == true then
   emit(state.copyWith(status: AppStatus.next_page, is_filled: true));
   emit(state.copyWith(status: AppStatus.selected, selected_id: e.id));
-  //isChanged == true,this need for icon in list
+
 }
 Future<void> _formOrder(FormOrderEvent e, Emitter emit) async {
     //save to db;
     //
-    emit(state.copyWith(status: AppStatus.pre_req_order));
+    emit(state.copyWith(status: AppStatus.pre_req_order, order: e.order));
 }
 Future<void> _haveNewOrder(HaveNewOrderEvent e , Emitter emit) async {
   emit(state.copyWith(status: AppStatus.have_new_order));

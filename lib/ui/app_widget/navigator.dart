@@ -79,7 +79,7 @@ class _NavigatorBarState extends State<NavigatorBar> {
       );
     }
     if (state.status.isPreRequestOrder){
-      return PreRequestWidget();
+      return PreRequestWidget(order: state.order!,date:state.date!);
     }
     if (state.status.isNewOrder){
       return OrderWidget();
