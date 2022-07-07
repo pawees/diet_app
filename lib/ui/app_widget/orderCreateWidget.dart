@@ -58,8 +58,7 @@ class OrderCreateWidget extends StatelessWidget {
                 SizedBox(height: 20,),
                 Text('Отделения',style: header1()),
                 SizedBox(height: 25,),
-                Container(
-                  height: 350,// FIXME: relative sizes in project
+                Expanded(
                   child: ListView.builder(
                       shrinkWrap: true,
                       // physics: NeverScrollableScrollPhysics(),

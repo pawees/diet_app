@@ -19,53 +19,12 @@ List<Diets> menuNames = Diets.fetchAll();
 
 
 
-// class _MenuRowWidget extends StatelessWidget {
-//   final List<Diets> menuRow;
-//   const _MenuRowWidget({Key? key,required this.menuRow,}) : super(key: key);
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Column(
-//       children: menuRow.map((data) => _MenuWidgetRow(data: data)).toList(),
-//     );
-    
-//   }
-// }
-
-// class _countBuilder extends StatelessWidget {
-//   const _countBuilder({Key? key}) : super(key: key);
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Text('0');
-    
-//   }
-// }
  _countBuilder(data, AppState state) {
   
   if (state.status.isSelected){return Text(data.count.toString());}
  
     }
-//   class _countBuilder extends StatelessWidget {
-//   _countBuilder({Key? key,required this.data}) : super(key: key);
-//   Diets data;
-  
 
-//   @override
-//   Widget build(BuildContext context) {
-//     return BlocBuilder<AppBloc,AppState>(
-//       builder: (context,state) {
-//          if (state.status.isSelected) {
-//           return Text(data.count.toString());
-//         } else {
-//           return const SizedBox();
-      
-
-//       }});
-    
-//   }
-// }
-//
   
 class SummaryAndBtnWidget extends StatelessWidget {
   const SummaryAndBtnWidget({Key? key, required this.state}) : super(key: key);
@@ -74,10 +33,14 @@ class SummaryAndBtnWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final appBloc = BlocProvider.of<AppBloc>(context);
+    var place = state!.places![state!.selected_id];
+
 
     _next_place(){
       //checking for null diets count,if null drop error.
-      listPlaces.add(Places(id: '1', name: 'ok', diets: menuNames));//id-name - hardcode
+
+      //использовать не лист,а то,что не будет дублироваться MAP<index,Places>
+      listPlaces.add(Places(id: place.id, name: place.name, diets: menuNames));//id-name - hardcode
       menuNames = Diets.fetchAll();
       int len = state!.places!.length - 1;
       int cur = state!.selected_id;
@@ -87,7 +50,7 @@ class SummaryAndBtnWidget extends StatelessWidget {
 
     _formed_order(){
       //check list count not null
-       listPlaces.add(Places(id: '1', name: 'ok', diets: menuNames));//id-name - hardcode
+      listPlaces.add(Places(id: place.id, name: place.name, diets: menuNames));//id-name - hardcode
       menuNames = Diets.fetchAll(); 
       Order order = Order(id:'130-re3-2', places: listPlaces);
       appBloc.add(FormOrderEvent(order));
@@ -194,11 +157,13 @@ class MenuChoiseWidget extends StatelessWidget {
     return BlocBuilder<AppBloc,AppState>(
       builder: (context,state) {
         var place = state.places![state.selected_id];
+      
+
         return  Padding(
             padding: const EdgeInsets.fromLTRB(17, 5, 30, 5),
             child: Column(
               children: [
-                HeaderWidget(),
+                HeaderWidget(title: place.name),
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [

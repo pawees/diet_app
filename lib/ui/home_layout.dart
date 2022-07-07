@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:game_app_training/ui/app_widget/bloc/app_bloc.dart';
+import 'package:game_app_training/ui/app_widget/menuWidget.dart';
 import 'package:game_app_training/ui/app_widget/navigator.dart';
 import 'package:game_app_training/ui/app_widget/orderCreateWidget.dart';
 import 'package:game_app_training/ui/app_widget/preRequestWidget.dart';
@@ -55,7 +56,10 @@ class HomeLayout extends StatelessWidget {
               }
          if (loginBloc.state.status.isSuccess && appBloc.state.status.isPreRequestOrder){
           return PreRequestWidget(order: appBloc.state.order!,date:appBloc.state.date!);
-         }                
+         }
+         if (loginBloc.state.status.isSuccess && appBloc.state.status.isSelected){
+          return MenuChoiseWidget();
+        }                
         else {
           return const SizedBox();
         }

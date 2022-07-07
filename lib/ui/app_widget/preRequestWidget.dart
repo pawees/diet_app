@@ -18,7 +18,7 @@ class PreRequestWidget extends StatelessWidget {
 
     }
     _prev_screen(){
-      appBloc.add(TapCreateOrderEvent(appBloc.state.status));
+      appBloc.add(PreviousScreenEvent());
     }
     return SafeArea(
 

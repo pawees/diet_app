@@ -52,8 +52,10 @@ class AppBloc extends Bloc<AppEvent, AppState> {
   final Map<String,String> data4 = {'id':'3','name':"Наркология(Взрослые)"};
 
 
+
   //
-  final places = [Places.fromJson(data2),Places.fromJson(data3),Places.fromJson(data4)];
+  final places = [Places.fromJson(data2),Places.fromJson(data3),Places.fromJson(data4),
+];
 
 
   emit(state.copyWith(status: AppStatus.create,
@@ -113,7 +115,14 @@ Future<void> _haveNewOrder(HaveNewOrderEvent e , Emitter emit) async {
   emit(state.copyWith(status: AppStatus.have_new_order));
 }
 Future<void> _previousScreen(PreviousScreenEvent e, Emitter emit) async {
-  AppStatus prev_status = state.previous;
-  emit(state.copyWith(status: prev_status));
+  AppStatus current_status = state.status;
+  _set_state(AppStatus cur){ 
+    if (cur == AppStatus.selected) return AppStatus.create;
+    if (cur == AppStatus.create) return AppStatus.order;
+    if (cur == AppStatus.pre_req_order) return AppStatus.create;
+
+
+    };
+  emit(state.copyWith(status: _set_state(current_status)));
 }
 }
