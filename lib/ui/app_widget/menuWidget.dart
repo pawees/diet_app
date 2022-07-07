@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:game_app_training/repository/models/places.dart';
 import 'package:game_app_training/ui/app_widget/bloc/app_bloc.dart';
+import 'package:game_app_training/ui/app_widget/headerWidget.dart';
 import 'package:game_app_training/ui/theme/styles.dart';
 import 'package:game_app_training/ui/theme/main_buttons.dart';
 
@@ -190,52 +191,37 @@ class MenuChoiseWidget extends StatelessWidget {
 
  @override
   Widget build(BuildContext context) {
-
-    _on_pressed(){};
-    
     return BlocBuilder<AppBloc,AppState>(
       builder: (context,state) {
         var place = state.places![state.selected_id];
-        return Scaffold(
-          appBar:AppBar(
-            title: Center(
-              child: Text(
-                  place.name,
-              style: const TextStyle(
-                color: Colors.black, fontSize: 20, fontWeight: FontWeight.w500),
-          )),),
-          body: Padding(
+        return  Padding(
             padding: const EdgeInsets.fromLTRB(17, 5, 30, 5),
-            child: ListView(
-              children: [Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                 SizedBox(height: 25,),
-                 Text('Рацион', style: header1(),),
-                 SizedBox(height: 28,),
-                 Container(
-                  height: 485,
-                   child: ListView.builder(
-                    // child: _MenuRowWidget(menuRow: menuNames),
-                    shrinkWrap: true,
-                    itemBuilder: (context, index) {
-                          if(index == menuNames.length){
-
-                            return SummaryAndBtnWidget(state: state);
-                          }
-                          return _MenuWidgetRow(data: menuNames[index], selected: index, state: state);
-                          },
-                    itemCount: menuNames.length + 1
-                    ),
-                 ),
-                 
-
-                    
-                ],
-              ),
-           ] ),
-          ),
-      );
+            child: Column(
+              children: [
+                HeaderWidget(),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text('Рацион'),
+                  ],
+                ),
+                Expanded(
+                  child: ListView.builder(
+                   // child: _MenuRowWidget(menuRow: menuNames),
+                   shrinkWrap: true,
+                   itemBuilder: (context, index) {
+                         if(index == menuNames.length){
+                
+                           return SummaryAndBtnWidget(state: state);
+                         }
+                         return _MenuWidgetRow(data: menuNames[index], selected: index, state: state);
+                         },
+                   itemCount: menuNames.length + 1
+                   ),
+                ),
+              ],
+            ),
+          );
       }
     );
   }

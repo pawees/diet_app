@@ -42,15 +42,15 @@ class _NavigatorBarState extends State<NavigatorBar> {
       builder: (context,state) {
         return Scaffold(
           body: _buildScreensWidget(state),
-          bottomNavigationBar: BottomNavigationBar(
-            items: [
-              BottomNavigationBarItem(icon: ImageIcon(AssetImage('assets/images/union.png'),), label:'Заявки'),
-              BottomNavigationBarItem(icon: ImageIcon(AssetImage('assets/images/qr_code.png')), label:'QR-коод'),
-              BottomNavigationBarItem(icon: ImageIcon(AssetImage('assets/images/profile.png')), label:'Профиль'),
-            ],
-            currentIndex: _selected,
-            onTap: onSelected,
-          ),
+          // bottomNavigationBar: BottomNavigationBar(
+          //   items: [
+          //     BottomNavigationBarItem(icon: ImageIcon(AssetImage('assets/images/union.png'),), label:'Заявки'),
+          //     BottomNavigationBarItem(icon: ImageIcon(AssetImage('assets/images/qr_code.png')), label:'QR-коод'),
+          //     BottomNavigationBarItem(icon: ImageIcon(AssetImage('assets/images/profile.png')), label:'Профиль'),
+          //   ],
+          //   currentIndex: _selected,
+          //   onTap: onSelected,
+          // ),
       );
       }
     );
