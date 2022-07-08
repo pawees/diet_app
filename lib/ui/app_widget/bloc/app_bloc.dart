@@ -47,20 +47,24 @@ class AppBloc extends Bloc<AppEvent, AppState> {
   "Хирургия(Взрослые)","Наркология(Взрослые)","Детское(Дети,Роженицы)","Травматология(Взрослые)",
   "Хирургия(Взрослые)","Наркология(Взрослые)","Детское(Дети,Роженицы)","Травматология(Взрослые)",];
   
-  final Map<String,String> data2 = {'id':'1','name':"Хирургия(Взрослые)"};
-  final Map<String,String> data3 = {'id':'2','name':"Терапия(Взрослые)"};
-  final Map<String,String> data4 = {'id':'3','name':"Наркология(Взрослые)"};
+  var data2 = {'id':1,'name':"Хирургия(Взрослые)"};
+  var data3 = {'id':2,'name':"Терапия(Взрослые)"};
+  var data4 = {'id':3,'name':"Наркология(Взрослые)"};
 
 
 
   //
   final places = [Places.fromJson(data2),Places.fromJson(data3),Places.fromJson(data4),
 ];
-
+  
+  List<Places> listPlaces = [];
+  Order order = Order(id:'130-re3-2', places: listPlaces);
 
   emit(state.copyWith(status: AppStatus.create,
                        places: places,
-                       previous: e.prev_status)); // create data field
+                       previous: e.prev_status,
+                       order: order
+                       )); // create data field
 
 
   }
@@ -120,8 +124,6 @@ Future<void> _previousScreen(PreviousScreenEvent e, Emitter emit) async {
     if (cur == AppStatus.selected) return AppStatus.create;
     if (cur == AppStatus.create) return AppStatus.order;
     if (cur == AppStatus.pre_req_order) return AppStatus.create;
-
-
     };
   emit(state.copyWith(status: _set_state(current_status)));
 }

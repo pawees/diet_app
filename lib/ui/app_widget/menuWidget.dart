@@ -12,10 +12,8 @@ import 'package:game_app_training/repository/models/order.dart';
 
 
 
-List<Places> listPlaces = [];
 
 
-List<Diets> menuNames = Diets.fetchAll(); 
 
 
 
@@ -40,8 +38,7 @@ class SummaryAndBtnWidget extends StatelessWidget {
       //checking for null diets count,if null drop error.
 
       //использовать не лист,а то,что не будет дублироваться MAP<index,Places>
-      listPlaces.add(Places(id: place.id, name: place.name, diets: menuNames));//id-name - hardcode
-      menuNames = Diets.fetchAll();
+      // menuNames = Diets.fetchAll();
       int len = state!.places!.length - 1;
       int cur = state!.selected_id;
       int next = cur + 1;
@@ -50,9 +47,22 @@ class SummaryAndBtnWidget extends StatelessWidget {
 
     _formed_order(){
       //check list count not null
-      listPlaces.add(Places(id: place.id, name: place.name, diets: menuNames));//id-name - hardcode
-      menuNames = Diets.fetchAll(); 
-      Order order = Order(id:'130-re3-2', places: listPlaces);
+      List<Places> listing = [];
+      List<Places> finalListing = []; 
+      // state!.places!.map((item)=> {if (item.diets != null){listing.add(item)}else{print('bad')}});
+      state!.places!.map((item)=> {if (item.diets != null){listing.add(item)}}).toList();
+ 
+        for (final el in listing){
+        List<Diets> res = el.isFilledMenu();
+        if (res != null){
+          el.diets = res;
+          finalListing.add(el);
+        }
+      };
+
+      //перебрать листинг,если там одни нули то выкинуть снэк бар с ошибкой.FIXME:
+
+      Order order = Order(id:'130-re3-2', places: finalListing );
       appBloc.add(FormOrderEvent(order));
     }
     
@@ -111,12 +121,13 @@ class _MenuWidgetRow extends StatelessWidget {
     final appBloc = BlocProvider.of<AppBloc>(context);
 
     _inc(){
+      //взять стэйт,селект проверить на существование(создать) прибавить
       appBloc.add(ChangeCountEvent(selected));
-
       data.count+=1;
 
     };
     _decr(){
+      //убавить
       appBloc.add(ChangeCountEvent(selected));
       if (data.count == 0) return;
       data.count-=1;
@@ -157,8 +168,14 @@ class MenuChoiseWidget extends StatelessWidget {
     return BlocBuilder<AppBloc,AppState>(
       builder: (context,state) {
         var place = state.places![state.selected_id];
-      
+        if (place.diets == null){
 
+                          List<Diets> menuNames = Diets.fetchAll();
+                          place.diets = menuNames;
+                          // state.order!.places!.add(Places(id: index, name: place.name, diets: menuNames));
+
+                         }
+        
         return  Padding(
             padding: const EdgeInsets.fromLTRB(17, 5, 30, 5),
             child: Column(
@@ -172,16 +189,16 @@ class MenuChoiseWidget extends StatelessWidget {
                 ),
                 Expanded(
                   child: ListView.builder(
-                   // child: _MenuRowWidget(menuRow: menuNames),
                    shrinkWrap: true,
                    itemBuilder: (context, index) {
-                         if(index == menuNames.length){
-                
+                        //проверить стэйт, если нет то заинитить.
+                         if(index == Diets.fetchAll().length){
                            return SummaryAndBtnWidget(state: state);
                          }
-                         return _MenuWidgetRow(data: menuNames[index], selected: index, state: state);
+                         return _MenuWidgetRow(data: place.diets![index], selected: index, state: state);
+
                          },
-                   itemCount: menuNames.length + 1
+                   itemCount: Diets.fetchAll().length + 1
                    ),
                 ),
               ],

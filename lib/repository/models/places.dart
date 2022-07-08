@@ -1,19 +1,37 @@
 import 'package:game_app_training/repository/models/diets.dart';
 
 class Places {
-  String id;
+  int id;
   String name;
   List<Diets>? diets;
 
   Places({required this.id, required this.name,this.diets});
 
  static Places empty = Places(
-    id: '0',
+    id: 0,
     name: 'unknow');
   
+   isFilledMenu(){
+    List<Diets> res = [];
+    for (final el in diets!){
+      if (el.count != 0 ){
+      res.add(el);
+    }
+    }
+    return res;
+  }
+    // List<Diets> isFilledMenu(){
+  //   List<Diets> res = [];
+  //   for (final el in diets!){
+
+  //   if (el.count != 0 ){
+  //     res.add(el);
+  //   }
+  //   return res;
+  // }
   //constructor that convert json to object instance
   factory Places.fromJson(Map<String, dynamic> json) {
-    return Places(id: json['id'] as String,
+    return Places(id: json['id'] as int,
                 name: json['name'] as String,
                 );
     }

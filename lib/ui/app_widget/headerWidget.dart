@@ -18,6 +18,9 @@ class HeaderWidget extends StatelessWidget {
         children: [
                   Row(children: [
             IconButton(
+                iconSize: 16.3,
+                padding: const EdgeInsets.symmetric(horizontal:0.0),
+                alignment: Alignment.centerLeft,
                 icon: ImageIcon(AssetImage('assets/images/chevron.png')),
                 onPressed: _prev_screen),
             Transform(
@@ -26,9 +29,14 @@ class HeaderWidget extends StatelessWidget {
                   style: TextStyle(
                     color: Colors.black, fontSize: 20, fontWeight: FontWeight.w500),
                           ),
-            ),    
+            ),
+            SizedBox(height: 10,)    
                 ],),
-            Divider(height: 3,)]
+            Divider(height: 3,),
+            
+            SizedBox(height: 20,)    
+            
+            ]
 
       ));
 }
