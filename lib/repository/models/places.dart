@@ -19,15 +19,26 @@ class Places {
     }
     return res;
   }
-  // List<Diets> isFilledMenu(){
-  //   List<Diets> res = [];
+  // bool isFilledMenuSum(){
+  //   int count = 0;
   //   for (final el in diets!){
-
-  //   if (el.count != 0 ){
-  //     res.add(el);
+  //     count+=el.count;
+  //   if (count == 0 ){
+  //     return true;
   //   }
-  //   return res;
+  //   return false;
   // }
+  bool isFilledMenuSum(){
+    int count = 0;
+    for (final el in diets!){
+      count+=el.count;}
+    if (count == 0 ){
+      return true;
+    }else{
+      return false;
+    }
+  }
+
   //constructor that convert json to object instance
   factory Places.fromJson(Map<String, dynamic> json) {
     return Places(

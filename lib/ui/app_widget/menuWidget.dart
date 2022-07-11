@@ -114,9 +114,10 @@ class _MenuWidgetRow extends StatelessWidget {
     final appBloc = BlocProvider.of<AppBloc>(context);
 
     _inc() {
-      //взять стэйт,селект проверить на существование(создать) прибавить
       appBloc.add(ChangeCountEvent(selected));
       data.count += 1;
+      appBloc.state.places![state.selected_id].isFilled = true;
+
     }
 
     ;
@@ -125,6 +126,10 @@ class _MenuWidgetRow extends StatelessWidget {
       appBloc.add(ChangeCountEvent(selected));
       if (data.count == 0) return;
       data.count -= 1;
+      if (appBloc.state.places![state.selected_id].isFilledMenuSum()){
+      appBloc.state.places![state.selected_id].isFilled = false;
+
+      } 
     }
 
     ;
@@ -199,7 +204,6 @@ class MenuChoiseWidget extends StatelessWidget {
               child: ListView.builder(
                   shrinkWrap: true,
                   itemBuilder: (context, index) {
-                    //проверить стэйт, если нет то заинитить.
                     if (index == Diets.fetchAll().length) {
                       return SummaryAndBtnWidget(state: state);
                     }

@@ -63,10 +63,15 @@ class OrderCreateWidget extends StatelessWidget {
                       shrinkWrap: true,
                       // physics: NeverScrollableScrollPhysics(),
                       itemBuilder: (context, index) {
+                          if (index == places.length && state.places![index].isFilled){
+                            return ElevatedButton(onPressed: (){}, child: const Text('child'));
+                          }
+                          
                           return PlacesWidget(data: places[index], selected: index);
                           },
                       itemCount: places.length,),
                 ),
+                _builder_form_btn(state, state.selected_id),
               ],
             ),
           ),
@@ -75,6 +80,31 @@ class OrderCreateWidget extends StatelessWidget {
     );
   }
 
+}
+
+_builder_form_btn(state,selected){
+  if(state.places![selected].isFilled){
+    return BtnWidget();
+  }else{
+    return NoBtnWidget();
+  }
+}
+class BtnWidget extends StatelessWidget {
+  const BtnWidget({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+        return ElevatedButton(onPressed: (){}, child: const Text('child'));
+
+  }
+}
+class NoBtnWidget extends StatelessWidget {
+  const NoBtnWidget({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container();
+  }
 }
 
 class PlacesWidget extends StatelessWidget {
@@ -96,13 +126,9 @@ class PlacesWidget extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
         SizedBox(height: 12.5,),
-        Row(
-           children: [
-             Expanded(child: Text(data.name)),
-             SizedBox.fromSize(size:Size.fromRadius(13),child: FittedBox(child: Icon(Icons.chevron_right_sharp))),]
-             ),
-        SizedBox(height: 12.5,),
-        Divider(height: 1,)
+        _builderFilledPlace(data,appBloc,selected),
+        const SizedBox(height: 12.5,),
+        const Divider(height: 1,)
           ],
     
     
@@ -111,6 +137,44 @@ class PlacesWidget extends StatelessWidget {
     
   }
 }
+
+_builderFilledPlace(data,appBloc,selected){
+  
+    return appBloc.state.places![selected].isFilled  ?
+    FilledWidget(data:data) : UnfilledWidget(data:data);
+
+}
+
+class FilledWidget extends StatelessWidget {
+  const FilledWidget({Key? key,this.data}) : super(key: key);
+  final data;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(children: [
+    ImageIcon(AssetImage('assets/images/filledIcon.png')),
+    SizedBox(width: 10,),  
+    Expanded(child: Text(data.name)),
+    SizedBox.fromSize(size:const Size.fromRadius(13),child: const FittedBox(child: Icon(Icons.chevron_right_sharp)))],);
+    
+  }
+}
+
+class UnfilledWidget extends StatelessWidget {
+  const UnfilledWidget({Key? key,this.data}) : super(key: key);
+  final data;
+
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(children: [
+      Expanded(child: Text(data.name)),
+    SizedBox.fromSize(size:const Size.fromRadius(13),child: const FittedBox(child: Icon(Icons.chevron_right_sharp)))],);
+  }
+}
+
+
+
 class Agency extends StatelessWidget {
   const Agency({Key? key,
   this.title,this.address}) : super(key: key);
@@ -122,7 +186,7 @@ class Agency extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Icon(Icons.sunny),
+        ImageIcon(AssetImage('assets/images/filledIcon.png'),color: Colors.blue,),
         SizedBox(width: 10,),
         
         Expanded(
@@ -137,7 +201,15 @@ class Agency extends StatelessWidget {
             ],
           ),
         ),
-        Icon(Icons.pan_tool_alt),
+        IconButton(
+    // iconSize: 16.3,
+    // padding: const EdgeInsets.symmetric(horizontal:0.0),
+    // alignment: Alignment.centerLeft,
+    icon: ImageIcon(AssetImage('assets/images/changeAgency.png'),color: Color.fromARGB(255, 64, 105, 153),),
+    onPressed: (){
+      //get agency event: .request->model->reset_state. FIXME
+
+    }),
       ],
     );
   }
