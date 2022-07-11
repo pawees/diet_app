@@ -61,7 +61,7 @@ class HomeLayout extends StatelessWidget {
           return MenuChoiseWidget();
         }                
         else {
-          return const SizedBox();
+          return NavigatorBar();
         }
       },
     );
