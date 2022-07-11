@@ -4,10 +4,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:game_app_training/ui/app_widget/menuWidget.dart';
 import 'package:game_app_training/ui/app_widget/orderCreateWidget.dart';
 import 'package:game_app_training/ui/app_widget/orderWidget.dart';
+import 'package:game_app_training/ui/app_widget/popupWidget/dialog_got_agency.dart';
 import 'package:game_app_training/ui/app_widget/preRequestWidget.dart';
 import 'package:game_app_training/ui/app_widget/profileWidget.dart';
-
-
 
 class NavigatorBar extends StatefulWidget {
   const NavigatorBar({Key? key}) : super(key: key);
@@ -21,70 +20,86 @@ class _NavigatorBarState extends State<NavigatorBar> {
 
   @override
   Widget build(BuildContext context) {
+    final appBloc = BlocProvider.of<AppBloc>(context);
 
-  final appBloc = BlocProvider.of<AppBloc>(context);
+    void onSelected(int index) {
+      if (_selected == index) return;
 
-  
-  void onSelected(int index){
-    if (_selected == index) return;
-
-    setState((){
-    _selected = index;});
-    if (_selected == 0){
-      appBloc.add(AppInitialEvent());
-    }
-    if (_selected == 2){
-      appBloc.add(TapProfileNavEvent());
-    };
-
-  }
-    return BlocBuilder<AppBloc,AppState>(
-      builder: (context,state) {
-        return Scaffold(
-          body: _buildScreensWidget(state),
-          // bottomNavigationBar: BottomNavigationBar(
-          //   items: [
-          //     BottomNavigationBarItem(icon: ImageIcon(AssetImage('assets/images/union.png'),), label:'Заявки'),
-          //     BottomNavigationBarItem(icon: ImageIcon(AssetImage('assets/images/qr_code.png')), label:'QR-коод'),
-          //     BottomNavigationBarItem(icon: ImageIcon(AssetImage('assets/images/profile.png')), label:'Профиль'),
-          //   ],
-          //   currentIndex: _selected,
-          //   onTap: onSelected,
-          // ),
-      );
+      setState(() {
+        _selected = index;
+      });
+      if (_selected == 0) {
+        appBloc.add(AppInitialEvent());
       }
+      if (_selected == 2) {
+        appBloc.add(TapProfileNavEvent());
+      }
+      ;
+    }
+
+    return BlocConsumer<AppBloc, AppState>(
+      listener: (context, state) {
+        if (state.status.isCreate) {
+          showDialog(
+              context: context,
+              builder: (_) {
+                return AlertDialog(
+                    title: const Text('AlertDialog Title'),
+                    content: const Text('123'),
+                    actions: [
+                      TextButton(onPressed: () {}, child: Text('add'))
+                    ]);
+              });
+        }
+      },
+      builder: (context, state) {
+        return BlocBuilder<AppBloc, AppState>(builder: (context, state) {
+          return Scaffold(
+            body: _buildScreensWidget(state),
+            // bottomNavigationBar: BottomNavigationBar(
+            //   items: [
+            //     BottomNavigationBarItem(icon: ImageIcon(AssetImage('assets/images/union.png'),), label:'Заявки'),
+            //     BottomNavigationBarItem(icon: ImageIcon(AssetImage('assets/images/qr_code.png')), label:'QR-коод'),
+            //     BottomNavigationBarItem(icon: ImageIcon(AssetImage('assets/images/profile.png')), label:'Профиль'),
+            //   ],
+            //   currentIndex: _selected,
+            //   onTap: onSelected,
+            // ),
+          );
+        });
+      },
     );
   }
-  
-   _buildScreensWidget( AppState state) {
-    if (state.status.isOrder){
+
+  _buildScreensWidget(AppState state) {
+    if (state.status.isOrder) {
       return OrderWidget();
     }
-    if (state.status.isProfile){
+    if (state.status.isProfile) {
       return ProfileWidget();
     }
-    if (state.status.isCreate){
+    if (state.status.isCreate) {
+      return AgencyWidget();
       return OrderCreateWidget(places: state.places);
     }
-     if (state.status.isSelected){
+    if (state.status.isSelected) {
       return MenuChoiseWidget();
     }
-    if (state.status.isLoading){
+    if (state.status.isLoading) {
       return Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Container(child: Center(child: CircularProgressIndicator()),),
-     
+          Container(
+            child: Center(child: CircularProgressIndicator()),
+          ),
         ],
       );
     }
-    if (state.status.isPreRequestOrder){
-      return PreRequestWidget(order: state.order!,date:state.date!);
+    if (state.status.isPreRequestOrder) {
+      return PreRequestWidget(order: state.order!, date: state.date!);
     }
-    if (state.status.isNewOrder){
+    if (state.status.isNewOrder) {
       return OrderWidget();
-    } 
-    
+    }
   }
 }
-
