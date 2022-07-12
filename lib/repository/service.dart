@@ -1,5 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:game_app_training/repository/models/order.dart';
+import 'package:game_app_training/repository/session.dart';
+
 import 'models/user.dart';
 import 'models/places.dart';
 
@@ -65,7 +68,8 @@ class HttpBatchServerProxy extends BatchServerProxyBase {
 class GameService {
   Future<User> getToken() async {
     Map details = {'username': 'ИвановИИ', 'password': '12345678'};
-    var proxy = HttpServerProxy('http://diet.web-dev.lite.grp/api/auth/json_rpc/');
+    var proxy = HttpServerProxy('http://diet.dev41359.it-o.ru/api/auth/json_rpc/');
+
     final response = await proxy.call("token", details);
     // json.decode(response);
     // return response;
@@ -73,10 +77,40 @@ class GameService {
       response,
     );
   }
+
+
+  Future<User> refreshAccessToken(String refreshtoken) async {
+    
+    Map details ={'refresh': refreshtoken};
+    var proxy = HttpServerProxy('http://diet.dev41359.it-o.ru/api/auth/json_rpc/');
+    final response = await proxy.call("token.refresh", details);
+        return User.fromJson({'refresh': refreshtoken,'access': response['access']});
+
+  }
+
+  Future<String> getUserInfo() async {
+    var access_token = await SessionState().token_data.getAccessToken();
+    Map<String,String> token_header = {'Authorization':'Bearer $access_token'};
+    Map details ={};
+    var proxy = HttpServerProxy('http://diet.dev41359.it-o.ru/api/json_rpc/', token_header);
+    try{
+    final response = await proxy.call("get_user_info", details);
+    return response[0]['uid_1c'];
+    }
+    catch(e)
+    {
+      print(e);
+      return '';
+    }
+
+
+  }
+
+
   Future<Places> getPlaces(String accessToken) async {
     Map details = {};
     Map<String, String> token_header = {'Authorization':'Bearer $accessToken'};
-    var proxy = HttpServerProxy('http://diet.web-dev.lite.grp/api/auth/json_rpc/',token_header);
+    var proxy = HttpServerProxy('http://diet.dev41359.it-o.ru/api/auth/json_rpc/',token_header);
     final response = await proxy.call("get_customer_info ", details);
     // json.decode(response);
     // return response;
@@ -85,6 +119,21 @@ class GameService {
       response,
     );
     }
+
+
+  Future<List<Order>> getNewOrders() async {
+    var access_token = await SessionState().token_data.getAccessToken();
+    Map details = {};
+    Map<String,String> token_header = {'Authorization':'Bearer $access_token'};
+    var proxy = HttpServerProxy('http://diet.dev41359.it-o.ru/api/auth/json_rpc/',token_header);
+    final response = await proxy.call("get_table_info", details);
+    //убрать первый элемент
+    return List<Order>.from(
+          response.map(
+                (data) => Order.fromJson(data),
+          ));
+    // return [ Order(id: "12") ];
+  }
 
   // Uri getUrl({
   //   required String url,

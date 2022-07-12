@@ -2,6 +2,7 @@ import 'package:game_app_training/repository/models/places.dart';
 
 class Order {
   String id;
+  //add agency
   List<Places>? places;
 
   Order({required this.id,  this.places});

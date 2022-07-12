@@ -29,6 +29,9 @@ class HomeLayout extends StatelessWidget {
               width: MediaQuery.of(context).size.width,
               child: AuthScreenWidget());
         }
+        if (loginBloc.state.status.isNeedAuth && appBloc.state.status.isInitial) {
+          return AuthScreenWidget();
+        } 
         if (loginBloc.state.status.isSuccess && appBloc.state.status.isInitial) {
           return NavigatorBar();
         } 
