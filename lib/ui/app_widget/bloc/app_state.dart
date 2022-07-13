@@ -1,6 +1,18 @@
 part of 'app_bloc.dart';
 
-enum AppStatus { initial,profile, order, error, loading, create, next_date, selected, next_page, pre_req_order,have_new_order}
+enum AppStatus {
+  initial,
+  profile,
+  order,
+  error,
+  loading,
+  create,
+  next_date,
+  selected,
+  next_page,
+  pre_req_order,
+  have_new_order
+}
 
 extension AppStatusX on AppStatus {
   bool get isInitial => this == AppStatus.initial;
@@ -25,44 +37,50 @@ class AppState extends Equatable {
     int? selected_id,
     this.status = AppStatus.initial,
     List<Places>? places,
-    String? date,}) : places = places ?? const [],
-                                date = date ?? '', agency = agency ?? '',
-                                selected_id = selected_id ?? 0, 
-                                is_filled = is_filled ?? false,
-                                order = order ?? null ;
-  
+    List<Diets>? diets,
+    String? date,
+  })  : places = places ?? const [],
+        date = date ?? '',
+        agency = agency ?? '',
+        selected_id = selected_id ?? 0,
+        is_filled = is_filled ?? false,
+        order = order ?? null,
+        diets = diets ?? const [];
+
   final bool is_filled;
   final int selected_id;
   final AppStatus status;
   final AppStatus previous;
   final List<Places>? places;
+  final List<Diets>? diets;
   final String? date;
   final String? agency;
   final Order? order;
 
   @override
-  List<Object?> get props => [status,previous,places,date,agency,order];
+  List<Object?> get props =>
+      [status, previous, places, diets, date, agency, order];
 
   AppState copyWith({
     AppStatus? status,
     AppStatus? previous,
     List<Places>? places,
+    List<Diets>? diets,
     String? date,
     int? selected_id,
     bool? is_filled,
     String? agency,
     Order? order,
-
   }) {
     return AppState(
-      status: status ?? this.status,
-      previous: previous?? this.previous,
-      places: places ?? this.places,
-      date: date ?? this.date,
-      agency: agency ?? this.agency,
-      selected_id: selected_id ?? this.selected_id,
-      is_filled: is_filled ?? this.is_filled,
-      order: order ?? this.order
-    );
+        status: status ?? this.status,
+        previous: previous ?? this.previous,
+        places: places ?? this.places,
+        diets: diets ?? this.diets,
+        date: date ?? this.date,
+        agency: agency ?? this.agency,
+        selected_id: selected_id ?? this.selected_id,
+        is_filled: is_filled ?? this.is_filled,
+        order: order ?? this.order);
   }
 }

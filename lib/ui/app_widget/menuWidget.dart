@@ -117,7 +117,6 @@ class _MenuWidgetRow extends StatelessWidget {
       appBloc.add(ChangeCountEvent(selected));
       data.count += 1;
       appBloc.state.places![state.selected_id].isFilled = true;
-
     }
 
     ;
@@ -126,10 +125,9 @@ class _MenuWidgetRow extends StatelessWidget {
       appBloc.add(ChangeCountEvent(selected));
       if (data.count == 0) return;
       data.count -= 1;
-      if (appBloc.state.places![state.selected_id].isFilledMenuSum()){
-      appBloc.state.places![state.selected_id].isFilled = false;
-
-      } 
+      if (appBloc.state.places![state.selected_id].isFilledMenuSum()) {
+        appBloc.state.places![state.selected_id].isFilled = false;
+      }
     }
 
     ;
@@ -181,9 +179,10 @@ class MenuChoiseWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<AppBloc, AppState>(builder: (context, state) {
+      var diets = state.diets;
       var place = state.places![state.selected_id];
       if (place.diets == null) {
-        List<Diets> menuNames = Diets.fetchAll();
+        List<Diets> menuNames = diets!;
         place.diets = menuNames;
         // state.order!.places!.add(Places(id: index, name: place.name, diets: menuNames));
 
@@ -204,15 +203,16 @@ class MenuChoiseWidget extends StatelessWidget {
               child: ListView.builder(
                   shrinkWrap: true,
                   itemBuilder: (context, index) {
-                    if (index == Diets.fetchAll().length) {
+                    if (index == diets!.length) {
                       return SummaryAndBtnWidget(state: state);
                     }
                     return _MenuWidgetRow(
-                        data: place.diets![index],
+                        data: diets![index],
+                        // data: place.diets![index],
                         selected: index,
                         state: state);
                   },
-                  itemCount: Diets.fetchAll().length + 1),
+                  itemCount: diets!.length + 1),
             ),
           ],
         ),

@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:game_app_training/repository/app_repository.dart';
+import 'package:game_app_training/repository/models/diets.dart';
 import 'package:game_app_training/repository/models/order.dart';
 import 'package:game_app_training/repository/session.dart';
 
@@ -14,12 +15,10 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     on<LoginEvent>(_loginEventHandler);
     _initial();
   }
-  
+
   final GameRepository appRepository;
   final _token = SessionState();
 
-
-  
   void _initial() {
     on<AuthorizeEvent>(_loginButtonTapped);
     on<ShowSnackBarEvent>(_showSnackBarTapped);
@@ -35,35 +34,33 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     //
     emit(state.copyWith(status: LoginStatus.loading));
 
-    try{
-
+    try {
       var refreshToken = await _token.token_data.getRefreshToken();
-      final new_access_token = await appRepository.refreshAccessToken(refreshToken!);
+      final new_access_token =
+          await appRepository.refreshAccessToken(refreshToken!);
       _token.token_data.setAccessToken(new_access_token.access);
 
+      //test methods
+      // List<Diets> diets = await appRepository.getDiets();
 
       //save to state uid from this method
       await appRepository.getUserInfo();
-      List<Order> orders = await appRepository.getNewOrders();
-
+      // List<Order> orders = await appRepository.getNewOrders();
 
       emit(state.copyWith(status: LoginStatus.success));
-
-   }catch(e){
-
+    } catch (e) {
+      print(e);
       emit(state.copyWith(status: LoginStatus.authorizeProc));
-   
-   }
+    }
 
     // var q = await _token.token_data.getAccessToken();
     // var q1 = 1;
-    
-    
+
     // emit(state.copyWith(status: LoginStatus.loading));
     // await Future.delayed(const Duration(seconds: 2));
     // emit(state.copyWith(status: LoginStatus.success));
     // await Future.delayed(const Duration(seconds: 2));
-    
+
     // try {
     //      final login = await appRepository.getToken();
     //      await _token.token_data.setAccessToken(login.access);
@@ -72,7 +69,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     //   print(error);
     //   emit(state.copyWith(status: LoginStatus.error));
     // }
-   
+
     // emit(state.copyWith(status: LoginStatus.authorizeProc));
     // emit(state.copyWith(status: LoginStatus.loading));
     // try {
@@ -83,7 +80,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     //   await _token.token_data.setAccessToken('z1asd434');
     //   var qwe = await _token.token_data.getAccessToken();
     //   var q11 = '132';
-      
+
     //   // emit(state.copyWith(status: LoginStatus.success));
     // } catch (error, stacktrace) {
     //   print(error);
@@ -101,7 +98,8 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
 
   Future<void> _loginButtonTapped(AuthorizeEvent e, Emitter emit) async {
     emit(state.copyWith(status: LoginStatus.loading));
-    try {//FIXME
+    try {
+      //FIXME
       //NEED
       // from e.login/password
       // then e.passwordControlle.clean()
@@ -110,11 +108,9 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       await _token.token_data.setRefreshToken(loginToken.refresh);
       emit(state.copyWith(status: LoginStatus.success));
     } catch (error, stacktrace) {
-      
       print(stacktrace);
       emit(state.copyWith(status: LoginStatus.error));
       //LiginStatus.error must be AlertDialog, -> LoginBuilder-should stay LoginConsumer.
     }
-   
   }
 }

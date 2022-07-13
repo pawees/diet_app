@@ -1,5 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:game_app_training/repository/models/agency.dart';
+import 'package:game_app_training/repository/models/diets.dart';
 import 'package:game_app_training/repository/models/order.dart';
 import 'package:game_app_training/repository/session.dart';
 
@@ -14,8 +16,6 @@ import 'package:http/http.dart';
 // import 'package:infogames/repository/models/model_barrel.dart';
 // import 'package:infogames/repository/models/result_error.dart';
 
-
-
 class HttpServerProxy extends ServerProxyBase {
   /// customHeaders, for jwts and other niceties
   Map<String, String> customHeaders;
@@ -28,7 +28,11 @@ class HttpServerProxy extends ServerProxyBase {
   @override
   Future<String> transmit(String package) async {
     /// This is HttpRequest from dart:html
-    var headers = {'Content-Type': 'application/json; charset=UTF-8'};
+    var headers = {
+      'Content-Type': 'application/json; charset=utf-8',
+      'Accept-Encoding': 'gzip, deflate, br',
+      'Accept-Language': 'ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7'
+    };
 
     if (customHeaders.isNotEmpty) {
       headers.addAll(customHeaders);
@@ -68,7 +72,8 @@ class HttpBatchServerProxy extends BatchServerProxyBase {
 class GameService {
   Future<User> getToken() async {
     Map details = {'username': 'ИвановИИ', 'password': '12345678'};
-    var proxy = HttpServerProxy('http://diet.dev41359.it-o.ru/api/auth/json_rpc/');
+    var proxy =
+        HttpServerProxy('https://diet.dev41359.it-o.ru/api/auth/json_rpc/');
 
     final response = await proxy.call("token", details);
     // json.decode(response);
@@ -78,63 +83,95 @@ class GameService {
     );
   }
 
-
   Future<User> refreshAccessToken(String refreshtoken) async {
-    
-    Map details ={'refresh': refreshtoken};
-    var proxy = HttpServerProxy('http://diet.dev41359.it-o.ru/api/auth/json_rpc/');
+    Map details = {'refresh': refreshtoken};
+    var proxy =
+        HttpServerProxy('https://diet.dev41359.it-o.ru/api/auth/json_rpc/');
     final response = await proxy.call("token.refresh", details);
-        return User.fromJson({'refresh': refreshtoken,'access': response['access']});
-
+    return User.fromJson(
+        {'refresh': refreshtoken, 'access': response['access']});
   }
 
   Future<String> getUserInfo() async {
     var access_token = await SessionState().token_data.getAccessToken();
-    Map<String,String> token_header = {'Authorization':'Bearer $access_token'};
-    Map details ={};
-    var proxy = HttpServerProxy('http://diet.dev41359.it-o.ru/api/json_rpc/', token_header);
-    try{
-    final response = await proxy.call("get_user_info", details);
-    return response[0]['uid_1c'];
-    }
-    catch(e)
-    {
+    Map<String, String> token_header = {
+      'Authorization': 'Bearer $access_token'
+    };
+    Map details = {};
+    var proxy = HttpServerProxy(
+        'https://diet.dev41359.it-o.ru/api/json_rpc/', token_header);
+    try {
+      final response = await proxy.call("get_user_info", details);
+      return response[0]['uid_1c'];
+    } catch (e) {
       print(e);
       return '';
     }
-
-
   }
-
 
   Future<Places> getPlaces(String accessToken) async {
     Map details = {};
-    Map<String, String> token_header = {'Authorization':'Bearer $accessToken'};
-    var proxy = HttpServerProxy('http://diet.dev41359.it-o.ru/api/auth/json_rpc/',token_header);
+    Map<String, String> token_header = {'Authorization': 'Bearer $accessToken'};
+    var proxy = HttpServerProxy(
+        'https://diet.dev41359.it-o.ru/api/auth/json_rpc/', token_header);
     final response = await proxy.call("get_customer_info ", details);
     // json.decode(response);
     // return response;
-    var q = 1 ;
+    var q = 1;
     return Places.fromJson(
       response,
     );
-    }
-
+  }
 
   Future<List<Order>> getNewOrders() async {
     var access_token = await SessionState().token_data.getAccessToken();
     Map details = {};
-    Map<String,String> token_header = {'Authorization':'Bearer $access_token'};
-    var proxy = HttpServerProxy('http://diet.dev41359.it-o.ru/api/auth/json_rpc/',token_header);
+    Map<String, String> token_header = {
+      'Authorization': 'Bearer $access_token'
+    };
+    var proxy = HttpServerProxy(
+        'https://diet.dev41359.it-o.ru/api/auth/json_rpc/', token_header);
     final response = await proxy.call("get_table_info", details);
     //убрать первый элемент
-    return List<Order>.from(
-          response.map(
-                (data) => Order.fromJson(data),
-          ));
-    // return [ Order(id: "12") ];
+    return List<Order>.from(response.map(
+      (data) => Order.fromJson(data),
+    ));
   }
 
+  Future<bool> sendOrder(order) async {
+    var access_token = await SessionState().token_data.getAccessToken();
+    Map details = {'order': order.toJson};
+    return true;
+    //превратить это всё в {}...
+  }
+
+  Future<List<Diets>> getDiets() async {
+    var access_token = await SessionState().token_data.getAccessToken();
+    Map details = {};
+    Map<String, String> token_header = {
+      'Authorization': 'Bearer $access_token'
+    };
+    var proxy = HttpServerProxy(
+        'https://diet.dev41359.it-o.ru/api/auth/json_rpc/', token_header);
+
+    final response = await proxy.call("get_diet_info", details);
+    response.removeAt(0);
+    return (response as List).map((it) => Diets.fromJson(it)).toList();
+  }
+
+  Future<List<Agency>> getAgencies() async {
+    var access_token = await SessionState().token_data.getAccessToken();
+    Map details = {};
+    Map<String, String> token_header = {
+      'Authorization': 'Bearer $access_token'
+    };
+    var proxy = HttpServerProxy(
+        'https://diet.dev41359.it-o.ru/api/auth/json_rpc/', token_header);
+
+    final response = await proxy.call("get_customer_info", details);
+    response.removeAt(0);
+    return (response as List).map((it) => Agency.fromJson(it)).toList();
+  }
   // Uri getUrl({
   //   required String url,
   //   Map<String, String>? extraParameters,

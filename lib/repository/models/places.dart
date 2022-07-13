@@ -3,10 +3,11 @@ import 'package:game_app_training/repository/models/diets.dart';
 class Places {
   int id;
   String name;
+  String? uid_1c;
   bool isFilled = false;
   List<Diets>? diets;
 
-  Places({required this.id, required this.name, this.diets});
+  Places({required this.id, required this.name, this.diets, this.uid_1c});
 
   static Places empty = Places(id: 0, name: 'unknow');
 
@@ -19,6 +20,7 @@ class Places {
     }
     return res;
   }
+
   // bool isFilledMenuSum(){
   //   int count = 0;
   //   for (final el in diets!){
@@ -28,13 +30,14 @@ class Places {
   //   }
   //   return false;
   // }
-  bool isFilledMenuSum(){
+  bool isFilledMenuSum() {
     int count = 0;
-    for (final el in diets!){
-      count+=el.count;}
-    if (count == 0 ){
+    for (final el in diets!) {
+      count += el.count;
+    }
+    if (count == 0) {
       return true;
-    }else{
+    } else {
       return false;
     }
   }
