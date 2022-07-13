@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:game_app_training/repository/app_repository.dart';
+import 'package:game_app_training/repository/models/agency.dart';
 import 'package:game_app_training/repository/models/diets.dart';
 import 'package:game_app_training/repository/models/order.dart';
 import 'package:game_app_training/repository/session.dart';
@@ -41,6 +42,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       _token.token_data.setAccessToken(new_access_token.access);
 
       //test methods
+      //List<Agency> diets = await appRepository.getAgencies();
       // List<Diets> diets = await appRepository.getDiets();
 
       //save to state uid from this method

@@ -1,4 +1,5 @@
 // import 'package:infogames/repository/models/model_barrel.dart';
+import 'package:game_app_training/repository/models/agency.dart';
 import 'package:game_app_training/repository/models/order.dart';
 import 'package:game_app_training/repository/models/diets.dart';
 
@@ -23,6 +24,7 @@ class GameRepository {
 
   Future<bool> sendNewOrder(order) async => service.sendOrder(order);
   Future<List<Diets>> getDiets() async => service.getDiets();
+  Future<List<Agency>> getAgencies() async => service.getAgencies();
 
   // Future<Game> getGames() async => service.getGames();
   // Future get_all() async => true;
