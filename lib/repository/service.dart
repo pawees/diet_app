@@ -28,6 +28,10 @@ class HttpServerProxy extends ServerProxyBase {
   @override
   Future<String> transmit(String package) async {
     /// This is HttpRequest from dart:html
+    String strToUtf8Charset(String _str) {
+      return Utf8Decoder().convert(_str.toString().codeUnits);
+    }
+
     var headers = {
       'Content-Type': 'application/json; charset=utf-8',
       'Accept-Encoding': 'gzip, deflate, br',
@@ -42,8 +46,7 @@ class HttpServerProxy extends ServerProxyBase {
     // print(package);
     var resp =
         await http.post(Uri.parse(resource), body: package, headers: headers);
-
-    var body = resp.body;
+    var body = strToUtf8Charset(resp.body);
     if (resp.statusCode == 204 || body.isEmpty) {
       return ''; // we'll return an empty string for null response
     } else {
@@ -109,20 +112,6 @@ class GameService {
     }
   }
 
-  Future<Places> getPlaces(String accessToken) async {
-    Map details = {};
-    Map<String, String> token_header = {'Authorization': 'Bearer $accessToken'};
-    var proxy = HttpServerProxy(
-        'https://diet.dev41359.it-o.ru/api/auth/json_rpc/', token_header);
-    final response = await proxy.call("get_customer_info ", details);
-    // json.decode(response);
-    // return response;
-    var q = 1;
-    return Places.fromJson(
-      response,
-    );
-  }
-
   Future<List<Order>> getNewOrders() async {
     var access_token = await SessionState().token_data.getAccessToken();
     Map details = {};
@@ -140,7 +129,26 @@ class GameService {
 
   Future<bool> sendOrder(order) async {
     var access_token = await SessionState().token_data.getAccessToken();
-    Map details = {'order': order.toJson};
+
+    List diets_list = [];
+    for (final p in order.places) {
+      for (final d in p.diets) {
+        Map diet_request = {
+          "user": order.user_uid,
+          "customer": order.agency_uid,
+          "customer_division": p.uid_1c,
+          "peoples_category": "3ba6eff9-ba94-11ea-aab0-005056aeb06b",
+          "diet": d.uid,
+          "date_execution": order.date,
+          "count": d.count
+        };
+        diets_list.add(diet_request);
+      }
+    }
+
+    Map details = {'order': diets_list};
+    print(details);
+
     return true;
     //превратить это всё в {}...
   }
@@ -172,6 +180,22 @@ class GameService {
     response.removeAt(0);
     return (response as List).map((it) => Agency.fromJson(it)).toList();
   }
+
+  Future<List<Places>> getPlaces(uid) async {
+    var access_token = await SessionState().token_data.getAccessToken();
+    Map details = {"uid_1c": uid};
+    Map<String, String> token_header = {
+      'Authorization': 'Bearer $access_token'
+    };
+    var proxy = HttpServerProxy(
+        'https://diet.dev41359.it-o.ru/api/auth/json_rpc/', token_header);
+
+    final response =
+        await proxy.call("get_customer_divisions_by_customer", details);
+    response.removeAt(0);
+    return (response as List).map((it) => Places.fromJson(it)).toList();
+  }
+
   // Uri getUrl({
   //   required String url,
   //   Map<String, String>? extraParameters,

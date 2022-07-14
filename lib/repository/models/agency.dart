@@ -1,11 +1,17 @@
 import 'package:game_app_training/repository/models/places.dart';
 
 class Agency {
-  String? name;
-  String? address;
-  String? uid_1c;
+  final String? name;
+  final String? address;
+  final String? uid_1c;
 
-  Agency({this.name, this.address, this.uid_1c});
+  const Agency({this.name, this.address, this.uid_1c});
+
+  static const empty = Agency(
+    name: '',
+    address: '',
+    uid_1c: '',
+  );
 
   //constructor that convert json to object instance
   factory Agency.fromJson(Map<String, dynamic> json) {

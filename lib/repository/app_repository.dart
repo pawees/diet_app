@@ -18,13 +18,12 @@ class GameRepository {
       service.refreshAccessToken(refresh_token);
   Future<String> getUserInfo() async => service.getUserInfo();
 
-  Future<Places> getPlaces(String access_token) async =>
-      service.getPlaces(access_token);
   Future<List<Order>> getNewOrders() async => service.getNewOrders();
 
   Future<bool> sendNewOrder(order) async => service.sendOrder(order);
   Future<List<Diets>> getDiets() async => service.getDiets();
   Future<List<Agency>> getAgencies() async => service.getAgencies();
+  Future<List<Places>> getPlaces(uid) async => service.getPlaces(uid);
 
   // Future<Game> getGames() async => service.getGames();
   // Future get_all() async => true;

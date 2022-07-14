@@ -57,8 +57,16 @@ class SummaryAndBtnWidget extends StatelessWidget {
       ;
 
       //перебрать листинг,если там одни нули то выкинуть снэк бар с ошибкой.FIXME:
+      var user_uid = state!.user_uid;
+      var date = state!.date;
+      var agency = state!.agency!.uid_1c;
 
-      Order order = Order(id: '130-re3-2', places: finalListing);
+      Order order = Order(
+          id: '130-re3-2',
+          places: finalListing,
+          user_uid: user_uid,
+          date: date,
+          agency_uid: agency);
       appBloc.add(FormOrderEvent(order));
     }
 

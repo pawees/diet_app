@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:game_app_training/repository/app_repository.dart';
+import 'package:game_app_training/repository/models/agency.dart';
 import 'package:game_app_training/repository/models/diets.dart';
 import 'package:game_app_training/repository/models/order.dart';
 import 'package:game_app_training/repository/models/places.dart';
@@ -37,46 +38,28 @@ class AppBloc extends Bloc<AppEvent, AppState> {
   }
 
   Future<void> _getCreate(TapCreateOrderEvent e, Emitter emit) async {
-    var access_token = await _token.token_data.getAccessToken();
     emit(state.copyWith(status: AppStatus.loading));
-    await Future.delayed(const Duration(seconds: 1));
-    // final places = await appRepository.getPlaces(access_token!);
 
-    // this is plug,like data were received
-    final List<String> data = [
-      "Хирургия(Взрослые)",
-      "Наркология(Взрослые)",
-      "Детское(Дети,Роженицы)",
-      "Травматология(Взрослые)",
-      "Хирургия(Взрослые)",
-      "Наркология(Взрослые)",
-      "Детское(Дети,Роженицы)",
-      "Травматология(Взрослые)",
-      "Хирургия(Взрослые)",
-      "Наркология(Взрослые)",
-      "Детское(Дети,Роженицы)",
-      "Травматология(Взрослые)",
-    ];
+    var user_uid = await appRepository.getUserInfo();
+    var agencies = await appRepository.getAgencies();
 
-    var data2 = {'id': 1, 'name': "Хирургия(Взрослые)"};
-    var data3 = {'id': 2, 'name': "Терапия(Взрослые)"};
-    var data4 = {'id': 3, 'name': "Наркология(Взрослые)"};
+    //FIXME this opened modal window,
+    //build from availeble agencies.
 
     //
-    final places = [
-      Places.fromJson(data2),
-      Places.fromJson(data3),
-      Places.fromJson(data4),
-    ];
 
     List<Places> listPlaces = [];
-    Order order = Order(id: '130-re3-2', places: listPlaces);
+    Order order = Order(id: '000-00-0', places: listPlaces);
+
+    final places = await appRepository.getPlaces(agencies[0].uid_1c);
 
     emit(state.copyWith(
+        agency: agencies[0], //FIXME temp
         status: AppStatus.create,
         places: places,
         previous: e.prev_status,
-        order: order)); // create data field
+        order: order,
+        user_uid: user_uid)); // create data field
   }
 
   Future<void> _getOrders(AppEvent e, Emitter emit) async {

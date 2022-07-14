@@ -1,15 +1,14 @@
 import 'package:game_app_training/repository/models/diets.dart';
 
 class Places {
-  int id;
   String name;
   String? uid_1c;
   bool isFilled = false;
   List<Diets>? diets;
 
-  Places({required this.id, required this.name, this.diets, this.uid_1c});
+  Places({required this.name, this.diets, this.uid_1c});
 
-  static Places empty = Places(id: 0, name: 'unknow');
+  static Places empty = Places(name: 'unknow');
 
   isFilledMenu() {
     List<Diets> res = [];
@@ -21,15 +20,6 @@ class Places {
     return res;
   }
 
-  // bool isFilledMenuSum(){
-  //   int count = 0;
-  //   for (final el in diets!){
-  //     count+=el.count;
-  //   if (count == 0 ){
-  //     return true;
-  //   }
-  //   return false;
-  // }
   bool isFilledMenuSum() {
     int count = 0;
     for (final el in diets!) {
@@ -45,14 +35,14 @@ class Places {
   //constructor that convert json to object instance
   factory Places.fromJson(Map<String, dynamic> json) {
     return Places(
-      id: json['id'] as int,
-      name: json['name'] as String,
+      uid_1c: json['uid_1c'] as String,
+      name: json['name_1c'] as String,
     );
   }
 
   //a method that convert object to json
   Map<String, dynamic> toJson() => {
-        'uid_1c': id,
+        'uid_1c': uid_1c,
         'name': name,
       };
 }

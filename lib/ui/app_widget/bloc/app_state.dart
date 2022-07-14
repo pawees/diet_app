@@ -32,20 +32,22 @@ class AppState extends Equatable {
   const AppState({
     Order? order,
     this.previous = AppStatus.initial,
-    String? agency,
+    Agency? agency,
     bool? is_filled,
     int? selected_id,
     this.status = AppStatus.initial,
     List<Places>? places,
     List<Diets>? diets,
     String? date,
+    String? user_uid,
   })  : places = places ?? const [],
         date = date ?? '',
-        agency = agency ?? '',
+        agency = agency ?? Agency.empty,
         selected_id = selected_id ?? 0,
         is_filled = is_filled ?? false,
         order = order ?? null,
-        diets = diets ?? const [];
+        diets = diets ?? const [],
+        user_uid = user_uid ?? '';
 
   final bool is_filled;
   final int selected_id;
@@ -54,12 +56,13 @@ class AppState extends Equatable {
   final List<Places>? places;
   final List<Diets>? diets;
   final String? date;
-  final String? agency;
+  final Agency? agency;
   final Order? order;
+  final String? user_uid;
 
   @override
   List<Object?> get props =>
-      [status, previous, places, diets, date, agency, order];
+      [status, previous, places, diets, date, agency, order, user_uid];
 
   AppState copyWith({
     AppStatus? status,
@@ -69,8 +72,9 @@ class AppState extends Equatable {
     String? date,
     int? selected_id,
     bool? is_filled,
-    String? agency,
+    Agency? agency,
     Order? order,
+    String? user_uid,
   }) {
     return AppState(
         status: status ?? this.status,
@@ -81,6 +85,7 @@ class AppState extends Equatable {
         agency: agency ?? this.agency,
         selected_id: selected_id ?? this.selected_id,
         is_filled: is_filled ?? this.is_filled,
-        order: order ?? this.order);
+        order: order ?? this.order,
+        user_uid: user_uid ?? this.user_uid);
   }
 }
