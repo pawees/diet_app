@@ -11,7 +11,8 @@ enum AppStatus {
   selected,
   next_page,
   pre_req_order,
-  have_new_order
+  have_new_order,
+  choose_agency
 }
 
 extension AppStatusX on AppStatus {
@@ -26,6 +27,7 @@ extension AppStatusX on AppStatus {
   bool get isNextPage => this == AppStatus.next_page;
   bool get isPreRequestOrder => this == AppStatus.pre_req_order;
   bool get isNewOrder => this == AppStatus.have_new_order;
+  bool get ischooseAgency => this == AppStatus.choose_agency;
 }
 
 class AppState extends Equatable {
@@ -38,6 +40,7 @@ class AppState extends Equatable {
     this.status = AppStatus.initial,
     List<Places>? places,
     List<Diets>? diets,
+    List<Agency>? agencies,
     String? date,
     String? user_uid,
   })  : places = places ?? const [],
@@ -47,6 +50,7 @@ class AppState extends Equatable {
         is_filled = is_filled ?? false,
         order = order ?? null,
         diets = diets ?? const [],
+        agencies = agencies ?? const [],
         user_uid = user_uid ?? '';
 
   final bool is_filled;
@@ -55,20 +59,31 @@ class AppState extends Equatable {
   final AppStatus previous;
   final List<Places>? places;
   final List<Diets>? diets;
+  final List<Agency> agencies;
   final String? date;
   final Agency? agency;
   final Order? order;
   final String? user_uid;
 
   @override
-  List<Object?> get props =>
-      [status, previous, places, diets, date, agency, order, user_uid];
+  List<Object?> get props => [
+        status,
+        previous,
+        places,
+        diets,
+        date,
+        agency,
+        order,
+        user_uid,
+        agencies
+      ];
 
   AppState copyWith({
     AppStatus? status,
     AppStatus? previous,
     List<Places>? places,
     List<Diets>? diets,
+    List<Agency>? agencies,
     String? date,
     int? selected_id,
     bool? is_filled,
@@ -86,6 +101,7 @@ class AppState extends Equatable {
         selected_id: selected_id ?? this.selected_id,
         is_filled: is_filled ?? this.is_filled,
         order: order ?? this.order,
-        user_uid: user_uid ?? this.user_uid);
+        user_uid: user_uid ?? this.user_uid,
+        agencies: agencies ?? this.agencies);
   }
 }

@@ -7,6 +7,7 @@ import 'package:game_app_training/repository/models/order.dart';
 import 'package:game_app_training/repository/models/places.dart';
 import 'package:game_app_training/repository/session.dart';
 import 'package:game_app_training/ui/app_widget/orderCreateWidget.dart';
+import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 
 import 'package:jiffy/jiffy.dart';
 
@@ -24,10 +25,9 @@ class AppBloc extends Bloc<AppEvent, AppState> {
   final _token = SessionState();
 
   void _initial() {
-    on<AppEvent>(_getOrders);
-    on<AppInitialEvent>(_getOrdersNew);
+    on<AppInitialEvent>(_initialApp);
     on<TapProfileNavEvent>(_getProfile);
-    on<TapCreateOrderEvent>(_getCreate);
+    on<TapCreateOrderEvent>(_chooseAgency);
     on<TapNextDateEvent>(_nextDate);
     on<GetMenuEvent>(_getMenu);
     on<ChangeCountEvent>(_changeCount);
@@ -35,44 +35,42 @@ class AppBloc extends Bloc<AppEvent, AppState> {
     on<FormOrderEvent>(_formOrder);
     on<HaveNewOrderEvent>(_haveNewOrder);
     on<PreviousScreenEvent>(_previousScreen);
+    on<TapAgencyChoiseEvent>(_getOrderScreen);
   }
 
-  Future<void> _getCreate(TapCreateOrderEvent e, Emitter emit) async {
-    emit(state.copyWith(status: AppStatus.loading));
+  Future<void> _getOrderScreen(TapAgencyChoiseEvent e, Emitter emit) async {
+    var agencies = await appRepository.getAgencies();
 
+    final places = await appRepository.getPlaces(agencies[e.id].uid_1c);
+    emit(state.copyWith(
+      agency: agencies[e.id], //FIXME temp
+      status: AppStatus.create,
+      places: places,
+    ));
+    SmartDialog.dismiss();
+  }
+
+  Future<void> _chooseAgency(TapCreateOrderEvent e, Emitter emit) async {
+    emit(state.copyWith(
+      status: AppStatus.choose_agency,
+    ));
+  }
+
+  Future<void> _initialApp(AppInitialEvent e, Emitter emit) async {
     var user_uid = await appRepository.getUserInfo();
     var agencies = await appRepository.getAgencies();
 
-    //FIXME this opened modal window,
-    //build from availeble agencies.
-
-    //
+    //try{}catch get orders.if no orders fetch 'no new orders'.
+    //and new orders if exist.
 
     List<Places> listPlaces = [];
     Order order = Order(id: '000-00-0', places: listPlaces);
-
-    final places = await appRepository.getPlaces(agencies[0].uid_1c);
-
     emit(state.copyWith(
-        agency: agencies[0], //FIXME temp
-        status: AppStatus.create,
-        places: places,
-        previous: e.prev_status,
+        status: AppStatus.order,
         order: order,
-        user_uid: user_uid)); // create data field
-  }
-
-  Future<void> _getOrders(AppEvent e, Emitter emit) async {
-    // do some check user for authorization
-    // emit(AuthorizeState(msg: "login_sucess"));
-  }
-
-  Future<void> _getOrdersNew(AppInitialEvent e, Emitter emit) async {
-    // do some check user for authorization
-    // emit(AuthorizeState(msg: "login_sucess"));
-    emit(state.copyWith(status: AppStatus.loading, date: Jiffy().format()));
-    await Future.delayed(const Duration(seconds: 2));
-    emit(state.copyWith(status: AppStatus.order));
+        user_uid: user_uid,
+        date: Jiffy().format(),
+        agencies: agencies));
   }
 
   Future<void> _getProfile(TapProfileNavEvent e, Emitter emit) async {
