@@ -29,15 +29,12 @@ class HomePage extends StatelessWidget {
             BlocProvider<AppBloc>(
               create: (context) => AppBloc(
                 appRepository: context.read<GameRepository>(),
-              )..add(
-                  AppInitialEvent(),
-                ),
+              ),
             ),
           ],
           child: HomeLayout(),
         ),
       ),
-      
     );
   }
 }

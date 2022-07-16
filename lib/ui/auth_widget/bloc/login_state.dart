@@ -1,6 +1,14 @@
 part of 'login_bloc.dart';
 
-enum LoginStatus { initial, success, error, loading, authorized, authorizeProc }
+enum LoginStatus {
+  initial,
+  success,
+  error,
+  loading,
+  authorized,
+  authorizeProc,
+  failiture
+}
 
 extension LoginStatusX on LoginStatus {
   bool get isInitial => this == LoginStatus.initial;
@@ -9,20 +17,19 @@ extension LoginStatusX on LoginStatus {
   bool get isLoading => this == LoginStatus.loading;
   bool get isAuth => this == LoginStatus.authorized;
   bool get isNeedAuth => this == LoginStatus.authorizeProc;
+  bool get isFailiture => this == LoginStatus.failiture;
 }
 
 class LoginState extends Equatable {
-  const LoginState({this.status = LoginStatus.initial});
+  const LoginState({this.status = LoginStatus.initial, this.failiture = null});
   final LoginStatus status;
+  final failiture;
 
   @override
-  List<Object?> get props => [status];
+  List<Object?> get props => [status, failiture];
 
-  LoginState copyWith({
-    LoginStatus? status,
-  }) {
+  LoginState copyWith({LoginStatus? status, final failiture}) {
     return LoginState(
-      status: status ?? this.status,
-    );
+        status: status ?? this.status, failiture: failiture ?? this.failiture);
   }
 }

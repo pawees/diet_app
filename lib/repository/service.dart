@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:game_app_training/repository/models/agency.dart';
 import 'package:game_app_training/repository/models/diets.dart';
 import 'package:game_app_training/repository/models/order.dart';
+import 'package:game_app_training/repository/models/result_error.dart';
 import 'package:game_app_training/repository/session.dart';
 
 import 'models/user.dart';
@@ -10,6 +11,7 @@ import 'models/places.dart';
 
 import 'package:http/http.dart' as http;
 import 'package:jsonrpc2/jsonrpc2.dart';
+
 // import 'package:flutter_dotenv/flutter_dotenv.dart';
 // import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
@@ -42,13 +44,12 @@ class HttpServerProxy extends ServerProxyBase {
       headers.addAll(customHeaders);
     }
 
-    // useful for debugging!
-    // print(package);
+    // Здесь можно обработать все коды ошибок.
     var resp =
         await http.post(Uri.parse(resource), body: package, headers: headers);
     var body = strToUtf8Charset(resp.body);
     if (resp.statusCode == 204 || body.isEmpty) {
-      return ''; // we'll return an empty string for null response
+      throw ErrorConnection('Упс...Что-то не так с соединением');
     } else {
       return body;
     }
@@ -91,6 +92,7 @@ class GameService {
     var proxy =
         HttpServerProxy('https://diet.dev41359.it-o.ru/api/auth/json_rpc/');
     final response = await proxy.call("token.refresh", details);
+    //New refresh token
     return User.fromJson(
         {'refresh': refreshtoken, 'access': response['access']});
   }
@@ -139,7 +141,7 @@ class GameService {
           "customer_division": p.uid_1c,
           "peoples_category": "3ba6eff9-ba94-11ea-aab0-005056aeb06b",
           "diet": d.uid,
-          "date_execution": order.date,
+          "date_execution": order.date.date_for_request,
           "count": d.count
         };
         diets_list.add(diet_request);

@@ -2,14 +2,19 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:game_app_training/repository/app_repository.dart';
 import 'package:game_app_training/repository/models/agency.dart';
+import 'package:game_app_training/repository/models/date.dart';
 import 'package:game_app_training/repository/models/diets.dart';
 import 'package:game_app_training/repository/models/order.dart';
 import 'package:game_app_training/repository/models/places.dart';
+import 'package:game_app_training/repository/models/result_error.dart';
 import 'package:game_app_training/repository/session.dart';
 import 'package:game_app_training/ui/app_widget/orderCreateWidget.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
+import 'package:rpc_exceptions/rpc_exceptions.dart';
 
 import 'package:jiffy/jiffy.dart';
+
+import '../../auth_widget/bloc/login_bloc.dart';
 
 part 'app_event.dart';
 part 'app_state.dart';
@@ -23,6 +28,28 @@ class AppBloc extends Bloc<AppEvent, AppState> {
 
   final GameRepository appRepository;
   final _token = SessionState();
+
+  Future<void> _refresh_token() async {
+    var refreshToken = await _token.token_data.getRefreshToken();
+    final new_access_token =
+        await appRepository.refreshAccessToken(refreshToken!);
+    _token.token_data.setAccessToken(new_access_token.access);
+  }
+
+  Future<void> _exceptionsHandler(error) async {
+    print('Exceptions handler Active');
+    if (error is ErrorConnection) {
+      emit(state.copyWith(status: AppStatus.error));
+    }
+
+    if (error is RuntimeException) {
+      emit(state.copyWith(status: AppStatus.exite));
+      await Future.delayed(const Duration(seconds: 2));
+      emit(state.copyWith(status: AppStatus.initial));
+    } else {
+      emit(state.copyWith(status: AppStatus.error)); //FIXME common error
+    }
+  }
 
   void _initial() {
     on<AppInitialEvent>(_initialApp);
@@ -39,15 +66,21 @@ class AppBloc extends Bloc<AppEvent, AppState> {
   }
 
   Future<void> _getOrderScreen(TapAgencyChoiseEvent e, Emitter emit) async {
-    var agencies = await appRepository.getAgencies();
-
-    final places = await appRepository.getPlaces(agencies[e.id].uid_1c);
-    emit(state.copyWith(
-      agency: agencies[e.id], //FIXME temp
-      status: AppStatus.create,
-      places: places,
-    ));
+    emit(state.copyWith(status: AppStatus.loading));
     SmartDialog.dismiss();
+    try {
+      await _refresh_token();
+
+      var agencies = await appRepository.getAgencies();
+      final places = await appRepository.getPlaces(agencies[e.id].uid_1c);
+      emit(state.copyWith(
+        agency: agencies[e.id], //FIXME temp
+        status: AppStatus.create,
+        places: places,
+      ));
+    } catch (error) {
+      _exceptionsHandler(error);
+    }
   }
 
   Future<void> _chooseAgency(TapCreateOrderEvent e, Emitter emit) async {
@@ -57,20 +90,30 @@ class AppBloc extends Bloc<AppEvent, AppState> {
   }
 
   Future<void> _initialApp(AppInitialEvent e, Emitter emit) async {
-    var user_uid = await appRepository.getUserInfo();
-    var agencies = await appRepository.getAgencies();
+    await Future.delayed(const Duration(seconds: 1));
 
-    //try{}catch get orders.if no orders fetch 'no new orders'.
-    //and new orders if exist.
+    try {
+      var user_uid = await appRepository.getUserInfo();
+      var agencies = await appRepository.getAgencies();
 
-    List<Places> listPlaces = [];
-    Order order = Order(id: '000-00-0', places: listPlaces);
-    emit(state.copyWith(
-        status: AppStatus.order,
-        order: order,
-        user_uid: user_uid,
-        date: Jiffy().format(),
-        agencies: agencies));
+      //try{}catch get orders.if no orders fetch 'no new orders'.
+      //and new orders if exist.
+      await Jiffy.locale('ru');
+      Date date = Date(
+          dd_mm_yyyy: Jiffy().format('dd.MM.yyyy'),
+          day_of_week: Jiffy().format('EEEE'),
+          date_for_request: Jiffy().format('dd-MM-yyyy'));
+      List<Places> listPlaces = [];
+      Order order = Order(id: '000-00-0', places: listPlaces);
+      emit(state.copyWith(
+          status: AppStatus.order,
+          order: order,
+          user_uid: user_uid,
+          date: date,
+          agencies: agencies));
+    } catch (error) {
+      _exceptionsHandler(error);
+    }
   }
 
   Future<void> _getProfile(TapProfileNavEvent e, Emitter emit) async {
@@ -80,19 +123,31 @@ class AppBloc extends Bloc<AppEvent, AppState> {
   }
 
   Future<void> _nextDate(TapNextDateEvent e, Emitter emit) async {
+    await Jiffy.locale('ru');
+    Date date = Date(
+        dd_mm_yyyy:
+            Jiffy().add(duration: Duration(days: e.count)).format('dd.MM.yyyy'),
+        day_of_week: Jiffy().add(duration: Duration(days: e.count)).EEEE,
+        date_for_request: Jiffy()
+            .add(duration: Duration(days: e.count))
+            .format('dd-MM-yyyy'));
     var prev = state.date;
     print(prev);
-    emit(state.copyWith(
-        status: AppStatus.create,
-        date: Jiffy().add(duration: Duration(days: e.count)).EEEE));
+    emit(state.copyWith(status: AppStatus.create, date: date));
   }
 
   Future<void> _getMenu(GetMenuEvent e, Emitter emit) async {
     //FIXME
-    emit(state.copyWith(status: AppStatus.loading));
-    List<Diets> diets = await appRepository.getDiets();
-    emit(state.copyWith(
-        status: AppStatus.selected, selected_id: e.id, diets: diets));
+    try {
+      await _refresh_token();
+
+      emit(state.copyWith(status: AppStatus.loading));
+      List<Diets> diets = await appRepository.getDiets();
+      emit(state.copyWith(
+          status: AppStatus.selected, selected_id: e.id, diets: diets));
+    } catch (error) {
+      _exceptionsHandler(error);
+    }
   }
 
   Future<void> _changeCount(ChangeCountEvent e, Emitter emit) async {
@@ -113,11 +168,14 @@ class AppBloc extends Bloc<AppEvent, AppState> {
   }
 
   Future<void> _haveNewOrder(HaveNewOrderEvent e, Emitter emit) async {
-    bool is_recieve_new_order = await appRepository.sendNewOrder(state.order);
+    try {
+      await _refresh_token();
 
-    //
-
-    emit(state.copyWith(status: AppStatus.have_new_order));
+      bool is_recieve_new_order = await appRepository.sendNewOrder(state.order);
+      emit(state.copyWith(status: AppStatus.have_new_order));
+    } catch (error) {
+      _exceptionsHandler(error);
+    }
   }
 
   Future<void> _previousScreen(PreviousScreenEvent e, Emitter emit) async {

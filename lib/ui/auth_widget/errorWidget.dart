@@ -2,11 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'bloc/login_bloc.dart';
 
-class AuthErrorWidget extends StatelessWidget {
-  const AuthErrorWidget({Key? key}) : super(key: key);
+class NotConnectErrorWidget extends StatelessWidget {
+  const NotConnectErrorWidget({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    _onPressed() {
+      //loginBloc.isAuth
+    }
     return BlocBuilder<LoginBloc, LoginState>(
       builder: (context, state) {
         if (state.status.isError) {
@@ -14,7 +17,13 @@ class AuthErrorWidget extends StatelessWidget {
             height: MediaQuery.of(context).size.height,
             width: MediaQuery.of(context).size.width,
             child: Center(
-              child: Text('error'),
+              child: Column(
+                children: [
+                  Text('error'),
+                  ElevatedButton(
+                      onPressed: _onPressed, child: Text('Попробовать ещё'))
+                ],
+              ),
             ),
           );
         } else {

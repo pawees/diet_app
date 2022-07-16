@@ -4,8 +4,12 @@ import 'package:game_app_training/repository/app_repository.dart';
 import 'package:game_app_training/repository/models/agency.dart';
 import 'package:game_app_training/repository/models/diets.dart';
 import 'package:game_app_training/repository/models/order.dart';
+import 'package:game_app_training/repository/models/result_error.dart';
 import 'package:game_app_training/repository/session.dart';
+import 'package:jsonrpc2/jsonrpc2.dart';
+import 'dart:convert';
 
+import 'package:rpc_exceptions/rpc_exceptions.dart';
 part 'login_event.dart';
 part 'login_state.dart';
 
@@ -27,13 +31,8 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   }
 
   Future<void> _isAuth(LoginEvent e, Emitter emit) async {
-    //берем рефреш токен - если нет,то на страницу авторизации
-    //обновляем ацесс токен - если нет,то на страницу авторизации
-    //делаем запрос на получение - если нет,то на страницу авторизации
-    //делаем запрос на получение активных заявок - сохраняем их в стэйт.
-    //если их нет,то рисуем экран новых заявок нет
-    //
     emit(state.copyWith(status: LoginStatus.loading));
+    //FIXME вместо лоадинг нужна красивая картинка роспитание.
 
     try {
       var refreshToken = await _token.token_data.getRefreshToken();
@@ -41,18 +40,17 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
           await appRepository.refreshAccessToken(refreshToken!);
       _token.token_data.setAccessToken(new_access_token.access);
 
-      //test methods
-      //List<Agency> diets = await appRepository.getAgencies();
-      // List<Diets> diets = await appRepository.getDiets();
-
-      //save to state uid from this method
       await appRepository.getUserInfo();
-      // List<Order> orders = await appRepository.getNewOrders();
 
       emit(state.copyWith(status: LoginStatus.success));
-    } catch (e) {
-      print(e);
-      emit(state.copyWith(status: LoginStatus.authorizeProc));
+    } catch (error) {
+      print(error);
+
+      if (error is ErrorConnection) {
+        emit(state.copyWith(status: LoginStatus.error));
+      } else {
+        emit(state.copyWith(status: LoginStatus.authorizeProc));
+      }
     }
 
     // var q = await _token.token_data.getAccessToken();
@@ -110,9 +108,18 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       await _token.token_data.setRefreshToken(loginToken.refresh);
       emit(state.copyWith(status: LoginStatus.success));
     } catch (error, stacktrace) {
-      print(stacktrace);
-      emit(state.copyWith(status: LoginStatus.error));
-      //LiginStatus.error must be AlertDialog, -> LoginBuilder-should stay LoginConsumer.
+      if (error is ErrorConnection) {
+        emit(state.copyWith(status: LoginStatus.error));
+      }
+      if (error is RuntimeException) if (error.message ==
+          "Authentication failed: No active account found with the given credentials") {
+        final e = 'Неправильный логин или пароль...';
+        emit(state.copyWith(status: LoginStatus.failiture, failiture: e));
+        emit(state.copyWith(status: LoginStatus.authorizeProc));
+      } else {
+        print(stacktrace);
+        emit(state.copyWith(status: LoginStatus.error));
+      }
     }
   }
 }

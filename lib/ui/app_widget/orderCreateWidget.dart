@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:game_app_training/repository/models/date.dart';
 import 'package:game_app_training/ui/app_widget/bloc/app_bloc.dart';
 import 'package:jiffy/jiffy.dart';
 import 'package:game_app_training/ui/theme/styles.dart';
@@ -273,7 +274,7 @@ class DateWidget extends StatelessWidget {
     required this.date,
   }) : super(key: key);
 
-  final String date;
+  final Date date;
 
   @override
   Widget build(BuildContext context) {
@@ -299,8 +300,11 @@ class DateWidget extends StatelessWidget {
         Expanded(
             child: Column(
           children: [
-            Text(date),
-            Text('сегодняшнее число'),
+            Text(date.dd_mm_yyyy.toString(), style: h20_400()),
+            Text(
+              date.day_of_week.toString(),
+              style: h13_400(),
+            ),
           ],
         )),
         IconButton(onPressed: _next, icon: Icon(Icons.chevron_right_sharp)),

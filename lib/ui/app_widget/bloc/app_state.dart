@@ -12,7 +12,8 @@ enum AppStatus {
   next_page,
   pre_req_order,
   have_new_order,
-  choose_agency
+  choose_agency,
+  exite
 }
 
 extension AppStatusX on AppStatus {
@@ -28,6 +29,7 @@ extension AppStatusX on AppStatus {
   bool get isPreRequestOrder => this == AppStatus.pre_req_order;
   bool get isNewOrder => this == AppStatus.have_new_order;
   bool get ischooseAgency => this == AppStatus.choose_agency;
+  bool get isExite => this == AppStatus.exite;
 }
 
 class AppState extends Equatable {
@@ -41,10 +43,10 @@ class AppState extends Equatable {
     List<Places>? places,
     List<Diets>? diets,
     List<Agency>? agencies,
-    String? date,
+    Date? date,
     String? user_uid,
   })  : places = places ?? const [],
-        date = date ?? '',
+        date = date ?? Date.empty,
         agency = agency ?? Agency.empty,
         selected_id = selected_id ?? 0,
         is_filled = is_filled ?? false,
@@ -60,7 +62,7 @@ class AppState extends Equatable {
   final List<Places>? places;
   final List<Diets>? diets;
   final List<Agency> agencies;
-  final String? date;
+  final Date? date;
   final Agency? agency;
   final Order? order;
   final String? user_uid;
@@ -84,7 +86,7 @@ class AppState extends Equatable {
     List<Places>? places,
     List<Diets>? diets,
     List<Agency>? agencies,
-    String? date,
+    Date? date,
     int? selected_id,
     bool? is_filled,
     Agency? agency,

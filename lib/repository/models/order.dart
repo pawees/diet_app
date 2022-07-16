@@ -1,10 +1,11 @@
+import 'package:game_app_training/repository/models/date.dart';
 import 'package:game_app_training/repository/models/places.dart';
 
 class Order {
   String id;
   String? agency_uid;
   String? user_uid;
-  String? date;
+  Date? date;
   List<Places>? places;
 
   Order(
