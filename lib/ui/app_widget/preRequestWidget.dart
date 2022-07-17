@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:game_app_training/repository/models/date.dart';
 import 'package:game_app_training/ui/app_widget/bloc/app_bloc.dart';
 import 'package:game_app_training/ui/app_widget/headerWidget.dart';
 import 'package:game_app_training/ui/theme/styles.dart';
@@ -11,7 +12,7 @@ class PreRequestWidget extends StatelessWidget {
 
   final order;
   //agency
-  final date;
+  final Date date;
 
   @override
   Widget build(BuildContext context) {
@@ -23,8 +24,14 @@ class PreRequestWidget extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           HeaderWidget(title: 'Список заявки'),
+          SizedBox(
+            height: 12,
+          ),
           Text('Дата', style: header1()),
-          Text(date),
+          Text(
+            date.dd_mm_yyyy.toString(),
+            style: h20_400(),
+          ),
           // _build_data_widget(call hive order);
           SizedBox(
             height: 16,

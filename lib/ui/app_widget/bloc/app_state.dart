@@ -13,7 +13,8 @@ enum AppStatus {
   pre_req_order,
   have_new_order,
   choose_agency,
-  exite
+  exite,
+  selected_certain_order
 }
 
 extension AppStatusX on AppStatus {
@@ -30,6 +31,7 @@ extension AppStatusX on AppStatus {
   bool get isNewOrder => this == AppStatus.have_new_order;
   bool get ischooseAgency => this == AppStatus.choose_agency;
   bool get isExite => this == AppStatus.exite;
+  bool get isSelectedCertainOrder => this == AppStatus.selected_certain_order;
 }
 
 class AppState extends Equatable {
@@ -39,24 +41,29 @@ class AppState extends Equatable {
     Agency? agency,
     bool? is_filled,
     int? selected_id,
+    int? selected_order,
     this.status = AppStatus.initial,
     List<Places>? places,
     List<Diets>? diets,
     List<Agency>? agencies,
     Date? date,
     String? user_uid,
+    List<Order>? orders,
   })  : places = places ?? const [],
         date = date ?? Date.empty,
         agency = agency ?? Agency.empty,
         selected_id = selected_id ?? 0,
+        selected_order = selected_order ?? 0,
         is_filled = is_filled ?? false,
         order = order ?? null,
         diets = diets ?? const [],
         agencies = agencies ?? const [],
-        user_uid = user_uid ?? '';
+        user_uid = user_uid ?? '',
+        orders = orders ?? const [];
 
   final bool is_filled;
   final int selected_id;
+  final int selected_order;
   final AppStatus status;
   final AppStatus previous;
   final List<Places>? places;
@@ -66,6 +73,7 @@ class AppState extends Equatable {
   final Agency? agency;
   final Order? order;
   final String? user_uid;
+  final List<Order>? orders;
 
   @override
   List<Object?> get props => [
@@ -77,7 +85,9 @@ class AppState extends Equatable {
         agency,
         order,
         user_uid,
-        agencies
+        agencies,
+        orders,
+        selected_order
       ];
 
   AppState copyWith({
@@ -88,10 +98,12 @@ class AppState extends Equatable {
     List<Agency>? agencies,
     Date? date,
     int? selected_id,
+    int? selected_order,
     bool? is_filled,
     Agency? agency,
     Order? order,
     String? user_uid,
+    List<Order>? orders,
   }) {
     return AppState(
         status: status ?? this.status,
@@ -104,6 +116,8 @@ class AppState extends Equatable {
         is_filled: is_filled ?? this.is_filled,
         order: order ?? this.order,
         user_uid: user_uid ?? this.user_uid,
-        agencies: agencies ?? this.agencies);
+        agencies: agencies ?? this.agencies,
+        orders: orders ?? this.orders,
+        selected_order: selected_order ?? this.selected_order);
   }
 }

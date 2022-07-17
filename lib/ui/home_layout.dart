@@ -69,22 +69,21 @@ class HomeLayout extends StatelessWidget {
             //     appBloc.state.status.isProfile) {
             //   return NavigatorBar();
             // }
-            // if (loginBloc.state.status.isSuccess &&
-            //     appBloc.state.status.isCreate) {
-            //   return OrderCreateWidget(
-            //     places: appBloc.state.places!,
-            //   );
-            // }
+            if (loginBloc.state.status.isSuccess &&
+                appBloc.state.status.isCreate) {
+              return OrderCreateWidget(
+                places: appBloc.state.places!,
+              );
+            }
             // if (loginBloc.state.status.isSuccess &&
             //     appBloc.state.status.isPreRequestOrder) {
             //   return PreRequestWidget(
             //       order: appBloc.state.order!, date: appBloc.state.date!);
             // }
-            // if (loginBloc.state.status.isSuccess &&
-            //     appBloc.state.status.isSelected) {
-            //   return MenuChoiseWidget();
-            // }
-            else {
+            if (loginBloc.state.status.isSuccess &&
+                appBloc.state.status.isSelected) {
+              return MenuChoiseWidget();
+            } else {
               return const LoadingWidget();
             }
           },

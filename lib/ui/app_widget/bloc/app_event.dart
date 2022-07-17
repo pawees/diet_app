@@ -51,3 +51,8 @@ class TapAgencyChoiseEvent extends AppEvent {
   int id;
   TapAgencyChoiseEvent(this.id);
 }
+
+class GetCertainOrderEvent extends AppEvent {
+  int id;
+  GetCertainOrderEvent(this.id);
+}

@@ -83,7 +83,9 @@ class SummaryAndBtnWidget extends StatelessWidget {
             ],
           ),
           Container(
-              height: 52, width: 152, child: formedBtn(context, _formed_order))
+              height: 52,
+              width: 152,
+              child: OrangeBtn(context, _formed_order, 'Готово'))
         ],
       );
     } else {

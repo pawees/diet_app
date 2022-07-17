@@ -1,8 +1,10 @@
+import 'package:game_app_training/repository/models/agency.dart';
 import 'package:game_app_training/repository/models/date.dart';
 import 'package:game_app_training/repository/models/places.dart';
 
 class Order {
   String id;
+  Agency? agency;
   String? agency_uid;
   String? user_uid;
   Date? date;
@@ -13,7 +15,8 @@ class Order {
       this.places,
       this.agency_uid,
       this.date,
-      this.user_uid});
+      this.user_uid,
+      this.agency});
 
   //constructor that convert json to object instance
   factory Order.fromJson(Map<String, dynamic> json) {

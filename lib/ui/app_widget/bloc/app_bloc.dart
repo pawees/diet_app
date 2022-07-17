@@ -63,6 +63,7 @@ class AppBloc extends Bloc<AppEvent, AppState> {
     on<HaveNewOrderEvent>(_haveNewOrder);
     on<PreviousScreenEvent>(_previousScreen);
     on<TapAgencyChoiseEvent>(_getOrderScreen);
+    on<GetCertainOrderEvent>(_getCertainOrder);
   }
 
   Future<void> _getOrderScreen(TapAgencyChoiseEvent e, Emitter emit) async {
@@ -95,22 +96,74 @@ class AppBloc extends Bloc<AppEvent, AppState> {
     try {
       var user_uid = await appRepository.getUserInfo();
       var agencies = await appRepository.getAgencies();
-
+      //Fake DATA!!!!---------------------------------------------------->
+      List<Order> orders = [
+        Order(
+            id: '1',
+            places: [
+              Places(name: 'unknow', diets: [Diets(count: 13, name: 'name')])
+            ],
+            agency_uid: agencies[0].uid_1c,
+            date: Date(
+                date_for_request: '2022-09-09',
+                day_of_week: 'monday',
+                dd_mm_yyyy: '2022-09-09'),
+            user_uid: '123',
+            agency: Agency(
+                name: 'Областная больница',
+                address: 'ул.Кирова',
+                uid_1c: agencies[0].uid_1c)),
+        Order(
+            id: '1',
+            places: [
+              Places(name: 'unknow', diets: [Diets(count: 13, name: 'name')])
+            ],
+            agency_uid: agencies[0].uid_1c,
+            date: Date(
+                date_for_request: '2022-09-09',
+                day_of_week: 'monday',
+                dd_mm_yyyy: '2022-09-09'),
+            user_uid: '123',
+            agency: Agency(
+                name: 'Областная больница',
+                address: 'ул.Кирова',
+                uid_1c: agencies[0].uid_1c)),
+        Order(
+            id: '1',
+            places: [
+              Places(name: 'unknow', diets: [Diets(count: 13, name: 'name')])
+            ],
+            //---------------------------------------------------->
+            agency_uid: agencies[0].uid_1c,
+            date: Date(
+                date_for_request: '2022-09-09',
+                day_of_week: 'monday',
+                dd_mm_yyyy: '2022-09-09'),
+            user_uid: '123',
+            agency: Agency(
+                name: 'Областная больница',
+                address: 'ул.Кирова',
+                uid_1c: agencies[0].uid_1c)),
+      ];
       //try{}catch get orders.if no orders fetch 'no new orders'.
       //and new orders if exist.
+
       await Jiffy.locale('ru');
       Date date = Date(
           dd_mm_yyyy: Jiffy().format('dd.MM.yyyy'),
           day_of_week: Jiffy().format('EEEE'),
           date_for_request: Jiffy().format('dd-MM-yyyy'));
+
       List<Places> listPlaces = [];
+
       Order order = Order(id: '000-00-0', places: listPlaces);
       emit(state.copyWith(
           status: AppStatus.order,
           order: order,
           user_uid: user_uid,
           date: date,
-          agencies: agencies));
+          agencies: agencies,
+          orders: orders));
     } catch (error) {
       _exceptionsHandler(error);
     }
@@ -150,6 +203,22 @@ class AppBloc extends Bloc<AppEvent, AppState> {
     }
   }
 
+  Future<void> _getCertainOrder(GetCertainOrderEvent e, Emitter emit) async {
+    //FIXME
+
+    try {
+      // await _refresh_token();
+
+      // emit(state.copyWith(status: AppStatus.loading));
+      emit(state.copyWith(
+        status: AppStatus.selected_certain_order,
+        selected_order: e.id,
+      ));
+    } catch (error) {
+      _exceptionsHandler(error);
+    }
+  }
+
   Future<void> _changeCount(ChangeCountEvent e, Emitter emit) async {
     emit(state.copyWith(
       status: AppStatus.create,
@@ -184,6 +253,7 @@ class AppBloc extends Bloc<AppEvent, AppState> {
       if (cur == AppStatus.selected) return AppStatus.create;
       if (cur == AppStatus.create) return AppStatus.order;
       if (cur == AppStatus.pre_req_order) return AppStatus.create;
+      if (cur == AppStatus.selected_certain_order) return AppStatus.order;
     }
 
     ;

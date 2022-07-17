@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:game_app_training/repository/models/date.dart';
 import 'package:game_app_training/ui/app_widget/bloc/app_bloc.dart';
+import 'package:game_app_training/ui/app_widget/headerWidget.dart';
 import 'package:jiffy/jiffy.dart';
 import 'package:game_app_training/ui/theme/styles.dart';
 import 'package:game_app_training/repository/models/places.dart';
@@ -18,89 +19,64 @@ class OrderCreateWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final appBloc = BlocProvider.of<AppBloc>(context);
-    _on_pressed() {
-      appBloc.add(PreviousScreenEvent());
-    }
-
     return BlocBuilder<AppBloc, AppState>(builder: (context, state) {
-      return Scaffold(
-        appBar: AppBar(
-          leading: IconButton(
-            icon: ImageIcon(AssetImage('assets/images/chevron.png')),
-            onPressed: _on_pressed,
-          ),
-          title: Transform(
-            transform: Matrix4.translationValues(
-                MediaQuery.of(context).size.width / 6, 0.0, 0.0),
-            child: Text(
-              'Новая заявка',
-              style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 20,
-                  fontWeight: FontWeight.w500),
+      return Padding(
+        padding: const EdgeInsets.fromLTRB(17, 5, 30, 5),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            HeaderWidget(title: 'Новая заявка'),
+            Text('Дата', style: header1()),
+            SizedBox(
+              height: 12,
             ),
-          ),
-        ),
-        body: Padding(
-          padding: const EdgeInsets.fromLTRB(17, 5, 30, 5),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Text('Дата', style: header1()),
-              SizedBox(
-                height: 12,
-              ),
-              _buildDateWidget(state),
-              // DateWidget(date: state.date!),
-              SizedBox(
-                height: 21,
-              ),
-              Divider(
-                height: 1,
-              ),
-              SizedBox(
-                height: 16,
-              ),
+            _buildDateWidget(state),
+            // DateWidget(date: state.date!),
+            SizedBox(
+              height: 21,
+            ),
+            Divider(
+              height: 1,
+            ),
+            SizedBox(
+              height: 16,
+            ),
 
-              Text('Учреждение', style: header1()),
-              SizedBox(
-                height: 16,
-              ),
-              _Agency(
-                  title: state.agency!.name, address: state.agency!.address),
-              SizedBox(
-                height: 20,
-              ),
-              Divider(
-                height: 1,
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              Text('Отделения', style: header1()),
-              SizedBox(
-                height: 25,
-              ),
-              Expanded(
-                child: ListView.builder(
-                  shrinkWrap: true,
-                  // physics: NeverScrollableScrollPhysics(),
-                  itemBuilder: (context, index) {
-                    if (index == places.length &&
-                        state.places![index].isFilled) {
-                      return ElevatedButton(
-                          onPressed: () {}, child: const Text('child'));
-                    }
+            Text('Учреждение', style: header1()),
+            SizedBox(
+              height: 16,
+            ),
+            _Agency(title: state.agency!.name, address: state.agency!.address),
+            SizedBox(
+              height: 20,
+            ),
+            Divider(
+              height: 1,
+            ),
+            SizedBox(
+              height: 20,
+            ),
+            Text('Отделения', style: header1()),
+            SizedBox(
+              height: 25,
+            ),
+            Expanded(
+              child: ListView.builder(
+                shrinkWrap: true,
+                // physics: NeverScrollableScrollPhysics(),
+                itemBuilder: (context, index) {
+                  if (index == places.length && state.places![index].isFilled) {
+                    return ElevatedButton(
+                        onPressed: () {}, child: const Text('child'));
+                  }
 
-                    return PlacesWidget(data: places[index], selected: index);
-                  },
-                  itemCount: places.length,
-                ),
+                  return PlacesWidget(data: places[index], selected: index);
+                },
+                itemCount: places.length,
               ),
-              _builder_form_btn(state, state.selected_id),
-            ],
-          ),
+            ),
+            _builder_form_btn(state, state.selected_id),
+          ],
         ),
       );
     });
