@@ -114,7 +114,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       if (error is RuntimeException) if (error.message ==
           "Authentication failed: No active account found with the given credentials") {
         final e = 'Неправильный логин или пароль...';
-        emit(state.copyWith(status: LoginStatus.failiture, failiture: e));
+        emit(state.copyWith(status: LoginStatus.failure, failiture: e));
         emit(state.copyWith(status: LoginStatus.authorizeProc));
       } else {
         print(stacktrace);

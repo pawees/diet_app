@@ -108,3 +108,48 @@ smartDialog(context, state) {
         );
       });
 }
+
+smartSuccessDialog(context, state) {
+  final appBloc = BlocProvider.of<AppBloc>(context);
+  SmartDialog.show(
+      useAnimation: true,
+      clickMaskDismiss: false,
+      builder: (_) {
+        return Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            Container(
+                height: 300, //FIXME
+                width: 500,
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(10),
+                        topRight: Radius.circular(10)),
+                    color: Colors.white),
+                alignment: Alignment.topCenter,
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    children: [
+                      Row(
+                        children: [
+                          Expanded(
+                              child: const SizedBox(
+                            width: 20,
+                          )),
+                          IconButton(
+                              onPressed: () {
+                                appBloc.add(AppInitialEvent());
+                                SmartDialog.dismiss();
+                              },
+                              icon: const Icon(Icons.close_rounded)),
+                        ],
+                      ),
+                      // ImageIcon(AssetImage('assets/images/qwe.png')),
+                    ],
+                  ),
+                )),
+          ],
+        );
+      });
+}

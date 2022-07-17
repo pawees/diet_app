@@ -7,7 +7,7 @@ enum LoginStatus {
   loading,
   authorized,
   authorizeProc,
-  failiture
+  failure
 }
 
 extension LoginStatusX on LoginStatus {
@@ -17,19 +17,19 @@ extension LoginStatusX on LoginStatus {
   bool get isLoading => this == LoginStatus.loading;
   bool get isAuth => this == LoginStatus.authorized;
   bool get isNeedAuth => this == LoginStatus.authorizeProc;
-  bool get isFailiture => this == LoginStatus.failiture;
+  bool get isFailure => this == LoginStatus.failure;
 }
 
 class LoginState extends Equatable {
-  const LoginState({this.status = LoginStatus.initial, this.failiture = null});
+  const LoginState({this.status = LoginStatus.initial, this.failure = null});
   final LoginStatus status;
-  final failiture;
+  final failure;
 
   @override
-  List<Object?> get props => [status, failiture];
+  List<Object?> get props => [status, failure];
 
   LoginState copyWith({LoginStatus? status, final failiture}) {
     return LoginState(
-        status: status ?? this.status, failiture: failiture ?? this.failiture);
+        status: status ?? this.status, failure: failure ?? this.failure);
   }
 }

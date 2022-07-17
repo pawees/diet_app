@@ -4,6 +4,7 @@ import 'package:game_app_training/ui/app_widget/bloc/app_bloc.dart';
 import 'package:game_app_training/ui/app_widget/menuWidget.dart';
 import 'package:game_app_training/ui/app_widget/navigator.dart';
 import 'package:game_app_training/ui/app_widget/orderCreateWidget.dart';
+import 'package:game_app_training/ui/app_widget/popupWidget/modalWindowsWidget.dart';
 import 'package:game_app_training/ui/app_widget/preRequestWidget.dart';
 import 'package:game_app_training/ui/auth_widget/authScreenWidget.dart';
 import 'package:game_app_training/ui/auth_widget/errorWidget.dart';
@@ -24,9 +25,12 @@ class HomeLayout extends StatelessWidget {
 
     return BlocConsumer<LoginBloc, LoginState>(
       listener: (context, state) {
-        if (state.status.isFailiture) {
-          SmartDialog.showToast(state.failiture.toString());
+        if (state.status.isFailure) {
+          SmartDialog.showToast(state.failure.toString());
         }
+        // if (state.status.isSuccess) {
+        //   smartSuccessDialog(context, state);
+        // }
         // if (state.status.isLoading) {
         //   SmartDialog.showLoading(msg: 'Загрузка...');
         // }
