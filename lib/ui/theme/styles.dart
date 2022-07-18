@@ -12,3 +12,5 @@ TextStyle h17_400() => TextStyle(fontSize: 17, fontWeight: FontWeight.w400);
 TextStyle h17_600() => TextStyle(fontSize: 17, fontWeight: FontWeight.w600);
 TextStyle h13_400() =>
     TextStyle(fontSize: 13, fontWeight: FontWeight.w400, color: Colors.grey);
+TextStyle h32_400() =>
+    TextStyle(fontSize: 32, fontWeight: FontWeight.w400);

@@ -3,7 +3,7 @@ import 'dart:ffi';
 import 'package:flutter/material.dart';
 
 final styleBtn = ButtonStyle(
-    // backgroundColor: MaterialStateProperty.all(Color(0xffF07C01)),
+    backgroundColor: MaterialStateProperty.all(Color(0xffF07C01)),
     foregroundColor: MaterialStateProperty.all(Colors.white),
     elevation: MaterialStateProperty.all<double>(0),
     textStyle: MaterialStateProperty.all(
@@ -22,12 +22,7 @@ final styleBtn2 = ButtonStyle(
     )));
 
 final styleGreyBtn = ButtonStyle(
-    backgroundColor: MaterialStateProperty.all(Color.fromARGB(
-      50,
-      242,
-      242,
-      247,
-    )),
+    backgroundColor: MaterialStateProperty.all(Color(0xffF2F2F7)),
     elevation: MaterialStateProperty.all<double>(0),
     foregroundColor:
         MaterialStateProperty.all(const Color.fromARGB(100, 114, 114, 114)),

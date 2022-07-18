@@ -34,9 +34,18 @@ class Places {
 
   //constructor that convert json to object instance
   factory Places.fromJson(Map<String, dynamic> json) {
+    if (json.length == 2){
+      return Places(
+      uid_1c: json['uid_1c'] as String,
+      name: json['name_1c'] as String,);
+
+    }else{}
     return Places(
       uid_1c: json['uid_1c'] as String,
       name: json['name_1c'] as String,
+      diets: (json['diets'] as List<dynamic>)
+      .map((e) => Diets.fromJson(e as Map<String,dynamic>))
+      .toList()
     );
   }
 

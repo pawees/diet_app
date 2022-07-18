@@ -36,16 +36,20 @@ class AppBloc extends Bloc<AppEvent, AppState> {
     _token.token_data.setAccessToken(new_access_token.access);
   }
 
-  Future<void> _exceptionsHandler(error) async {
+  Future<void> _exceptionsHandler(error,e,emit) async {
     print('Exceptions handler Active');
     if (error is ErrorConnection) {
       emit(state.copyWith(status: AppStatus.error));
     }
+    if (error is ErrorSendOrder){
+      emit(state.copyWith(status: AppStatus.create_order_err));
 
+
+
+    }
     if (error is RuntimeException) {
       emit(state.copyWith(status: AppStatus.exite));
-      await Future.delayed(const Duration(seconds: 2));
-      emit(state.copyWith(status: AppStatus.initial));
+
     } else {
       emit(state.copyWith(status: AppStatus.error)); //FIXME common error
     }
@@ -80,7 +84,7 @@ class AppBloc extends Bloc<AppEvent, AppState> {
         places: places,
       ));
     } catch (error) {
-      _exceptionsHandler(error);
+      _exceptionsHandler(error,e ,emit);
     }
   }
 
@@ -91,68 +95,22 @@ class AppBloc extends Bloc<AppEvent, AppState> {
   }
 
   Future<void> _initialApp(AppInitialEvent e, Emitter emit) async {
+    //throw empty error,!нет данных
     await Future.delayed(const Duration(seconds: 1));
 
     try {
       var user_uid = await appRepository.getUserInfo();
       var agencies = await appRepository.getAgencies();
-      //Fake DATA!!!!---------------------------------------------------->
-      List<Order> orders = [
-        Order(
-            id: '1',
-            places: [
-              Places(name: 'unknow', diets: [Diets(count: 13, name: 'name')])
-            ],
-            agency_uid: agencies[0].uid_1c,
-            date: Date(
-                date_for_request: '2022-09-09',
-                day_of_week: 'monday',
-                dd_mm_yyyy: '2022-09-09'),
-            user_uid: '123',
-            agency: Agency(
-                name: 'Областная больница',
-                address: 'ул.Кирова',
-                uid_1c: agencies[0].uid_1c)),
-        Order(
-            id: '1',
-            places: [
-              Places(name: 'unknow', diets: [Diets(count: 13, name: 'name')])
-            ],
-            agency_uid: agencies[0].uid_1c,
-            date: Date(
-                date_for_request: '2022-09-09',
-                day_of_week: 'monday',
-                dd_mm_yyyy: '2022-09-09'),
-            user_uid: '123',
-            agency: Agency(
-                name: 'Областная больница',
-                address: 'ул.Кирова',
-                uid_1c: agencies[0].uid_1c)),
-        Order(
-            id: '1',
-            places: [
-              Places(name: 'unknow', diets: [Diets(count: 13, name: 'name')])
-            ],
-            //---------------------------------------------------->
-            agency_uid: agencies[0].uid_1c,
-            date: Date(
-                date_for_request: '2022-09-09',
-                day_of_week: 'monday',
-                dd_mm_yyyy: '2022-09-09'),
-            user_uid: '123',
-            agency: Agency(
-                name: 'Областная больница',
-                address: 'ул.Кирова',
-                uid_1c: agencies[0].uid_1c)),
-      ];
-      //try{}catch get orders.if no orders fetch 'no new orders'.
-      //and new orders if exist.
+
+     List<Order> get_orders = await appRepository.getOrders();
+
+
 
       await Jiffy.locale('ru');
       Date date = Date(
           dd_mm_yyyy: Jiffy().format('dd.MM.yyyy'),
           day_of_week: Jiffy().format('EEEE'),
-          date_for_request: Jiffy().format('dd-MM-yyyy'));
+          date_for_request: Jiffy().format('yyyy-MM-dd'));
 
       List<Places> listPlaces = [];
 
@@ -163,9 +121,9 @@ class AppBloc extends Bloc<AppEvent, AppState> {
           user_uid: user_uid,
           date: date,
           agencies: agencies,
-          orders: orders));
+          orders: get_orders));
     } catch (error) {
-      _exceptionsHandler(error);
+      _exceptionsHandler(error,e,emit);
     }
   }
 
@@ -195,11 +153,11 @@ class AppBloc extends Bloc<AppEvent, AppState> {
       await _refresh_token();
 
       emit(state.copyWith(status: AppStatus.loading));
-      List<Diets> diets = await appRepository.getDiets();
+      List<Diets> diets = await appRepository.getDiets(state.agency!.uid_1c);
       emit(state.copyWith(
           status: AppStatus.selected, selected_id: e.id, diets: diets));
     } catch (error) {
-      _exceptionsHandler(error);
+      _exceptionsHandler(error,e,emit);
     }
   }
 
@@ -215,7 +173,7 @@ class AppBloc extends Bloc<AppEvent, AppState> {
         selected_order: e.id,
       ));
     } catch (error) {
-      _exceptionsHandler(error);
+      _exceptionsHandler(error,e,emit);
     }
   }
 
@@ -235,15 +193,15 @@ class AppBloc extends Bloc<AppEvent, AppState> {
   Future<void> _formOrder(FormOrderEvent e, Emitter emit) async {
     emit(state.copyWith(status: AppStatus.pre_req_order, order: e.order));
   }
-
+ //тупое название
   Future<void> _haveNewOrder(HaveNewOrderEvent e, Emitter emit) async {
+    emit(state.copyWith(status: AppStatus.loading));
     try {
       await _refresh_token();
-
       bool is_recieve_new_order = await appRepository.sendNewOrder(state.order);
       emit(state.copyWith(status: AppStatus.have_new_order));
     } catch (error) {
-      _exceptionsHandler(error);
+      _exceptionsHandler(error,e,emit);
     }
   }
 

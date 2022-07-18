@@ -14,7 +14,8 @@ enum AppStatus {
   have_new_order,
   choose_agency,
   exite,
-  selected_certain_order
+  selected_certain_order,
+  create_order_err
 }
 
 extension AppStatusX on AppStatus {
@@ -32,6 +33,7 @@ extension AppStatusX on AppStatus {
   bool get ischooseAgency => this == AppStatus.choose_agency;
   bool get isExite => this == AppStatus.exite;
   bool get isSelectedCertainOrder => this == AppStatus.selected_certain_order;
+  bool get errorCreateOrder => this == AppStatus.create_order_err;
 }
 
 class AppState extends Equatable {

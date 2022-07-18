@@ -1,3 +1,4 @@
+import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:game_app_training/ui/app_widget/bloc/app_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -48,6 +49,12 @@ class _NavigatorBarState extends State<NavigatorBar> {
         }
         if (state.status.ischooseAgency) {
           smartDialog(context, state);
+        }
+        if (state.status.errorCreateOrder){
+          final appBloc = BlocProvider.of<AppBloc>(context);
+          SmartDialog.showToast('Заявка не сформирована,попробуйте еще раз.',displayTime: const Duration(seconds: 3));
+          appBloc.add(AppInitialEvent());
+
         }
       },
       builder: (context, state) {

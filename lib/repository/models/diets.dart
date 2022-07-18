@@ -28,11 +28,20 @@ class Diets {
 
   //constructor that convert json to object instance
   factory Diets.fromJson(Map<String, dynamic> json) {
-    return Diets(
-      count: 0,
+    try{
+      return Diets(
+      count: json['count'] as int,
+      name: json['diet']['name_1c'] as String,
+      uid: json['diet']['uid_1c'] as String,
+    );
+    }catch(e){
+      return Diets(
+      count: 0,  
       name: json['name_1c'] as String,
       uid: json['uid_1c'] as String,
     );
+    }
+    
   }
 
   //a method that convert object to json

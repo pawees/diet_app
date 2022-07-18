@@ -77,7 +77,7 @@ class GameService {
   Future<User> getToken() async {
     Map details = {'username': 'ИвановИИ', 'password': '12345678'};
     var proxy =
-        HttpServerProxy('https://diet.dev41359.it-o.ru/api/auth/json_rpc/');
+        HttpServerProxy('http://diet.dev41359.it-o.ru/api/auth/json_rpc/');
 
     final response = await proxy.call("token", details);
     // json.decode(response);
@@ -90,7 +90,7 @@ class GameService {
   Future<User> refreshAccessToken(String refreshtoken) async {
     Map details = {'refresh': refreshtoken};
     var proxy =
-        HttpServerProxy('https://diet.dev41359.it-o.ru/api/auth/json_rpc/');
+        HttpServerProxy('http://diet.dev41359.it-o.ru/api/auth/json_rpc/');
     final response = await proxy.call("token.refresh", details);
     //New refresh token
     return User.fromJson(
@@ -104,7 +104,7 @@ class GameService {
     };
     Map details = {};
     var proxy = HttpServerProxy(
-        'https://diet.dev41359.it-o.ru/api/json_rpc/', token_header);
+        'http://diet.dev41359.it-o.ru/api/json_rpc/', token_header);
     try {
       final response = await proxy.call("get_user_info", details);
       return response[0]['uid_1c'];
@@ -114,19 +114,20 @@ class GameService {
     }
   }
 
-  Future<List<Order>> getNewOrders() async {
+  Future<List<Order>> getOrders() async {
     var access_token = await SessionState().token_data.getAccessToken();
     Map details = {};
     Map<String, String> token_header = {
       'Authorization': 'Bearer $access_token'
     };
     var proxy = HttpServerProxy(
-        'https://diet.dev41359.it-o.ru/api/auth/json_rpc/', token_header);
-    final response = await proxy.call("get_table_info", details);
-    //убрать первый элемент
-    return List<Order>.from(response.map(
-      (data) => Order.fromJson(data),
-    ));
+        'http://diet.dev41359.it-o.ru/api/auth/json_rpc/', token_header);
+    final response = await proxy.call("get_order", details);
+    List<Order> lst = [];
+    for (var item in response){
+      lst.add(Order.fromJson(item));
+    }
+    return lst;
   }
 
   Future<bool> sendOrder(order) async {
@@ -141,33 +142,45 @@ class GameService {
           "customer_division": p.uid_1c,
           "peoples_category": "3ba6eff9-ba94-11ea-aab0-005056aeb06b",
           "diet": d.uid,
-          "date_execution": order.date.date_for_request,
-          "count": d.count
+          "date_execution":"2022-07-20",// order.date.date_for_request,
+          "count": d.count,
+          "order": ""
         };
         diets_list.add(diet_request);
       }
     }
 
-    Map details = {'order': diets_list};
-    print(details);
-
-    return true;
-    //превратить это всё в {}...
-  }
-
-  Future<List<Diets>> getDiets() async {
-    var access_token = await SessionState().token_data.getAccessToken();
-    Map details = {};
+    Map details = {'tables': diets_list};
     Map<String, String> token_header = {
       'Authorization': 'Bearer $access_token'
     };
     var proxy = HttpServerProxy(
-        'https://diet.dev41359.it-o.ru/api/auth/json_rpc/', token_header);
+        'http://diet.dev41359.it-o.ru/api/auth/json_rpc/', token_header);
+    final response = await proxy.call("create_order", details);
+    print(details);
 
-    final response = await proxy.call("get_diet_info", details);
-    response.removeAt(0);
+    if(response == 'Создать заказ не удалось.'){
+      throw ErrorSendOrder('Создать заказ не удалось');
+    }
+
+    return true;
+
+  }
+
+
+  Future<List<Diets>> getDiets(agencyUid) async {
+    var access_token = await SessionState().token_data.getAccessToken();
+    Map details = {"uid_1c": "$agencyUid"};
+    Map<String, String> token_header = {
+      'Authorization': 'Bearer $access_token'
+    };
+    var proxy = HttpServerProxy(
+        'http://diet.dev41359.it-o.ru/api/auth/json_rpc/', token_header);
+
+    final response = await proxy.call("get_customer_diets", details);
     return (response as List).map((it) => Diets.fromJson(it)).toList();
   }
+
 
   Future<List<Agency>> getAgencies() async {
     var access_token = await SessionState().token_data.getAccessToken();
@@ -176,12 +189,13 @@ class GameService {
       'Authorization': 'Bearer $access_token'
     };
     var proxy = HttpServerProxy(
-        'https://diet.dev41359.it-o.ru/api/auth/json_rpc/', token_header);
+        'http://diet.dev41359.it-o.ru/api/auth/json_rpc/', token_header);
 
     final response = await proxy.call("get_customer_info", details);
     response.removeAt(0);
     return (response as List).map((it) => Agency.fromJson(it)).toList();
   }
+
 
   Future<List<Places>> getPlaces(uid) async {
     var access_token = await SessionState().token_data.getAccessToken();
@@ -190,7 +204,7 @@ class GameService {
       'Authorization': 'Bearer $access_token'
     };
     var proxy = HttpServerProxy(
-        'https://diet.dev41359.it-o.ru/api/auth/json_rpc/', token_header);
+        'http://diet.dev41359.it-o.ru/api/auth/json_rpc/', token_header);
 
     final response =
         await proxy.call("get_customer_divisions_by_customer", details);

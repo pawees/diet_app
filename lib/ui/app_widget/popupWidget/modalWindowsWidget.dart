@@ -69,8 +69,8 @@ smartDialog(context, state) {
                 width: 500,
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(10),
-                        topRight: Radius.circular(10)),
+                        topLeft: Radius.circular(20),
+                        topRight: Radius.circular(20)),
                     color: Colors.white),
                 alignment: Alignment.topCenter,
                 child: Padding(
@@ -109,7 +109,7 @@ smartDialog(context, state) {
       });
 }
 
-smartSuccessDialog(context, state) {
+smartSuccessDialog(context,state) {
   final appBloc = BlocProvider.of<AppBloc>(context);
   SmartDialog.show(
       useAnimation: true,
@@ -119,12 +119,12 @@ smartSuccessDialog(context, state) {
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
             Container(
-                height: 300, //FIXME
+                height: 400, //FIXME
                 width: 500,
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                     borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(10),
-                        topRight: Radius.circular(10)),
+                        topLeft: Radius.circular(20),
+                        topRight: Radius.circular(20)),
                     color: Colors.white),
                 alignment: Alignment.topCenter,
                 child: Padding(
@@ -133,8 +133,8 @@ smartSuccessDialog(context, state) {
                     children: [
                       Row(
                         children: [
-                          Expanded(
-                              child: const SizedBox(
+                          const Expanded(
+                              child: SizedBox(
                             width: 20,
                           )),
                           IconButton(
@@ -145,7 +145,34 @@ smartSuccessDialog(context, state) {
                               icon: const Icon(Icons.close_rounded)),
                         ],
                       ),
-                      // ImageIcon(AssetImage('assets/images/qwe.png')),
+                      const SizedBox(height: 15,),
+                      const Image(image: AssetImage('assets/images/success.png')),
+                      const SizedBox(height: 24,),
+                      Text('Запрос отправлен',style: h32_400()),
+                      const SizedBox(height: 24,),
+                      Divider(height: 1,),
+                      const SizedBox(height: 24,),
+                      Center(child: Text('Последнее время на редактирование заканчивается в',style: h20_400())),
+                      const SizedBox(
+                        height: 8,
+                      ),
+              Container(
+                height: 50,
+                width: 226,
+                decoration: const BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(8.0)),
+                    color: Color(0xffF2F2F7),
+
+                ),
+                child: Center(
+                  child: Text('21.05.2022' + ' - 10:00',
+                      style: h20_400()),
+                ),//INSERT THIS state.order.date.dd_mm_yyyy.toString() add appState to parameter this method
+              ),
+               const SizedBox(
+                        height: 10,
+                      ),
+
                     ],
                   ),
                 )),

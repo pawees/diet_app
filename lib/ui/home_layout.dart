@@ -28,9 +28,10 @@ class HomeLayout extends StatelessWidget {
         if (state.status.isFailure) {
           SmartDialog.showToast(state.failure.toString());
         }
-        // if (state.status.isSuccess) {
-        //   smartSuccessDialog(context, state);
-        // }
+        if (state.status.isSuccess) {
+          smartSuccessDialog(context, state);
+        }
+
         // if (state.status.isLoading) {
         //   SmartDialog.showLoading(msg: 'Загрузка...');
         // }

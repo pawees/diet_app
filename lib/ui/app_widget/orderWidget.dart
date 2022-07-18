@@ -150,15 +150,8 @@ class CreateBtnWidget extends StatelessWidget {
         onPressed: _createEvent,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            // ImageIcon(
-            //   AssetImage('assets/images/icon.png'),
-            // ),
-            Icon(
-              Icons.add,
-              color: Colors.white,
-              size: 24.0,
-            ),
+          children: const [
+            Image(image: AssetImage('assets/images/icon.png')),
             SizedBox(width: 10),
             Text('Создать новую заявку'),
           ],
@@ -196,10 +189,10 @@ class NewOrdersWidget extends StatelessWidget {
             height: 165,
             width: double.infinity,
             decoration: BoxDecoration(
-              color: Color.fromARGB(185, 185, 211, 243),
+              color: const Color(0xffDEEDFF),
               border: Border.all(
-                  color: Color.fromARGB(255, 147, 175, 207), width: 1.0),
-              borderRadius: BorderRadius.only(
+                  color: const Color(0xffB9D3F3), width: 1.0),
+              borderRadius: const BorderRadius.only(
                   topLeft: Radius.circular(10), topRight: Radius.circular(10)),
             ),
             child: Padding(
@@ -207,7 +200,7 @@ class NewOrdersWidget extends StatelessWidget {
               child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    SizedBox(
+                    const SizedBox(
                       height: 16,
                     ),
                     Row(
@@ -220,13 +213,13 @@ class NewOrdersWidget extends StatelessWidget {
                         Text('№-35677', style: header1())
                       ],
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 12,
                     ),
-                    Divider(
+                    const Divider(
                       height: 1,
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 12,
                     ),
                     Row(
@@ -239,7 +232,7 @@ class NewOrdersWidget extends StatelessWidget {
                             // iconSize: 16.3,
                             // padding: const EdgeInsets.symmetric(horizontal:0.0),
                             // alignment: Alignment.centerLeft,
-                            icon: ImageIcon(
+                            icon: const ImageIcon(
                               AssetImage('assets/images/changeAgency.png'),
                               color: Color.fromARGB(255, 64, 105, 153),
                             ),
@@ -249,10 +242,10 @@ class NewOrdersWidget extends StatelessWidget {
                             }),
                       ],
                     ),
-                    SizedBox(height: 12),
+                    const SizedBox(height: 12),
                     //FIXME jiffy time!
                     Text('22.05.2022 - 10:00', style: h18_500()),
-                    SizedBox(height: 16),
+                    const SizedBox(height: 16),
                   ]),
             ),
           ),
@@ -261,8 +254,8 @@ class NewOrdersWidget extends StatelessWidget {
             height: 230,
             decoration: BoxDecoration(
               border: Border.all(
-                  color: Color.fromARGB(255, 147, 175, 207), width: 1.0),
-              borderRadius: BorderRadius.only(
+                  color: const Color.fromARGB(255, 147, 175, 207), width: 1.0),
+              borderRadius: const BorderRadius.only(
                   bottomLeft: Radius.circular(10),
                   bottomRight: Radius.circular(10)),
             ),
@@ -271,42 +264,42 @@ class NewOrdersWidget extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SizedBox(
+                 const SizedBox(
                     height: 12,
                   ),
                   Text('Дата', style: h14_400()),
                   Text('22.05.2022', style: h18_500()),
-                  SizedBox(
+                  const SizedBox(
                     height: 12,
                   ),
-                  Divider(
+                 const Divider(
                     height: 1,
                   ),
-                  SizedBox(
+                const SizedBox(
                     height: 12,
                   ),
                   Text('Учреждение', style: h14_400()),
-                  Text(order.agency_uid.toString(),
+                  Text(order.agency!.name.toString(),
                       style: h18_500()), //FIXME  hardode
                   Expanded(
                       child: Text(
-                          '610027,Киров,Кировская область,Красноармейская 101б',
+                          order.agency!.address.toString(),
                           style: h13_400())),
-                  SizedBox(
+                 const SizedBox(
                     height: 16,
                   ),
-                  Divider(
+                  const Divider(
                     height: 1,
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 12,
                   ),
-                  Text('Пациентов'),
-                  SizedBox(
+                  const Text('Пациентов'),
+                  const SizedBox(
                     height: 5,
                   ),
                   Text('10', style: h18_500()),
-                  SizedBox(
+                  const SizedBox(
                     height: 16,
                   ),
 

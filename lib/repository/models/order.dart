@@ -1,6 +1,7 @@
 import 'package:game_app_training/repository/models/agency.dart';
 import 'package:game_app_training/repository/models/date.dart';
 import 'package:game_app_training/repository/models/places.dart';
+import 'package:jiffy/jiffy.dart';
 
 class Order {
   String id;
@@ -20,9 +21,19 @@ class Order {
 
   //constructor that convert json to object instance
   factory Order.fromJson(Map<String, dynamic> json) {
+    String date = json['order_date'].split('T')[0];
+    
     return Order(
-      id: json['id'] as String,
-      places: json['places'] as List<Places>,
+      id: json['order_number'] as String,
+      date: Date(date_for_request: Jiffy(date).format('yyyy-MM-dd'),
+                  dd_mm_yyyy: Jiffy(date).format('dd.MM.yyyy'),
+                  day_of_week: Jiffy(date).EEEE ),
+      user_uid: json['0-0-0-0'],
+      agency_uid: json['customer']['uid_1c'],
+      agency: Agency(address:'адресс', name: json['customer']['name_1c'], uid_1c:json['customer']['uid_1c'] ),            
+      places: (json['customer_division'] as List<dynamic>)
+      .map(( e) => Places.fromJson(e as Map<String,dynamic>))
+      .toList()
     );
   }
 

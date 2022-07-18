@@ -49,7 +49,7 @@ class SummaryAndBtnWidget extends StatelessWidget {
 
       for (final el in listing) {
         List<Diets> res = el.isFilledMenu();
-        if (res != null) {
+        if (res.length != 0) {
           el.diets = res;
           finalListing.add(el);
         }
@@ -159,16 +159,19 @@ class _MenuWidgetRow extends StatelessWidget {
                 style: header2(),
               )),
               IconButton(
-                icon: Icon(Icons.plus_one),
+                icon: const Image(image: AssetImage('assets/images/add.png')),
                 onPressed: _inc,
               ),
               // _countBuilder(data: data),
               _countBuilder(data, state),
-
-              IconButton(
-                icon: Icon(Icons.exposure_minus_1_outlined),
-                onPressed: _decr,
+               IconButton(
+                icon: const Image(image: AssetImage('assets/images/removal.png')),
+                onPressed: _inc,
               ),
+              // IconButton(
+              //   icon: Icon(Icons.exposure_minus_1_outlined),
+              //   onPressed: _decr,
+              // ),
             ],
           ),
           SizedBox(
