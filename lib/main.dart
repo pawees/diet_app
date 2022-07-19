@@ -7,6 +7,7 @@ import 'package:game_app_training/ui/home_page.dart';
 import 'package:game_app_training/utils/app_bloc_oserver.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:jiffy/jiffy.dart';
 
 // import 'package:flutter_dotenv/flutter_dotenv.dart';
 class MyHttpOverrides extends HttpOverrides {
@@ -32,6 +33,8 @@ Future<void> register_adapters() async {
 }
 
 Future main() async {
+  await Jiffy.locale('ru');
+
   WidgetsFlutterBinding.ensureInitialized();
   await Hive.initFlutter();
   await register_adapters();

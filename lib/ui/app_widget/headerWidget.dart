@@ -24,9 +24,7 @@ class HeaderWidget extends StatelessWidget {
               alignment: Alignment.centerLeft,
               icon: ImageIcon(AssetImage('assets/images/chevron.png')),
               onPressed: _prev_screen),
-          const SizedBox(
-            width: 30,
-          ),
+
           Expanded(child: Text(title, style: h17_600())),
           const SizedBox(
             height: 10,

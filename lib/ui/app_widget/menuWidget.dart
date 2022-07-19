@@ -62,6 +62,7 @@ class SummaryAndBtnWidget extends StatelessWidget {
       var agency = state!.agency!.uid_1c;
 
       Order order = Order(
+          pk: 0,
           id: '130-re3-2',
           places: finalListing,
           user_uid: user_uid,
@@ -72,16 +73,17 @@ class SummaryAndBtnWidget extends StatelessWidget {
 
     if (state!.places!.length - 1 == state!.selected_id) {
       return Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Row(
-            children: [
-              Text('Итого Рацион'),
-              SizedBox(
-                width: 50,
-              ),
-              Text('none') //это значение пока под вопросом.Непонятно что это.
-            ],
-          ),
+          // Row(
+          //   children: [
+          //     Text('Итого Рацион'),
+          //     SizedBox(
+          //       width: 50,
+          //     ),
+          //     Text('none') //это значение пока под вопросом.Непонятно что это.
+          //   ],
+          // ),
           Container(
               height: 52,
               width: 152,
@@ -90,18 +92,18 @@ class SummaryAndBtnWidget extends StatelessWidget {
       );
     } else {
       return Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Row(
-            children: [
-              Text('Итого Рацион'),
-              SizedBox(
-                width: 50,
-              ),
-              Text('none') //это значение пока под вопросом.Непонятно что это.
-            ],
-          ),
-          Container(
-              height: 52, width: 152, child: mainBtn(context, _next_place))
+          // Row(
+          //   children: [
+          //     Text('Итого Рацион'),
+          //     SizedBox(
+          //       width: 50,
+          //     ),
+          //     Text('none') //это значение пока под вопросом.Непонятно что это.
+          //   ],
+          // ),
+          GreenBtn(context, _next_place, 'Следующее отделение'),
         ],
       );
     }
@@ -166,7 +168,7 @@ class _MenuWidgetRow extends StatelessWidget {
               _countBuilder(data, state),
                IconButton(
                 icon: const Image(image: AssetImage('assets/images/removal.png')),
-                onPressed: _inc,
+                onPressed: _decr,
               ),
               // IconButton(
               //   icon: Icon(Icons.exposure_minus_1_outlined),

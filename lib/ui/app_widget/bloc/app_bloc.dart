@@ -3,6 +3,7 @@ import 'package:equatable/equatable.dart';
 import 'package:game_app_training/repository/app_repository.dart';
 import 'package:game_app_training/repository/models/agency.dart';
 import 'package:game_app_training/repository/models/date.dart';
+import 'package:game_app_training/repository/models/dietCategories.dart';
 import 'package:game_app_training/repository/models/diets.dart';
 import 'package:game_app_training/repository/models/order.dart';
 import 'package:game_app_training/repository/models/places.dart';
@@ -68,8 +69,9 @@ class AppBloc extends Bloc<AppEvent, AppState> {
     on<PreviousScreenEvent>(_previousScreen);
     on<TapAgencyChoiseEvent>(_getOrderScreen);
     on<GetCertainOrderEvent>(_getCertainOrder);
+    on<EditOrderEvent>(_EditOrder);
   }
-
+  
   Future<void> _getOrderScreen(TapAgencyChoiseEvent e, Emitter emit) async {
     emit(state.copyWith(status: AppStatus.loading));
     SmartDialog.dismiss();
@@ -89,10 +91,17 @@ class AppBloc extends Bloc<AppEvent, AppState> {
   }
 
   Future<void> _chooseAgency(TapCreateOrderEvent e, Emitter emit) async {
+    emit(state.copyWith(date_counter: 0));
+         Date date = Date(
+          dd_mm_yyyy: Jiffy().format('dd.MM.yyyy'),
+          day_of_week: Jiffy().format('EEEE'),
+          date_for_request: Jiffy().format('yyyy-MM-dd'));
+    emit(state.copyWith(date: date));
     emit(state.copyWith(
       status: AppStatus.choose_agency,
     ));
   }
+
 
   Future<void> _initialApp(AppInitialEvent e, Emitter emit) async {
     //throw empty error,!нет данных
@@ -114,18 +123,20 @@ class AppBloc extends Bloc<AppEvent, AppState> {
 
       List<Places> listPlaces = [];
 
-      Order order = Order(id: '000-00-0', places: listPlaces);
+      Order order = Order(pk:0,id: '000-00-0', places: listPlaces);
       emit(state.copyWith(
           status: AppStatus.order,
           order: order,
           user_uid: user_uid,
           date: date,
           agencies: agencies,
-          orders: get_orders));
+          orders: get_orders,
+          date_counter: 0));
     } catch (error) {
       _exceptionsHandler(error,e,emit);
     }
   }
+
 
   Future<void> _getProfile(TapProfileNavEvent e, Emitter emit) async {
     emit(state.copyWith(status: AppStatus.loading));
@@ -133,33 +144,36 @@ class AppBloc extends Bloc<AppEvent, AppState> {
     emit(state.copyWith(status: AppStatus.profile));
   }
 
+
   Future<void> _nextDate(TapNextDateEvent e, Emitter emit) async {
-    await Jiffy.locale('ru');
+    int count = state.date_counter + 1;
+    emit(state.copyWith(date_counter: count));
     Date date = Date(
         dd_mm_yyyy:
-            Jiffy().add(duration: Duration(days: e.count)).format('dd.MM.yyyy'),
-        day_of_week: Jiffy().add(duration: Duration(days: e.count)).EEEE,
+            Jiffy().add(duration: Duration(days: state.date_counter)).format('dd.MM.yyyy'),
+        day_of_week: Jiffy().add(duration: Duration(days: state.date_counter)).EEEE,
         date_for_request: Jiffy()
-            .add(duration: Duration(days: e.count))
-            .format('dd-MM-yyyy'));
-    var prev = state.date;
-    print(prev);
+            .add(duration: Duration(days: state.date_counter))
+            .format('yyyy-MM-dd'));
     emit(state.copyWith(status: AppStatus.create, date: date));
   }
 
+
   Future<void> _getMenu(GetMenuEvent e, Emitter emit) async {
-    //FIXME
+
     try {
       await _refresh_token();
 
       emit(state.copyWith(status: AppStatus.loading));
       List<Diets> diets = await appRepository.getDiets(state.agency!.uid_1c);
+      List<CategoryDiet> peoples = await appRepository.getPeopleCategory(state.agency!.uid_1c);
       emit(state.copyWith(
-          status: AppStatus.selected, selected_id: e.id, diets: diets));
+          status: AppStatus.selected, selected_id: e.id, diets: diets,categories: peoples));
     } catch (error) {
       _exceptionsHandler(error,e,emit);
     }
   }
+
 
   Future<void> _getCertainOrder(GetCertainOrderEvent e, Emitter emit) async {
     //FIXME
@@ -177,6 +191,7 @@ class AppBloc extends Bloc<AppEvent, AppState> {
     }
   }
 
+
   Future<void> _changeCount(ChangeCountEvent e, Emitter emit) async {
     emit(state.copyWith(
       status: AppStatus.create,
@@ -184,37 +199,83 @@ class AppBloc extends Bloc<AppEvent, AppState> {
     emit(state.copyWith(status: AppStatus.selected));
   }
 
+
   Future<void> _nextPlace(NextPlaceEvent e, Emitter emit) async {
 //get list in event,check that list have count>0;is_filled == true then
     emit(state.copyWith(status: AppStatus.next_page, is_filled: true));
     emit(state.copyWith(status: AppStatus.selected, selected_id: e.id));
   }
 
+
   Future<void> _formOrder(FormOrderEvent e, Emitter emit) async {
     emit(state.copyWith(status: AppStatus.pre_req_order, order: e.order));
   }
  //тупое название
+
   Future<void> _haveNewOrder(HaveNewOrderEvent e, Emitter emit) async {
+
+
     emit(state.copyWith(status: AppStatus.loading));
     try {
       await _refresh_token();
-      bool is_recieve_new_order = await appRepository.sendNewOrder(state.order);
-      emit(state.copyWith(status: AppStatus.have_new_order));
+      bool is_recieve_new_order = await appRepository.sendNewOrder(state.order,state);
+      //check for null
+      List<Order> get_orders = await appRepository.getOrders();
+
+      emit(state.copyWith(status: AppStatus.have_new_order, orders: get_orders));
+
+
+
     } catch (error) {
       _exceptionsHandler(error,e,emit);
     }
   }
 
+
   Future<void> _previousScreen(PreviousScreenEvent e, Emitter emit) async {
     AppStatus current_status = state.status;
     _set_state(AppStatus cur) {
       if (cur == AppStatus.selected) return AppStatus.create;
-      if (cur == AppStatus.create) return AppStatus.order;
+      if (cur == AppStatus.create) 
+      {
+        emit(state.copyWith(date_counter: 0));
+         Date date = Date(
+          dd_mm_yyyy: Jiffy().format('dd.MM.yyyy'),
+          day_of_week: Jiffy().format('EEEE'),
+          date_for_request: Jiffy().format('yyyy-MM-dd'));
+        emit(state.copyWith(date: date));
+        return AppStatus.order;
+        
+        }
       if (cur == AppStatus.pre_req_order) return AppStatus.create;
       if (cur == AppStatus.selected_certain_order) return AppStatus.order;
     }
 
-    ;
     emit(state.copyWith(status: _set_state(current_status)));
   }
+
+
+  Future<void> _EditOrder(EditOrderEvent e, Emitter emit) async {
+      
+
+      emit(state.copyWith(status: AppStatus.loading));
+
+      Order order = state.orders![e.id];
+
+       emit(state.copyWith(date_counter: 0));
+         Date date = Date(
+          dd_mm_yyyy: Jiffy().format('dd.MM.yyyy'),
+          day_of_week: Jiffy().format('EEEE'),
+          date_for_request: Jiffy().format('yyyy-MM-dd'));
+    emit(state.copyWith(date: date));
+    emit(state.copyWith(
+      status: AppStatus.create,
+    ));
+    emit(state.copyWith(
+      places: order.places,
+    ));
+    //вернуть учреждение из сохраненного.
+
+
+}
 }

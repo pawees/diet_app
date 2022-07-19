@@ -19,8 +19,6 @@ class TapCreateOrderEvent extends AppEvent {
 }
 
 class TapNextDateEvent extends AppEvent {
-  int count;
-  TapNextDateEvent(this.count);
 }
 
 class GetMenuEvent extends AppEvent {
@@ -55,4 +53,9 @@ class TapAgencyChoiseEvent extends AppEvent {
 class GetCertainOrderEvent extends AppEvent {
   int id;
   GetCertainOrderEvent(this.id);
+}
+
+class EditOrderEvent extends AppEvent {
+  int id;
+  EditOrderEvent(this.id);
 }

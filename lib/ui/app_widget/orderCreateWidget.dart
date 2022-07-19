@@ -5,21 +5,27 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:game_app_training/repository/models/date.dart';
 import 'package:game_app_training/ui/app_widget/bloc/app_bloc.dart';
 import 'package:game_app_training/ui/app_widget/headerWidget.dart';
+import 'package:game_app_training/ui/theme/main_buttons.dart';
 import 'package:jiffy/jiffy.dart';
 import 'package:game_app_training/ui/theme/styles.dart';
 import 'package:game_app_training/repository/models/places.dart';
 
 class OrderCreateWidget extends StatelessWidget {
-  const OrderCreateWidget({
+   OrderCreateWidget({
     Key? key,
     required this.places,
+        count = 0,
   }) : super(key: key);
 
   final places;
-
+   int   count = 0;
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<AppBloc, AppState>(builder: (context, state) {
+    final appBloc = BlocProvider.of<AppBloc>(context);
+    _onPressed() {
+      appBloc.add(HaveNewOrderEvent());
+    }
       return Padding(
         padding: const EdgeInsets.fromLTRB(17, 5, 30, 5),
         child: Column(
@@ -27,23 +33,23 @@ class OrderCreateWidget extends StatelessWidget {
           children: [
             HeaderWidget(title: 'Новая заявка'),
             Text('Дата', style: header1()),
-            SizedBox(
+            const SizedBox(
               height: 12,
             ),
-            _buildDateWidget(state),
+            _buildDateWidget(state,count),
             // DateWidget(date: state.date!),
-            SizedBox(
+            const SizedBox(
               height: 21,
             ),
-            Divider(
+            const Divider(
               height: 1,
             ),
-            SizedBox(
+            const SizedBox(
               height: 16,
             ),
 
             Text('Учреждение', style: header1()),
-            SizedBox(
+            const SizedBox(
               height: 16,
             ),
             _Agency(title: state.agency!.name, address: state.agency!.address),
@@ -66,8 +72,7 @@ class OrderCreateWidget extends StatelessWidget {
                 // physics: NeverScrollableScrollPhysics(),
                 itemBuilder: (context, index) {
                   if (index == places.length && state.places![index].isFilled) {
-                    return ElevatedButton(
-                        onPressed: () {}, child: const Text('child'));
+                   return OrangeBtn(context, _onPressed, 'Сформировать заявку');
                   }
 
                   return PlacesWidget(data: places[index], selected: index);
@@ -96,7 +101,12 @@ class BtnWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ElevatedButton(onPressed: () {}, child: const Text('child'));
+        final appBloc = BlocProvider.of<AppBloc>(context);
+    _onPressed() {
+      appBloc.add(HaveNewOrderEvent());
+    }
+      return OrangeBtn(context, _onPressed, 'Сформировать заявку');
+
   }
 }
 
@@ -196,13 +206,17 @@ class _Agency extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appBloc = BlocProvider.of<AppBloc>(context);
+    void _createEvent() {
+      appBloc.add(TapCreateOrderEvent(appBloc.state.status));
+    }
     return Row(
       children: [
-        ImageIcon(
+        const ImageIcon(
           AssetImage('assets/images/filledIcon.png'),
           color: Colors.blue,
         ),
-        SizedBox(
+        const SizedBox(
           width: 10,
         ),
         Expanded(
@@ -211,17 +225,14 @@ class _Agency extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(title),
-              SizedBox(
+              const SizedBox(
                 height: 4,
               ),
               SizedBox(
                   width: 250,
                   child: Text(
                     address,
-                    style: TextStyle(
-                        fontSize: 13,
-                        fontWeight: FontWeight.w400,
-                        color: Colors.grey),
+                    style: h13_400(),
                   )),
             ],
           ),
@@ -230,67 +241,59 @@ class _Agency extends StatelessWidget {
             // iconSize: 16.3,
             // padding: const EdgeInsets.symmetric(horizontal:0.0),
             // alignment: Alignment.centerLeft,
-            icon: ImageIcon(
+            icon: const ImageIcon(
               AssetImage('assets/images/changeAgency.png'),
               color: Color.fromARGB(255, 64, 105, 153),
             ),
-            onPressed: () {
-              //get agency event: .request->model->reset_state. FIXME
-            }),
+            onPressed: _createEvent),
       ],
     );
   }
 }
 
-int count = 0;
-
 class DateWidget extends StatelessWidget {
-  const DateWidget({
+  DateWidget({
     Key? key,
-    required this.date,
+    required this.state,
+
   }) : super(key: key);
 
-  final Date date;
-
+  final AppState state;
+  
   @override
   Widget build(BuildContext context) {
     final appBloc = BlocProvider.of<AppBloc>(context);
 
     _next() {
-      count += 1;
-      appBloc.add(TapNextDateEvent(count));
+      appBloc.add(TapNextDateEvent());
     }
-
-    ;
 
     _prev() {
-      if (count == 0) return;
-      count -= 1;
-      appBloc.add(TapNextDateEvent(count));
+      if (state.date_counter == 0) return;
+      appBloc.add(TapNextDateEvent());
     }
 
-    ;
     return Row(
       children: [
-        IconButton(onPressed: _prev, icon: Icon(Icons.chevron_left_sharp)),
+        IconButton(onPressed: _prev, icon: const Icon(Icons.chevron_left_sharp)),
         Expanded(
             child: Column(
           children: [
-            Text(date.dd_mm_yyyy.toString(), style: h20_400()),
+            Text(state.date!.dd_mm_yyyy.toString(), style: h20_400()),
             Text(
-              date.day_of_week.toString(),
+              state.date!.day_of_week.toString(),
               style: h13_400(),
             ),
           ],
         )),
-        IconButton(onPressed: _next, icon: Icon(Icons.chevron_right_sharp)),
+        IconButton(onPressed: _next, icon: const Icon(Icons.chevron_right_sharp)),
       ],
     );
   }
 }
 
-_buildDateWidget(AppState state) {
+_buildDateWidget(AppState state,int count) {
   if (state.status.isCreate) {
-    return DateWidget(date: state.date!);
+    return DateWidget(state: state);
   }
 }

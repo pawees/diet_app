@@ -173,7 +173,11 @@ class NewOrdersWidget extends StatelessWidget {
     _getCertainOrder() {
       appBloc.add(GetCertainOrderEvent(selected));
     }
+    _edit_order(){
 
+        appBloc.add(EditOrderEvent(selected));
+
+    }
     return GestureDetector(
       onTap: _getCertainOrder,
       child: Column(
@@ -210,7 +214,7 @@ class NewOrdersWidget extends StatelessWidget {
                           'Номер заявки',
                           style: h20_400(),
                         )),
-                        Text('№-35677', style: header1())
+                        Text(order.pk.toString(), style: header1())
                       ],
                     ),
                     const SizedBox(
@@ -236,10 +240,8 @@ class NewOrdersWidget extends StatelessWidget {
                               AssetImage('assets/images/changeAgency.png'),
                               color: Color.fromARGB(255, 64, 105, 153),
                             ),
-                            onPressed: () {
-                              //FIXME update order btn
-                              //Make active
-                            }),
+                            onPressed: _edit_order
+                            ),
                       ],
                     ),
                     const SizedBox(height: 12),

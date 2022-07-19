@@ -38,6 +38,7 @@ extension AppStatusX on AppStatus {
 
 class AppState extends Equatable {
   const AppState({
+    int? date_counter,
     Order? order,
     this.previous = AppStatus.initial,
     Agency? agency,
@@ -51,9 +52,12 @@ class AppState extends Equatable {
     Date? date,
     String? user_uid,
     List<Order>? orders,
+    List<CategoryDiet>? categories,
   })  : places = places ?? const [],
+        date_counter = date_counter ?? 0,
         date = date ?? Date.empty,
         agency = agency ?? Agency.empty,
+        categories = categories ?? const [],
         selected_id = selected_id ?? 0,
         selected_order = selected_order ?? 0,
         is_filled = is_filled ?? false,
@@ -62,7 +66,7 @@ class AppState extends Equatable {
         agencies = agencies ?? const [],
         user_uid = user_uid ?? '',
         orders = orders ?? const [];
-
+  final int date_counter;
   final bool is_filled;
   final int selected_id;
   final int selected_order;
@@ -71,6 +75,7 @@ class AppState extends Equatable {
   final List<Places>? places;
   final List<Diets>? diets;
   final List<Agency> agencies;
+  final List<CategoryDiet> categories;
   final Date? date;
   final Agency? agency;
   final Order? order;
@@ -89,7 +94,10 @@ class AppState extends Equatable {
         user_uid,
         agencies,
         orders,
-        selected_order
+        selected_order,
+        categories,
+        date_counter
+        
       ];
 
   AppState copyWith({
@@ -106,6 +114,8 @@ class AppState extends Equatable {
     Order? order,
     String? user_uid,
     List<Order>? orders,
+    List<CategoryDiet>? categories,
+    int? date_counter,
   }) {
     return AppState(
         status: status ?? this.status,
@@ -120,6 +130,8 @@ class AppState extends Equatable {
         user_uid: user_uid ?? this.user_uid,
         agencies: agencies ?? this.agencies,
         orders: orders ?? this.orders,
-        selected_order: selected_order ?? this.selected_order);
+        selected_order: selected_order ?? this.selected_order,
+        categories: categories ?? this.categories,
+        date_counter: date_counter?? this.date_counter);
   }
 }

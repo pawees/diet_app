@@ -4,6 +4,7 @@ import 'package:game_app_training/repository/models/places.dart';
 import 'package:jiffy/jiffy.dart';
 
 class Order {
+  int pk;
   String id;
   Agency? agency;
   String? agency_uid;
@@ -12,7 +13,9 @@ class Order {
   List<Places>? places;
 
   Order(
-      {required this.id,
+      {
+      required this.pk,  
+      required this.id,
       this.places,
       this.agency_uid,
       this.date,
@@ -24,6 +27,7 @@ class Order {
     String date = json['order_date'].split('T')[0];
     
     return Order(
+      pk: json['order_id'] as int,
       id: json['order_number'] as String,
       date: Date(date_for_request: Jiffy(date).format('yyyy-MM-dd'),
                   dd_mm_yyyy: Jiffy(date).format('dd.MM.yyyy'),

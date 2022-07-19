@@ -60,6 +60,12 @@ smartDialog(context, state) {
   SmartDialog.show(
       useAnimation: true,
       clickMaskDismiss: false,
+      // onDismiss: () async {
+      //   await Future.delayed(Duration(milliseconds: 10));
+      //   print('object');
+      //   appBloc.add(AppInitialEvent());
+
+      // },
       builder: (_) {
         return Column(
           mainAxisAlignment: MainAxisAlignment.end,
@@ -67,7 +73,7 @@ smartDialog(context, state) {
             Container(
                 height: 300, //FIXME
                 width: 500,
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                     borderRadius: BorderRadius.only(
                         topLeft: Radius.circular(20),
                         topRight: Radius.circular(20)),

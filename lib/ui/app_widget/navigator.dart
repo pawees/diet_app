@@ -2,6 +2,7 @@ import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:game_app_training/ui/app_widget/bloc/app_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 import 'package:game_app_training/ui/app_widget/certainOrderWidget.dart';
 import 'package:game_app_training/ui/app_widget/menuWidget.dart';
 import 'package:game_app_training/ui/app_widget/orderCreateWidget.dart';
@@ -11,6 +12,8 @@ import 'package:game_app_training/ui/app_widget/preRequestWidget.dart';
 import 'package:game_app_training/ui/app_widget/profileWidget.dart';
 import 'package:game_app_training/ui/auth_widget/bloc/login_bloc.dart';
 import 'package:game_app_training/ui/auth_widget/errorWidget.dart';
+
+import 'bloc/app_bloc.dart';
 
 class NavigatorBar extends StatefulWidget {
   const NavigatorBar({Key? key}) : super(key: key);

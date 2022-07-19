@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:game_app_training/repository/models/date.dart';
 import 'package:game_app_training/ui/app_widget/bloc/app_bloc.dart';
 import 'package:game_app_training/ui/app_widget/headerWidget.dart';
+import 'package:game_app_training/ui/theme/main_buttons.dart';
 import 'package:game_app_training/ui/theme/styles.dart';
 
 //add common padding
@@ -172,6 +173,6 @@ class SendOrderWidget extends StatelessWidget {
       appBloc.add(HaveNewOrderEvent());
     }
 
-    return ElevatedButton(onPressed: _onPressed, child: Text('push me'));
+    return OrangeBtn(context, _onPressed, 'Отправить');
   }
 }

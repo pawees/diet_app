@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:game_app_training/repository/models/agency.dart';
+import 'package:game_app_training/repository/models/dietCategories.dart';
 import 'package:game_app_training/repository/models/diets.dart';
 import 'package:game_app_training/repository/models/order.dart';
 import 'package:game_app_training/repository/models/result_error.dart';
@@ -130,7 +131,7 @@ class GameService {
     return lst;
   }
 
-  Future<bool> sendOrder(order) async {
+  Future<bool> sendOrder(order,state) async {
     var access_token = await SessionState().token_data.getAccessToken();
 
     List diets_list = [];
@@ -140,9 +141,9 @@ class GameService {
           "user": order.user_uid,
           "customer": order.agency_uid,
           "customer_division": p.uid_1c,
-          "peoples_category": "3ba6eff9-ba94-11ea-aab0-005056aeb06b",
+          "peoples_category": state.categories[1].uid_1c,
           "diet": d.uid,
-          "date_execution":"2022-07-20",// order.date.date_for_request,
+          "date_execution": order.date.date_for_request,
           "count": d.count,
           "order": ""
         };
@@ -167,6 +168,19 @@ class GameService {
 
   }
 
+  Future<List<CategoryDiet>> getPeopleCategory(agencyUid) async {
+    var access_token = await SessionState().token_data.getAccessToken();
+    Map details = {"uid_1c": "$agencyUid"};
+    Map<String, String> token_header = {
+      'Authorization': 'Bearer $access_token'
+    };
+    var proxy = HttpServerProxy(
+        'http://diet.dev41359.it-o.ru/api/auth/json_rpc/', token_header);
+
+    final response = await proxy.call("get_peop_cat_by_customer", details);
+    return (response as List).map((it) => CategoryDiet.fromJson(it)).toList();
+  }
+
 
   Future<List<Diets>> getDiets(agencyUid) async {
     var access_token = await SessionState().token_data.getAccessToken();
@@ -180,6 +194,7 @@ class GameService {
     final response = await proxy.call("get_customer_diets", details);
     return (response as List).map((it) => Diets.fromJson(it)).toList();
   }
+
 
 
   Future<List<Agency>> getAgencies() async {

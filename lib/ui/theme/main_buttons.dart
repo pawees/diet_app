@@ -30,15 +30,19 @@ final styleGreyBtn = ButtonStyle(
       borderRadius: BorderRadius.circular(11.0),
     )));
 
-ElevatedButton mainBtn(context, on_pressed) {
-  return ElevatedButton(
-    style: styleBtn2,
-    onPressed: on_pressed,
-    child: Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: const [
-        Text('Следующий'),
-      ],
+Container GreenBtn(context, on_pressed,String text) {
+  return Container(
+    height: 48,
+    width: 152,
+    child: ElevatedButton(
+      style: styleBtn2,
+      onPressed: on_pressed,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(text),
+        ],
+      ),
     ),
   );
 }
