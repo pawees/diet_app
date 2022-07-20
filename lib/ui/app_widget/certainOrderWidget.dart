@@ -15,6 +15,7 @@ class CertainOrderWidget extends StatelessWidget {
     return BlocBuilder<AppBloc, AppState>(
       builder: (context, state) {
         final Order order = state.orders![state.selected_order];
+        String? title = state.title;
         String order_num = order.id;
         Date? order_date = order.date;
         String? order_agency = order.agency!.name;
@@ -26,7 +27,7 @@ class CertainOrderWidget extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              HeaderWidget(title: 'Номер заявки № - $order_num'),
+              HeaderWidget(title: '$title $order_num'),
               Text('Дата', style: header1()),
               const SizedBox(
                 height: 12,

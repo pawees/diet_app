@@ -38,6 +38,7 @@ extension AppStatusX on AppStatus {
 
 class AppState extends Equatable {
   const AppState({
+    String? title,
     int? date_counter,
     Order? order,
     this.previous = AppStatus.initial,
@@ -53,6 +54,8 @@ class AppState extends Equatable {
     String? user_uid,
     List<Order>? orders,
     List<CategoryDiet>? categories,
+    bool? edited,
+
   })  : places = places ?? const [],
         date_counter = date_counter ?? 0,
         date = date ?? Date.empty,
@@ -65,7 +68,9 @@ class AppState extends Equatable {
         diets = diets ?? const [],
         agencies = agencies ?? const [],
         user_uid = user_uid ?? '',
-        orders = orders ?? const [];
+        orders = orders ?? const [],
+        title = title ?? '',
+        edited = edited ?? false;
   final int date_counter;
   final bool is_filled;
   final int selected_id;
@@ -81,6 +86,9 @@ class AppState extends Equatable {
   final Order? order;
   final String? user_uid;
   final List<Order>? orders;
+  final String? title;
+    final bool? edited;
+
 
   @override
   List<Object?> get props => [
@@ -96,7 +104,9 @@ class AppState extends Equatable {
         orders,
         selected_order,
         categories,
-        date_counter
+        date_counter,
+        title,
+        edited
         
       ];
 
@@ -116,8 +126,13 @@ class AppState extends Equatable {
     List<Order>? orders,
     List<CategoryDiet>? categories,
     int? date_counter,
+    String? title,
+    bool? edited,
+
+
   }) {
     return AppState(
+        edited: edited ?? this.edited,
         status: status ?? this.status,
         previous: previous ?? this.previous,
         places: places ?? this.places,
@@ -132,6 +147,7 @@ class AppState extends Equatable {
         orders: orders ?? this.orders,
         selected_order: selected_order ?? this.selected_order,
         categories: categories ?? this.categories,
-        date_counter: date_counter?? this.date_counter);
+        date_counter: date_counter?? this.date_counter,
+        title: title ?? this.title);
   }
 }

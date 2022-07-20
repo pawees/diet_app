@@ -6,6 +6,7 @@ import 'package:game_app_training/ui/theme/styles.dart';
 class HeaderWidget extends StatelessWidget {
   const HeaderWidget({Key? key, required this.title}) : super(key: key);
   final String title;
+  
   @override
   Widget build(BuildContext context) {
     final appBloc = BlocProvider.of<AppBloc>(context);

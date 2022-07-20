@@ -3,6 +3,8 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:game_app_training/repository/models/date.dart';
+import 'package:game_app_training/repository/models/diets.dart';
+import 'package:game_app_training/repository/models/order.dart';
 import 'package:game_app_training/ui/app_widget/bloc/app_bloc.dart';
 import 'package:game_app_training/ui/app_widget/headerWidget.dart';
 import 'package:game_app_training/ui/theme/main_buttons.dart';
@@ -31,7 +33,7 @@ class OrderCreateWidget extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            HeaderWidget(title: 'Новая заявка'),
+            HeaderWidget(title: state.title.toString()),
             Text('Дата', style: header1()),
             const SizedBox(
               height: 12,
@@ -89,19 +91,61 @@ class OrderCreateWidget extends StatelessWidget {
 }
 
 _builder_form_btn(state, selected) {
+  if (state.edited && state.places![selected].isFilled ){
+    return _EditBtnWidget();
+  }
   if (state.places![selected].isFilled) {
-    return BtnWidget();
+    return _BtnWidget();  
   } else {
-    return NoBtnWidget();
+    return _NoBtnWidget();
   }
 }
-
-class BtnWidget extends StatelessWidget {
-  const BtnWidget({Key? key}) : super(key: key);
+class _EditBtnWidget extends StatelessWidget {
+  const _EditBtnWidget({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-        final appBloc = BlocProvider.of<AppBloc>(context);
+    final appBloc = BlocProvider.of<AppBloc>(context);
+    _onPressed() {
+      List<Places> listing = [];
+      List<Places> finalListing = [];
+      
+      appBloc.state.places!
+          .map((item) => {
+                if (item.diets != null) {listing.add(item)}
+              })
+          .toList();
+      //можно занести в блок этот кусок кода.
+
+      for (final el in listing) {
+        List<Diets> res = el.isFilledMenu();
+        if (res.length != 0) {
+          el.diets = res;
+          finalListing.add(el);
+        }
+      }
+
+      
+      var user_uid = appBloc.state.user_uid;
+      var date = appBloc.state.date;
+      var agency = appBloc.state.agency!.uid_1c;
+      
+      
+      Order order = appBloc.state.order!;
+      order.places = finalListing;
+      order.date = date;
+
+      appBloc.add(FormOrderEvent(order));
+    }
+      return GreenBtn(context, _onPressed, 'Редактировать заявку');
+  }
+}
+class _BtnWidget extends StatelessWidget {
+  const _BtnWidget({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final appBloc = BlocProvider.of<AppBloc>(context);
     _onPressed() {
       appBloc.add(HaveNewOrderEvent());
     }
@@ -110,8 +154,8 @@ class BtnWidget extends StatelessWidget {
   }
 }
 
-class NoBtnWidget extends StatelessWidget {
-  const NoBtnWidget({Key? key}) : super(key: key);
+class _NoBtnWidget extends StatelessWidget {
+  const _NoBtnWidget({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

@@ -145,7 +145,7 @@ smartSuccessDialog(context,state) {
                           )),
                           IconButton(
                               onPressed: () {
-                                appBloc.add(AppInitialEvent());
+                                // appBloc.add(AppInitialEvent());
                                 SmartDialog.dismiss();
                               },
                               icon: const Icon(Icons.close_rounded)),
@@ -179,6 +179,58 @@ smartSuccessDialog(context,state) {
                         height: 10,
                       ),
 
+                    ],
+                  ),
+                )),
+          ],
+        );
+      });
+}
+smartErrorDialog(context,state) {
+  final appBloc = BlocProvider.of<AppBloc>(context);
+  SmartDialog.show(
+      useAnimation: true,
+      clickMaskDismiss: false,
+      builder: (_) {
+        return Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            Container(
+                height: 400, //FIXME
+                width: 500,
+                decoration: const BoxDecoration(
+                    borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(20),
+                        topRight: Radius.circular(20)),
+                    color: Colors.white),
+                alignment: Alignment.topCenter,
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    children: [
+                      Row(
+                        children: [
+                          const Expanded(
+                              child: SizedBox(
+                            width: 20,
+                          )),
+                          IconButton(
+                              onPressed: () {
+                         
+                                SmartDialog.dismiss();
+                              },
+                              icon: const Icon(Icons.close_rounded)),
+                        ],
+                      ),
+                      const SizedBox(height: 15,),
+                      const Image(image: AssetImage('assets/images/error.png')),
+                      const SizedBox(height: 24,),
+                      Text('Заявка не сформирована.',style: h32_400()),
+                      const SizedBox(height: 24,),
+                      Divider(height: 1,),
+                      const SizedBox(height: 24,),
+                      Center(child: Text('Нельзя обновить заказ с указанной датой исполнения.',style: h20_400())),
+  
                     ],
                   ),
                 )),

@@ -150,7 +150,7 @@ class GameService {
         diets_list.add(diet_request);
       }
     }
-
+    
     Map details = {'tables': diets_list};
     Map<String, String> token_header = {
       'Authorization': 'Bearer $access_token'
@@ -167,6 +167,46 @@ class GameService {
     return true;
 
   }
+
+
+  Future<bool> sendEditedOrder(order,state) async {
+    var access_token = await SessionState().token_data.getAccessToken();
+
+    List diets_list = [];
+    for (final p in order.places) {
+      for (final d in p.diets) {
+        Map diet_request = {
+          "pk": d.pk,
+          "user": state.user_uid,
+          "customer": order.agency_uid,
+          "customer_division": p.uid_1c,
+          "peoples_category": state.categories[1].uid_1c,
+          "diet": d.uid,
+          "date_execution": order.date.date_for_request,
+          "count": d.count,
+          "order": order.id
+        };
+        diets_list.add(diet_request);
+      }
+    }
+
+    Map details = {'tables': diets_list};
+    Map<String, String> token_header = {
+      'Authorization': 'Bearer $access_token'
+    };
+    var proxy = HttpServerProxy(
+        'http://diet.dev41359.it-o.ru/api/auth/json_rpc/', token_header);
+    final response = await proxy.call("update_order", details);
+    print(details);
+
+    if(response == 'Нельзя обновить заказ с указанной датой исполнения.'){
+      throw ErrorSendOrder('Нельзя обновить заказ с указанной датой исполнения.');
+    }
+
+    return true;
+
+  }
+
 
   Future<List<CategoryDiet>> getPeopleCategory(agencyUid) async {
     var access_token = await SessionState().token_data.getAccessToken();
@@ -224,7 +264,12 @@ class GameService {
     final response =
         await proxy.call("get_customer_divisions_by_customer", details);
     response.removeAt(0);
-    return (response as List).map((it) => Places.fromJson(it)).toList();
+    List<Places> lst = [];
+    for (var item in response){
+      lst.add(Places.fromJson(item));
+    }
+    return lst;
+    // return (response as List).map((it) => Places.fromJson(it)).toList();
   }
 
   // Uri getUrl({

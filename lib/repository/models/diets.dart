@@ -1,38 +1,22 @@
 class Diets {
+  int? pk;
   final String name;
   int count;
   String? uid;
 
-  Diets({required this.count, required this.name, this.uid});
+  Diets({required this.count, required this.name, this.uid,this.pk});
 
 //  static const Diets empty = Diets(
 //     count: 0,
 //     name: 'unknow');
 
-  static List<Diets> fetchAll() {
-    return [
-      Diets(name: 'ОВД', count: 0),
-      Diets(name: 'Зонд', count: 0),
-      Diets(name: 'ОВД2', count: 0),
-      Diets(name: 'ЩД', count: 0),
-      Diets(name: 'НКД', count: 0),
-      Diets(name: 'ОВДм', count: 0),
-      Diets(name: 'ОВД', count: 0),
-      Diets(name: 'ЩД1', count: 0),
-      Diets(name: 'ОВдр', count: 0),
-      Diets(name: 'ЩДб/м', count: 0),
-      Diets(name: 'Х1', count: 0),
-      Diets(name: 'ВБД1', count: 0),
-    ];
-  }
-
-  //constructor that convert json to object instance
   factory Diets.fromJson(Map<String, dynamic> json) {
     try{
       return Diets(
       count: json['count'] as int,
       name: json['diet']['name_1c'] as String,
       uid: json['diet']['uid_1c'] as String,
+      pk: json['pk'] as int,
     );
     }catch(e){
       return Diets(
@@ -44,7 +28,7 @@ class Diets {
     
   }
 
-  //a method that convert object to json
+
   Map<String, dynamic> toJson() => {
         'name': name,
         'count': count,

@@ -30,18 +30,21 @@ final styleGreyBtn = ButtonStyle(
       borderRadius: BorderRadius.circular(11.0),
     )));
 
-Container GreenBtn(context, on_pressed,String text) {
-  return Container(
-    height: 48,
-    width: 152,
-    child: ElevatedButton(
-      style: styleBtn2,
-      onPressed: on_pressed,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(text),
-        ],
+Padding GreenBtn(context, on_pressed,String text) {
+  return Padding(
+    padding: const EdgeInsets.symmetric(vertical: 6.0),
+    child: Container(
+      height: 43,
+      width: 152,
+      child: ElevatedButton(
+        style: styleBtn2,
+        onPressed: on_pressed,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(text),
+          ],
+        ),
       ),
     ),
   );

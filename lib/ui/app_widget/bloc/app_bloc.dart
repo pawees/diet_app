@@ -69,21 +69,33 @@ class AppBloc extends Bloc<AppEvent, AppState> {
     on<PreviousScreenEvent>(_previousScreen);
     on<TapAgencyChoiseEvent>(_getOrderScreen);
     on<GetCertainOrderEvent>(_getCertainOrder);
-    on<EditOrderEvent>(_EditOrder);
+    on<EditOrderEvent>(_editOrder);
   }
   
   Future<void> _getOrderScreen(TapAgencyChoiseEvent e, Emitter emit) async {
-    emit(state.copyWith(status: AppStatus.loading));
+
+      emit(state.copyWith(status: AppStatus.loading));
+
+    
     SmartDialog.dismiss();
+
+    state.copyWith(edited: false);
+
     try {
       await _refresh_token();
 
       var agencies = await appRepository.getAgencies();
       final places = await appRepository.getPlaces(agencies[e.id].uid_1c);
+      for (var i in places){
+        i.diets =await appRepository.getDiets(agencies[e.id].uid_1c);
+      }
+      emit(state.copyWith(status: AppStatus.loading));
+
       emit(state.copyWith(
         agency: agencies[e.id], //FIXME temp
         status: AppStatus.create,
         places: places,
+        title: 'Новая заявка'
       ));
     } catch (error) {
       _exceptionsHandler(error,e ,emit);
@@ -104,9 +116,8 @@ class AppBloc extends Bloc<AppEvent, AppState> {
 
 
   Future<void> _initialApp(AppInitialEvent e, Emitter emit) async {
-    //throw empty error,!нет данных
-    await Future.delayed(const Duration(seconds: 1));
 
+    emit(state.copyWith(status: AppStatus.loading));
     try {
       var user_uid = await appRepository.getUserInfo();
       var agencies = await appRepository.getAgencies();
@@ -115,7 +126,7 @@ class AppBloc extends Bloc<AppEvent, AppState> {
 
 
 
-      await Jiffy.locale('ru');
+  
       Date date = Date(
           dd_mm_yyyy: Jiffy().format('dd.MM.yyyy'),
           day_of_week: Jiffy().format('EEEE'),
@@ -123,7 +134,7 @@ class AppBloc extends Bloc<AppEvent, AppState> {
 
       List<Places> listPlaces = [];
 
-      Order order = Order(pk:0,id: '000-00-0', places: listPlaces);
+      Order order = Order(pk:0, id: '000-00-0', places: listPlaces);
       emit(state.copyWith(
           status: AppStatus.order,
           order: order,
@@ -165,10 +176,11 @@ class AppBloc extends Bloc<AppEvent, AppState> {
       await _refresh_token();
 
       emit(state.copyWith(status: AppStatus.loading));
-      List<Diets> diets = await appRepository.getDiets(state.agency!.uid_1c);
+      
       List<CategoryDiet> peoples = await appRepository.getPeopleCategory(state.agency!.uid_1c);
+
       emit(state.copyWith(
-          status: AppStatus.selected, selected_id: e.id, diets: diets,categories: peoples));
+          status: AppStatus.selected, selected_id: e.id, categories: peoples));
     } catch (error) {
       _exceptionsHandler(error,e,emit);
     }
@@ -185,6 +197,7 @@ class AppBloc extends Bloc<AppEvent, AppState> {
       emit(state.copyWith(
         status: AppStatus.selected_certain_order,
         selected_order: e.id,
+        title: 'Номер заявки №'
       ));
     } catch (error) {
       _exceptionsHandler(error,e,emit);
@@ -218,12 +231,21 @@ class AppBloc extends Bloc<AppEvent, AppState> {
     emit(state.copyWith(status: AppStatus.loading));
     try {
       await _refresh_token();
+      
+      if(state.edited!){
+
+        bool is_recieve_edited_order = await appRepository.sendEditedOrder(state.order,state);
+        List<Order> get_orders = await appRepository.getOrders();
+        emit(state.copyWith(status: AppStatus.have_new_order, orders: get_orders, edited: false));
+      }else{
+      
       bool is_recieve_new_order = await appRepository.sendNewOrder(state.order,state);
       //check for null
       List<Order> get_orders = await appRepository.getOrders();
+      emit(state.copyWith(status: AppStatus.have_new_order, orders: get_orders, edited: false));
 
-      emit(state.copyWith(status: AppStatus.have_new_order, orders: get_orders));
-
+      }
+      
 
 
     } catch (error) {
@@ -255,27 +277,41 @@ class AppBloc extends Bloc<AppEvent, AppState> {
   }
 
 
-  Future<void> _EditOrder(EditOrderEvent e, Emitter emit) async {
-      
+  Future<void> _editOrder(EditOrderEvent e, Emitter emit) async {
 
       emit(state.copyWith(status: AppStatus.loading));
-
+      
       Order order = state.orders![e.id];
+      final places = await appRepository.getPlaces(order.agency!.uid_1c);
+      List<Diets> diets = await appRepository.getDiets(order.agency!.uid_1c);
+      for (var i in places){
+      List<Diets> d = [];
+
+        for(var i in diets){
+          d.add(Diets(count: i.count,pk: i.pk,uid: i.uid,name:i.name));
+        }
+        i.diets = d;//await appRepository.getDiets(order.agency!.uid_1c);
+      }
+
+      for(var i in order.places!){
+        places.removeWhere((item) => item.name == i.name);
+        places.add(i);
+        }
 
        emit(state.copyWith(date_counter: 0));
-         Date date = Date(
-          dd_mm_yyyy: Jiffy().format('dd.MM.yyyy'),
-          day_of_week: Jiffy().format('EEEE'),
-          date_for_request: Jiffy().format('yyyy-MM-dd'));
-    emit(state.copyWith(date: date));
+
+    
     emit(state.copyWith(
       status: AppStatus.create,
-    ));
-    emit(state.copyWith(
-      places: order.places,
-    ));
-    //вернуть учреждение из сохраненного.
-
-
+      places: places,
+      agency: order.agency,
+      title: 'Редактировать заявку',
+      date: order.date,
+      order: order,
+      edited: true));
 }
+
+
+
+
 }

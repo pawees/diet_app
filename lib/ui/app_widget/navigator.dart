@@ -53,9 +53,14 @@ class _NavigatorBarState extends State<NavigatorBar> {
         if (state.status.ischooseAgency) {
           smartDialog(context, state);
         }
+        if (state.status.isNewOrder) {
+          smartSuccessDialog(context, state);
+        }
         if (state.status.errorCreateOrder){
+          smartErrorDialog(context, state);
+
           final appBloc = BlocProvider.of<AppBloc>(context);
-          SmartDialog.showToast('Заявка не сформирована,попробуйте еще раз.',displayTime: const Duration(seconds: 3));
+          // SmartDialog.showToast('Заявка не сформирована,попробуйте еще раз.',displayTime: const Duration(seconds: 3));
           appBloc.add(AppInitialEvent());
 
         }

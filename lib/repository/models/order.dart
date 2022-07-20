@@ -24,14 +24,13 @@ class Order {
 
   //constructor that convert json to object instance
   factory Order.fromJson(Map<String, dynamic> json) {
-    String date = json['order_date'].split('T')[0];
     
     return Order(
       pk: json['order_id'] as int,
       id: json['order_number'] as String,
-      date: Date(date_for_request: Jiffy(date).format('yyyy-MM-dd'),
-                  dd_mm_yyyy: Jiffy(date).format('dd.MM.yyyy'),
-                  day_of_week: Jiffy(date).EEEE ),
+      date: Date(date_for_request: Jiffy(json['date_execution']).format('yyyy-MM-dd'),
+                  dd_mm_yyyy: Jiffy(json['date_execution']).format('dd.MM.yyyy'),
+                  day_of_week: Jiffy(json['date_execution']).EEEE ),
       user_uid: json['0-0-0-0'],
       agency_uid: json['customer']['uid_1c'],
       agency: Agency(address:'адресс', name: json['customer']['name_1c'], uid_1c:json['customer']['uid_1c'] ),            

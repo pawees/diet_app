@@ -47,6 +47,7 @@ class SummaryAndBtnWidget extends StatelessWidget {
           .toList();
       //можно занести в блок этот кусок кода.
 
+
       for (final el in listing) {
         List<Diets> res = el.isFilledMenu();
         if (res.length != 0) {
@@ -56,14 +57,14 @@ class SummaryAndBtnWidget extends StatelessWidget {
       }
       ;
 
-      //перебрать листинг,если там одни нули то выкинуть снэк бар с ошибкой.FIXME:
+      
       var user_uid = state!.user_uid;
       var date = state!.date;
       var agency = state!.agency!.uid_1c;
-
+      
       Order order = Order(
-          pk: 0,
-          id: '130-re3-2',
+          pk: state!.order!.pk,
+          id: state!.order!.id,
           places: finalListing,
           user_uid: user_uid,
           date: date,
@@ -133,12 +134,14 @@ class _MenuWidgetRow extends StatelessWidget {
 
     ;
     _decr() {
-      //убавить
       appBloc.add(ChangeCountEvent(selected));
-      if (data.count == 0) return;
+      if (data.count == 0){ 
+        appBloc.state.places![state.selected_id].isFilled = false;
+        return;
+        };
       data.count -= 1;
       if (appBloc.state.places![state.selected_id].isFilledMenuSum()) {
-        appBloc.state.places![state.selected_id].isFilled = false;
+        appBloc.state.places![state.selected_id].isFilled = true;
       }
     }
 
@@ -194,8 +197,9 @@ class MenuChoiseWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<AppBloc, AppState>(builder: (context, state) {
-      var diets = state.diets;
+      var diets = state.places![state.selected_id].diets;
       var place = state.places![state.selected_id];
+      
       if (place.diets == null) {
         List<Diets> menuNames = diets!;
         place.diets = menuNames;

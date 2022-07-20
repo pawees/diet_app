@@ -21,7 +21,11 @@ class GameRepository {
 
   Future<List<Order>> getOrders() async => service.getOrders();
 
+
   Future<bool> sendNewOrder(order,state) async => service.sendOrder(order,state);
+  Future<bool> sendEditedOrder(order,state) async => service.sendEditedOrder(order,state);
+
+
   Future<List<Diets>> getDiets(agencyUid) async => service.getDiets(agencyUid);
   Future<List<CategoryDiet>> getPeopleCategory(agencyUid) async => service.getPeopleCategory(agencyUid);
 
