@@ -78,7 +78,7 @@ class GameService {
   Future<User> getToken() async {
     Map details = {'username': 'ИвановИИ', 'password': '12345678'};
     var proxy =
-        HttpServerProxy('http://diet.dev41359.it-o.ru/api/auth/json_rpc/');
+        HttpServerProxy(url);
 
     final response = await proxy.call("token", details);
     // json.decode(response);
@@ -91,7 +91,7 @@ class GameService {
   Future<User> refreshAccessToken(String refreshtoken) async {
     Map details = {'refresh': refreshtoken};
     var proxy =
-        HttpServerProxy('http://diet.dev41359.it-o.ru/api/auth/json_rpc/');
+        HttpServerProxy(url);
     final response = await proxy.call("token.refresh", details);
     //New refresh token
     return User.fromJson(
@@ -105,7 +105,7 @@ class GameService {
     };
     Map details = {};
     var proxy = HttpServerProxy(
-        'http://diet.dev41359.it-o.ru/api/json_rpc/', token_header);
+        url, token_header);
     try {
       final response = await proxy.call("get_user_info", details);
       return response[0]['uid_1c'];
@@ -122,7 +122,7 @@ class GameService {
       'Authorization': 'Bearer $access_token'
     };
     var proxy = HttpServerProxy(
-        'http://diet.dev41359.it-o.ru/api/auth/json_rpc/', token_header);
+        url, token_header);
     final response = await proxy.call("get_order", details);
     List<Order> lst = [];
     for (var item in response){
@@ -156,7 +156,7 @@ class GameService {
       'Authorization': 'Bearer $access_token'
     };
     var proxy = HttpServerProxy(
-        'http://diet.dev41359.it-o.ru/api/auth/json_rpc/', token_header);
+        url, token_header);
     final response = await proxy.call("create_order", details);
     print(details);
 
@@ -195,7 +195,7 @@ class GameService {
       'Authorization': 'Bearer $access_token'
     };
     var proxy = HttpServerProxy(
-        'http://diet.dev41359.it-o.ru/api/auth/json_rpc/', token_header);
+        url, token_header);
     final response = await proxy.call("update_order", details);
     print(details);
 
@@ -215,7 +215,7 @@ class GameService {
       'Authorization': 'Bearer $access_token'
     };
     var proxy = HttpServerProxy(
-        'http://diet.dev41359.it-o.ru/api/auth/json_rpc/', token_header);
+        url, token_header);
 
     final response = await proxy.call("get_peop_cat_by_customer", details);
     return (response as List).map((it) => CategoryDiet.fromJson(it)).toList();
@@ -229,7 +229,7 @@ class GameService {
       'Authorization': 'Bearer $access_token'
     };
     var proxy = HttpServerProxy(
-        'http://diet.dev41359.it-o.ru/api/auth/json_rpc/', token_header);
+        url, token_header);
 
     final response = await proxy.call("get_customer_diets", details);
     return (response as List).map((it) => Diets.fromJson(it)).toList();
@@ -244,7 +244,7 @@ class GameService {
       'Authorization': 'Bearer $access_token'
     };
     var proxy = HttpServerProxy(
-        'http://diet.dev41359.it-o.ru/api/auth/json_rpc/', token_header);
+        url, token_header);
 
     final response = await proxy.call("get_customer_info", details);
     response.removeAt(0);
@@ -259,92 +259,21 @@ class GameService {
       'Authorization': 'Bearer $access_token'
     };
     var proxy = HttpServerProxy(
-        'http://diet.dev41359.it-o.ru/api/auth/json_rpc/', token_header);
+        url, token_header);
 
     final response =
         await proxy.call("get_customer_divisions_by_customer", details);
-    response.removeAt(0);
+
+        
     List<Places> lst = [];
     for (var item in response){
       lst.add(Places.fromJson(item));
     }
     return lst;
-    // return (response as List).map((it) => Places.fromJson(it)).toList();
+
   }
 
-  // Uri getUrl({
-  //   required String url,
-  //   Map<String, String>? extraParameters,
-  // }) {
-  //   final queryParameters = <String, String>{
-  //     'key': dotenv.get('GAMES_API_KEY')
-  //   };
-  //   if (extraParameters != null) {
-  //     queryParameters.addAll(extraParameters);
-  //   }
 
-  //   return Uri.parse('$baseUrl/$url').replace(
-  //     queryParameters: queryParameters,
-  //   );
-  // }
+  final String url = 'http://diet.dev41359.it-o.ru/api/auth/json_rpc/';
 
-  // Future<Game> getToken() async {
-  //   final response = await _httpClient.get(
-  //     getUrl(url: 'games'),
-  //   );
-  //   if (response.statusCode == 200) {
-  //     if (response.body.isNotEmpty) {
-  //       return Game.fromJson(
-  //         json.decode(response.body),
-  //       );
-  //     } else {
-  //       throw ErrorEmptyResponse();
-  //     }
-  //   } else {
-  //     throw ErrorGettingGames('Error getting games');
-  //   }
-  // }
-
-  // Future<List<Genre>> getGenres() async {
-  //   final response = await _httpClient.get(
-  //     getUrl(url: 'genres'),
-  //   );
-  //   if (response.statusCode == 200) {
-  //     if (response.body.isNotEmpty) {
-  //       return List<Genre>.from(
-  //         json.decode(response.body)['results'].map(
-  //               (data) => Genre.fromJson(data),
-  //             ),
-  //       );
-  //     } else {
-  //       throw ErrorEmptyResponse();
-  //     }
-  //   } else {
-  //     throw ErrorGettingGames('Error getting genres');
-  //   }
-  // }
-
-  // Future<List<Result>> getGamesByCategory(int genreId) async {
-  //   final response = await _httpClient.get(
-  //     getUrl(
-  //       url: 'games',
-  //       extraParameters: {
-  //         'genres': genreId.toString(),
-  //       },
-  //     ),
-  //   );
-  //   if (response.statusCode == 200) {
-  //     if (response.body.isNotEmpty) {
-  //       return List<Result>.from(
-  //         json.decode(response.body)['results'].map(
-  //               (data) => Result.fromJson(data),
-  //             ),
-  //       );
-  //     } else {
-  //       throw ErrorEmptyResponse();
-  //     }
-  //   } else {
-  //     throw ErrorGettingGames('Error getting games');
-  //   }
-  // }
 }

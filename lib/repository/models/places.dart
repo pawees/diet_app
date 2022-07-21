@@ -36,17 +36,19 @@ class Places {
   factory Places.fromJson(Map<String, dynamic> json) {
     if (json.length == 2){
       return Places(
-      uid_1c: json['uid_1c'] as String,
-      name: json['name_1c'] as String,);
+      uid_1c: json['uid_1c'],
+      name: json['name_1c'],);
 
-    }else{}
-    return Places(
+    }else{
+      return Places(
       uid_1c: json['uid_1c'] as String,
       name: json['name_1c'] as String,
       diets: (json['diets'] as List<dynamic>)
       .map((e) => Diets.fromJson(e as Map<String,dynamic>))
       .toList()
     );
+    }
+
   }
 
   //a method that convert object to json
