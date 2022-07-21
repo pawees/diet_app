@@ -161,6 +161,146 @@ class CreateBtnWidget extends StatelessWidget {
   }
 }
 
+class NoEditableWidget extends StatelessWidget {
+  const NoEditableWidget({Key? key,required this.order, required this.selected}) : super(key: key);
+  final Order order;
+  final int selected;
+
+  @override
+  Widget build(BuildContext context) {
+    final appBloc = BlocProvider.of<AppBloc>(context);
+    _getCertainOrder() {
+      appBloc.add(GetCertainOrderEvent(selected));
+    }
+    return GestureDetector(
+      onTap: _getCertainOrder,
+      child: Column(children: [
+        const SizedBox(
+              height: 32,
+            ),
+            const Divider(height: 1),
+            const SizedBox(
+              height: 32,
+            ),
+            Container(
+              height: 165,
+              width: double.infinity,
+              decoration: BoxDecoration(
+                color: const Color(0xffE9FFAC),
+                border: Border.all(
+                    color: const Color(0xffC7DA92), width: 1.0),
+                borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(10), topRight: Radius.circular(10)),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const SizedBox(
+                        height: 16,
+                      ),
+                      Row(
+                        children: [
+                          Expanded(
+                              child: Text(
+                            'Номер заявки',
+                            style: h20_400(),
+                          )),
+                          Text('№-' + order.pk.toString(), style: header1())
+                        ],
+                      ),
+                      const SizedBox(
+                        height: 12,
+                      ),
+                      const Divider(
+                        height: 1,
+                      ),
+                      const SizedBox(
+                        height: 12,
+                      ),
+                      Row(
+                        children: [
+                          Expanded(
+                              child: Text(
+                                  'Время на редактирование закончилось',
+                                  style: h14_400())),
+                        ],
+                      ),
+                      const SizedBox(height: 12),
+                      //FIXME jiffy time!
+                      Text('22.05.2022 - 10:00', style: h18_500()),
+                      const SizedBox(height: 16),
+                    ]),
+              ),
+            ),
+            Container(
+              width: double.infinity,
+              height: 230,
+              decoration: BoxDecoration(
+                border: Border.all(
+                    color: const Color(0xffC7DA92), width: 1.0),
+                borderRadius: const BorderRadius.only(
+                    bottomLeft: Radius.circular(10),
+                    bottomRight: Radius.circular(10)),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                   const SizedBox(
+                      height: 12,
+                    ),
+                    Text('Дата', style: h14_400()),
+                    Text('22.05.2022', style: h18_500()),
+                    const SizedBox(
+                      height: 12,
+                    ),
+                   const Divider(
+                      height: 1,
+                    ),
+                  const SizedBox(
+                      height: 12,
+                    ),
+                    Text('Учреждение', style: h14_400()),
+                    Text(order.agency!.name.toString(),
+                        style: h18_500()), //FIXME  hardode
+                    Expanded(
+                        child: Text(
+                            order.agency!.address.toString(),
+                            style: h13_400())),
+                   const SizedBox(
+                      height: 16,
+                    ),
+                    const Divider(
+                      height: 1,
+                    ),
+                    const SizedBox(
+                      height: 12,
+                    ),
+                    const Text('Пациентов'),
+                    const SizedBox(
+                      height: 5,
+                    ),
+                    Text('10', style: h18_500()),
+                    const SizedBox(
+                      height: 16,
+                    ),
+    
+                    //FIXME  hardode
+                    //FIXME yewllow header(for time)
+                  ],
+                ),
+              ),
+            )
+    
+      ],),
+    );
+    
+  }
+}
+
 class NewOrdersWidget extends StatelessWidget {
   const NewOrdersWidget({Key? key, required this.order, required this.selected})
       : super(key: key);
@@ -364,10 +504,20 @@ class _isNewPageWidget extends StatelessWidget {
             child: ListView.builder(
                 shrinkWrap: true,
                 itemBuilder: (context, index) {
-                  return NewOrdersWidget(
+                  if (state.orders[index].isEditable){
+                    return NewOrdersWidget(
                     order: state.orders[index],
                     selected: index,
                   );
+
+                  }else{
+                    return NoEditableWidget(
+                      order: state.orders[index],
+                      selected: index,
+
+                    );
+                  }
+                 
                 },
                 itemCount: state.orders!.length),
           ),

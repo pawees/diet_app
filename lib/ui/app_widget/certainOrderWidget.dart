@@ -89,8 +89,9 @@ class CertainOrderWidget extends StatelessWidget {
                 child: ListView.builder(
                   shrinkWrap: true,
                   itemBuilder: (context, index) {
-                    if (index == order.places!.length) {
-                      return _EditAndCopyBtnsWidget();
+                    if (index == order.places!.length ) {
+                        return _EditAndCopyBtnsWidget(order);
+                      
                     }
                     return _PlacesDietsList(
                         pl_list: order.places, index: index);
@@ -107,14 +108,15 @@ class CertainOrderWidget extends StatelessWidget {
 }
 
 class _EditAndCopyBtnsWidget extends StatelessWidget {
-  _EditAndCopyBtnsWidget({Key? key}) : super(key: key);
+  _EditAndCopyBtnsWidget(this.order);
+  final order;
 
   @override
   Widget build(BuildContext context) {
     _edit_order() {}
     _copy_order() {}
-
-    return Column(
+    if(order.isEditable){
+      return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         OrangeBtn(context, _edit_order, 'Редактировать'),
@@ -127,6 +129,19 @@ class _EditAndCopyBtnsWidget extends StatelessWidget {
         ),
       ],
     );
+    }else{
+      return 
+      Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        GreyBtn(context, _copy_order, 'Копировать данные'),
+        const SizedBox(
+          height: 30,
+        ),
+      ],
+    );
+    }
+    
   }
 }
 

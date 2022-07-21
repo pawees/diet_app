@@ -11,6 +11,7 @@ class Order {
   String? user_uid;
   Date? date;
   List<Places>? places;
+  bool? isEditable;
 
   Order(
       {
@@ -20,7 +21,8 @@ class Order {
       this.agency_uid,
       this.date,
       this.user_uid,
-      this.agency});
+      this.agency,
+      this.isEditable});
 
   //constructor that convert json to object instance
   factory Order.fromJson(Map<String, dynamic> json) {
@@ -33,7 +35,8 @@ class Order {
                   day_of_week: Jiffy(json['date_execution']).EEEE ),
       user_uid: json['0-0-0-0'],
       agency_uid: json['customer']['uid_1c'],
-      agency: Agency(address:'адресс', name: json['customer']['name_1c'], uid_1c:json['customer']['uid_1c'] ),            
+      agency: Agency(address:'адресс', name: json['customer']['name_1c'], uid_1c:json['customer']['uid_1c'] ),
+      isEditable:  json['is_editable'],            
       places: (json['customer_division'] as List<dynamic>)
       .map(( e) => Places.fromJson(e as Map<String,dynamic>))
       .toList()
