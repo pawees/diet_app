@@ -3,6 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:game_app_training/repository/models/agency.dart';
 import 'package:game_app_training/ui/app_widget/bloc/app_bloc.dart';
+import 'package:game_app_training/ui/app_widget/orderCreateWidget.dart';
+import 'package:game_app_training/ui/theme/main_buttons.dart';
 import 'package:game_app_training/ui/theme/styles.dart';
 
 class _agenciesListWidget extends StatelessWidget {
@@ -237,4 +239,66 @@ smartErrorDialog(context,state) {
           ],
         );
       });
+
 }
+
+
+  
+// smartChooseDataDialog(context, AppState state) {
+//   final appBloc = BlocProvider.of<AppBloc>(context);
+  
+//   _on_pressed(){
+//   appBloc.add(HaveNewOrderEvent());
+//   }
+
+//   SmartDialog.show(
+//       useAnimation: true,
+//       clickMaskDismiss: false,
+//       builder: (_) {
+//         return Column(
+//           mainAxisAlignment: MainAxisAlignment.end,
+//           crossAxisAlignment: CrossAxisAlignment.stretch,
+//           children: [
+//             Container(
+//                 height: 246, //FIXME
+//                 width: 500,
+//                 decoration: const BoxDecoration(
+//                     borderRadius: BorderRadius.only(
+//                         topLeft: Radius.circular(20),
+//                         topRight: Radius.circular(20)),
+//                     color: Colors.white),
+//                 alignment: Alignment.topCenter,
+//                 child: Padding(
+//                   padding: const EdgeInsets.all(16.0),
+//                   child: Column(
+//                     children: [
+//                       Row(
+//                         children: [
+//                           Text('Выберите дату',style: h20_600()),
+//                           const Expanded(
+//                               child: SizedBox(
+//                             width: 20,
+//                           )),
+//                           IconButton(
+//                               onPressed: () {
+                         
+//                                 SmartDialog.dismiss();
+//                               },
+//                               icon: const Icon(Icons.close_rounded)),
+//                         ],
+//                       ),
+//                       const SizedBox(height: 15),
+//                       _DateWidget(bloc: appBloc, date: state.date,date_counter: state.date_counter,),
+//                       const SizedBox(height: 24),
+//                       OrangeBtn(context, _on_pressed, 'Создать')
+//                     ],
+//                   ),
+//                 )),
+//           ],
+//         );
+//       });
+
+// }
+
+
+ 

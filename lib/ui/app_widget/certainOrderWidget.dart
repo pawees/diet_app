@@ -113,8 +113,11 @@ class _EditAndCopyBtnsWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appBloc = BlocProvider.of<AppBloc>(context);
     _edit_order() {}
-    _copy_order() {}
+    _copy_order() {
+        appBloc.add(CopyAndCreateEvent());
+    }
     if(order.isEditable){
       return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,

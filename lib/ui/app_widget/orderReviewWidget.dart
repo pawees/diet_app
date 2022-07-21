@@ -121,7 +121,7 @@ class SendOrderWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final appBloc = BlocProvider.of<AppBloc>(context);
     _onPressed(){
-      appBloc.add(HaveNewOrderEvent());
+      appBloc.add(HaveNewOrderEvent(''));
 
     }
     return ElevatedButton(onPressed: _onPressed, child: Text('push me'));

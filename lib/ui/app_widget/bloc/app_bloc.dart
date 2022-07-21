@@ -70,6 +70,7 @@ class AppBloc extends Bloc<AppEvent, AppState> {
     on<TapAgencyChoiseEvent>(_getOrderScreen);
     on<GetCertainOrderEvent>(_getCertainOrder);
     on<EditOrderEvent>(_editOrder);
+    on<CopyAndCreateEvent>(_copyAndCreate);
   }
   
   Future<void> _getOrderScreen(TapAgencyChoiseEvent e, Emitter emit) async {
@@ -231,6 +232,7 @@ class AppBloc extends Bloc<AppEvent, AppState> {
  //тупое название
 
   Future<void> _haveNewOrder(HaveNewOrderEvent e, Emitter emit) async {
+    SmartDialog.dismiss();
 
 
     emit(state.copyWith(status: AppStatus.loading));
@@ -238,23 +240,24 @@ class AppBloc extends Bloc<AppEvent, AppState> {
       await _refresh_token();
       
       if(state.edited!){
-
         bool is_recieve_edited_order = await appRepository.sendEditedOrder(state.order,state);
-        List<Order> get_orders = await appRepository.getOrders();
-        emit(state.copyWith(status: AppStatus.have_new_order, orders: get_orders, edited: false));
       }else{
-      
+      if (e.date !=''){
+        Date date = Date(date_for_request: e.date, day_of_week: e.date,dd_mm_yyyy: e.date);
+        state.order!.date = date;
+      }
       bool is_recieve_new_order = await appRepository.sendNewOrder(state.order,state);
       //check for null
+      }
       List<Order> get_orders = await appRepository.getOrders();
       emit(state.copyWith(status: AppStatus.have_new_order, orders: get_orders, edited: false));
-
-      }
       
 
 
     } catch (error) {
       _exceptionsHandler(error,e,emit);
+      SmartDialog.dismiss();
+
     }
   }
 
@@ -316,6 +319,43 @@ class AppBloc extends Bloc<AppEvent, AppState> {
       edited: true));
 }
 
+ Future<void> _copyAndCreate(CopyAndCreateEvent e, Emitter emit) async {
+    //selected id packed order like above
+    emit(state.copyWith(status: AppStatus.loading));
+      
+      Order order = state.orders![state.selected_order];
+      var user_uid = await appRepository.getUserInfo();
+      order.user_uid = user_uid;
+      final places = await appRepository.getPlaces(order.agency!.uid_1c);
+      List<Diets> diets = await appRepository.getDiets(order.agency!.uid_1c);
+      List<CategoryDiet> peoples = await appRepository.getPeopleCategory(order.agency!.uid_1c);
+
+      for (var i in places){
+      List<Diets> d = [];
+
+        for(var i in diets){
+          d.add(Diets(count: i.count,pk: i.pk,uid: i.uid,name:i.name));
+        }
+        i.diets = d;//await appRepository.getDiets(order.agency!.uid_1c);
+      }
+
+      for(var i in order.places!){
+        places.removeWhere((item) => item.name == i.name);
+        places.add(i);
+        }
+
+       emit(state.copyWith(date_counter: 0));
+
+    
+      emit(state.copyWith(
+      status: AppStatus.date_choose,
+      places: places,
+      agency: order.agency,
+      date: order.date,
+      order: order,
+      categories: peoples,
+      edited: false));
+ }
 
 
 

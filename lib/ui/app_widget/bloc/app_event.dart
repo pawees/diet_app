@@ -43,7 +43,10 @@ class FormOrderEvent extends AppEvent {
   FormOrderEvent(this.order);
 }
 
-class HaveNewOrderEvent extends AppEvent {}
+class HaveNewOrderEvent extends AppEvent {
+  String date;
+  HaveNewOrderEvent(this.date);
+}
 
 class PreviousScreenEvent extends AppEvent {}
 
@@ -61,3 +64,4 @@ class EditOrderEvent extends AppEvent {
   int id;
   EditOrderEvent(this.id);
 }
+class CopyAndCreateEvent extends AppEvent {}

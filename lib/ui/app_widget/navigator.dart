@@ -7,6 +7,7 @@ import 'package:game_app_training/ui/app_widget/certainOrderWidget.dart';
 import 'package:game_app_training/ui/app_widget/menuWidget.dart';
 import 'package:game_app_training/ui/app_widget/orderCreateWidget.dart';
 import 'package:game_app_training/ui/app_widget/orderWidget.dart';
+import 'package:game_app_training/ui/app_widget/popupWidget/chooseDate.dart';
 import 'package:game_app_training/ui/app_widget/popupWidget/modalWindowsWidget.dart';
 import 'package:game_app_training/ui/app_widget/preRequestWidget.dart';
 import 'package:game_app_training/ui/app_widget/profileWidget.dart';
@@ -52,6 +53,11 @@ class _NavigatorBarState extends State<NavigatorBar> {
         }
         if (state.status.ischooseAgency) {
           smartDialog(context, state);
+        }
+         if (state.status.dateChoose) {
+          smartChooseDataDialog(context, state);
+
+
         }
         if (state.status.isNewOrder) {
           smartSuccessDialog(context, state);

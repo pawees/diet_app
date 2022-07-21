@@ -26,7 +26,7 @@ class OrderCreateWidget extends StatelessWidget {
     return BlocBuilder<AppBloc, AppState>(builder: (context, state) {
     final appBloc = BlocProvider.of<AppBloc>(context);
     _onPressed() {
-      appBloc.add(HaveNewOrderEvent());
+      appBloc.add(HaveNewOrderEvent(''));
     }
       return Padding(
         padding: const EdgeInsets.fromLTRB(17, 5, 30, 5),
@@ -147,7 +147,7 @@ class _BtnWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final appBloc = BlocProvider.of<AppBloc>(context);
     _onPressed() {
-      appBloc.add(HaveNewOrderEvent());
+      appBloc.add(HaveNewOrderEvent(''));
     }
       return OrangeBtn(context, _onPressed, 'Сформировать заявку');
 
