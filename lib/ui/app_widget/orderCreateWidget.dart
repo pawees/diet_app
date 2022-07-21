@@ -309,12 +309,12 @@ class DateWidget extends StatelessWidget {
     final appBloc = BlocProvider.of<AppBloc>(context);
 
     _next() {
-      appBloc.add(TapNextDateEvent());
+      appBloc.add(TapNextDateEvent(true));
     }
 
     _prev() {
       if (state.date_counter == 0) return;
-      appBloc.add(TapNextDateEvent());
+      appBloc.add(TapNextDateEvent(false));
     }
 
     return Row(

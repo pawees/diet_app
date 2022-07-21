@@ -19,6 +19,8 @@ class TapCreateOrderEvent extends AppEvent {
 }
 
 class TapNextDateEvent extends AppEvent {
+  TapNextDateEvent(this.increment);
+  bool increment;
 }
 
 class GetMenuEvent extends AppEvent {

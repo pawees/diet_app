@@ -16,7 +16,7 @@ class CertainOrderWidget extends StatelessWidget {
       builder: (context, state) {
         final Order order = state.orders![state.selected_order];
         String? title = state.title;
-        String order_num = order.id;
+        String order_num = order.pk.toString();
         Date? order_date = order.date;
         String? order_agency = order.agency!.name;
         String? order_address = order.agency!.address;

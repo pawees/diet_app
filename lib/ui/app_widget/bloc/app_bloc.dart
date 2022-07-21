@@ -157,8 +157,13 @@ class AppBloc extends Bloc<AppEvent, AppState> {
 
 
   Future<void> _nextDate(TapNextDateEvent e, Emitter emit) async {
-    int count = state.date_counter + 1;
-    emit(state.copyWith(date_counter: count));
+    if (e.increment){
+    emit(state.copyWith(date_counter: state.date_counter + 1));
+    }else{
+        emit(state.copyWith(date_counter: state.date_counter - 1));
+
+    }
+    
     Date date = Date(
         dd_mm_yyyy:
             Jiffy().add(duration: Duration(days: state.date_counter)).format('dd.MM.yyyy'),

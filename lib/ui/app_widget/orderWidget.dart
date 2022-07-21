@@ -354,7 +354,7 @@ class NewOrdersWidget extends StatelessWidget {
                           'Номер заявки',
                           style: h20_400(),
                         )),
-                        Text(order.pk.toString(), style: header1())
+                        Text('№-' + order.pk.toString(), style: header1())
                       ],
                     ),
                     const SizedBox(
