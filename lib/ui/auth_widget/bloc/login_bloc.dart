@@ -109,19 +109,17 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       token.refreshToken = loginToken.refresh;
 
       emit(state.copyWith(status: LoginStatus.success));
-    } catch (error, stacktrace) {
+    } on Exception catch (error, _) {
       if (error is ErrorConnection) {
         emit(state.copyWith(status: LoginStatus.error));
       }
-      if (error is RuntimeException) if (error.message ==
-          "Authentication failed: No active account found with the given credentials") {
+      if (error is RuntimeException){ 
         final e = 'Неправильный логин или пароль...';
-        emit(state.copyWith(status: LoginStatus.failure, failiture: e));
+        emit(state.copyWith(status: LoginStatus.failure, failure: e));
         emit(state.copyWith(status: LoginStatus.authorizeProc));
-      } else {
-        print(stacktrace);
-        emit(state.copyWith(status: LoginStatus.error));
-      }
-    }
+      }else{
+ 
+        emit(state.copyWith(status: LoginStatus.error, failure: error.toString()));
+      }}
   }
 }

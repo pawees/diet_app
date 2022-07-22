@@ -3,8 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'bloc/login_bloc.dart';
 
 class NotConnectErrorWidget extends StatelessWidget {
-  const NotConnectErrorWidget({Key? key}) : super(key: key);
-
+  const NotConnectErrorWidget({Key? key,this.state}) : super(key: key);
+  final state;
   @override
   Widget build(BuildContext context) {
     _onPressed() {
@@ -18,8 +18,9 @@ class NotConnectErrorWidget extends StatelessWidget {
             width: MediaQuery.of(context).size.width,
             child: Center(
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text('error'),
+                  Text(state.failure.toString()),
                   ElevatedButton(
                       onPressed: _onPressed, child: Text('Попробовать ещё'))
                 ],

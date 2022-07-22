@@ -23,12 +23,12 @@ extension LoginStatusX on LoginStatus {
 class LoginState extends Equatable {
   const LoginState({this.status = LoginStatus.initial, this.failure = null});
   final LoginStatus status;
-  final failure;
+  final String? failure;
 
   @override
   List<Object?> get props => [status, failure];
 
-  LoginState copyWith({LoginStatus? status, final failiture}) {
+  LoginState copyWith({LoginStatus? status, final failure}) {
     return LoginState(
         status: status ?? this.status, failure: failure ?? this.failure);
   }
