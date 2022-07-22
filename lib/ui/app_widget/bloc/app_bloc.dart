@@ -88,15 +88,15 @@ class AppBloc extends Bloc<AppEvent, AppState> {
       var agencies = await appRepository.getAgencies();
       final places = await appRepository.getPlaces(agencies[e.id].uid_1c);
 
-      // diets = await appRepository.getDiets(agencies[e.id].uid_1c);
-      // for (var i in places){
-      // List<Diets> d = [];
+      List<Diets>diets = await appRepository.getDiets(agencies[e.id].uid_1c);
+      for (var i in places){
+      List<Diets> d = [];
 
-      //   for(var i in diets){
-      //     d.add(Diets(count: 0,pk: 0,uid: '',name: ''));
-      //   }
-      //   i.diets = d;//await appRepository.getDiets(order.agency!.uid_1c);
-      // }
+        for(var i in diets){
+          d.add(Diets(count:i.count,pk: i.pk,uid: i.uid,name: i.name));
+        }
+        i.diets = d;
+      }
 
       emit(state.copyWith(status: AppStatus.loading));
 
@@ -335,17 +335,17 @@ class AppBloc extends Bloc<AppEvent, AppState> {
       var user_uid = await appRepository.getUserInfo();
       order.user_uid = user_uid;
       final places = await appRepository.getPlaces(order.agency!.uid_1c);
-      List<Diets> diets = await appRepository.getDiets(order.agency!.uid_1c);
+      //List<Diets> diets = await appRepository.getDiets(order.agency!.uid_1c);
       List<CategoryDiet> peoples = await appRepository.getPeopleCategory(order.agency!.uid_1c);
 
-      for (var i in places){
-      List<Diets> d = [];
+      // for (var i in places){
+      // List<Diets> d = [];
 
-        for(var i in diets){
-          d.add(Diets(count: i.count,pk: i.pk,uid: i.uid,name:i.name));
-        }
-        i.diets = d;//await appRepository.getDiets(order.agency!.uid_1c);
-      }
+      //   for(var i in diets){
+      //     d.add(Diets(count: i.count,pk: i.pk,uid: i.uid,name:i.name));
+      //   }
+      //   i.diets = d;//await appRepository.getDiets(order.agency!.uid_1c);
+      // }
 
       for(var i in order.places!){
         places.removeWhere((item) => item.name == i.name);

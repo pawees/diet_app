@@ -141,7 +141,7 @@ class GameService {
           "user": order.user_uid,
           "customer": order.agency_uid,
           "customer_division": p.uid_1c,
-          "peoples_category": state.categories[1].uid_1c,
+          "peoples_category": state.categories[0].uid_1c,
           "diet": d.uid,
           "date_execution": order.date.date_for_request,
           "count": d.count,

@@ -173,7 +173,7 @@ smartSuccessDialog(context,state) {
 
                 ),
                 child: Center(
-                  child: Text('21.05.2022' + ' - 10:00',
+                  child: Text(state.order.date.dd_mm_yyyy + ' - 10:00',
                       style: h20_400()),
                 ),//INSERT THIS state.order.date.dd_mm_yyyy.toString() add appState to parameter this method
               ),

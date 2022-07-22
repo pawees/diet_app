@@ -25,8 +25,39 @@ class OrderCreateWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<AppBloc, AppState>(builder: (context, state) {
     final appBloc = BlocProvider.of<AppBloc>(context);
-    _onPressed() {
-      appBloc.add(HaveNewOrderEvent(''));
+    _formed_order() {
+      List<Places> listing = [];
+      List<Places> finalListing = [];
+      state!.places!
+          .map((item) => {
+                if (item.diets != null) {listing.add(item)}
+              })
+          .toList();
+      //можно занести в блок этот кусок кода.
+
+
+      for (final el in listing) {
+        List<Diets> res = el.isFilledMenu();
+        if (res.length != 0) {
+          el.diets = res;
+          finalListing.add(el);
+        }
+      }
+      ;
+
+      
+      var user_uid = state!.user_uid;
+      var date = state!.date;
+      var agency = state!.agency!.uid_1c;
+      
+      Order order = Order(
+          pk: state!.order!.pk,
+          id: state!.order!.id,
+          places: finalListing,
+          user_uid: user_uid,
+          date: date,
+          agency_uid: agency);
+      appBloc.add(FormOrderEvent(order));
     }
       return Padding(
         padding: const EdgeInsets.fromLTRB(17, 5, 30, 5),
@@ -74,7 +105,7 @@ class OrderCreateWidget extends StatelessWidget {
                 // physics: NeverScrollableScrollPhysics(),
                 itemBuilder: (context, index) {
                   if (index == places.length && state.places![index].isFilled) {
-                   return OrangeBtn(context, _onPressed, 'Сформировать заявку');
+                   return OrangeBtn(context, _formed_order, 'Сформировать заявку');
                   }
 
                   return PlacesWidget(data: places[index], selected: index);
@@ -95,7 +126,7 @@ _builder_form_btn(state, selected) {
     return _EditBtnWidget();
   }
   if (state.places![selected].isFilled) {
-    return _BtnWidget();  
+    return _BtnWidget(state: state,);  
   } else {
     return _NoBtnWidget();
   }
@@ -141,15 +172,47 @@ class _EditBtnWidget extends StatelessWidget {
   }
 }
 class _BtnWidget extends StatelessWidget {
-  const _BtnWidget({Key? key}) : super(key: key);
+  const _BtnWidget({Key? key,this.state}) : super(key: key);
+  final state;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context,) {
     final appBloc = BlocProvider.of<AppBloc>(context);
-    _onPressed() {
-      appBloc.add(HaveNewOrderEvent(''));
+    _formed_order() {
+      List<Places> listing = [];
+      List<Places> finalListing = [];
+      state!.places!
+          .map((item) => {
+                if (item.diets != null) {listing.add(item)}
+              })
+          .toList();
+      //можно занести в блок этот кусок кода.
+
+
+      for (final el in listing) {
+        List<Diets> res = el.isFilledMenu();
+        if (res.length != 0) {
+          el.diets = res;
+          finalListing.add(el);
+        }
+      }
+      ;
+
+      
+      var user_uid = state!.user_uid;
+      var date = state!.date;
+      var agency = state!.agency!.uid_1c;
+      
+      Order order = Order(
+          pk: state!.order!.pk,
+          id: state!.order!.id,
+          places: finalListing,
+          user_uid: user_uid,
+          date: date,
+          agency_uid: agency);
+      appBloc.add(FormOrderEvent(order));
     }
-      return OrangeBtn(context, _onPressed, 'Сформировать заявку');
+      return OrangeBtn(context, _formed_order, 'Сформировать заявку');
 
   }
 }

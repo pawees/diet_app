@@ -386,7 +386,7 @@ class NewOrdersWidget extends StatelessWidget {
                     ),
                     const SizedBox(height: 12),
                     //FIXME jiffy time!
-                    Text('22.05.2022 - 10:00', style: h18_500()),
+                    Text('${order.date!.dd_mm_yyyy}- 10:00', style: h18_500()),
                     const SizedBox(height: 16),
                   ]),
             ),
@@ -410,7 +410,7 @@ class NewOrdersWidget extends StatelessWidget {
                     height: 12,
                   ),
                   Text('Дата', style: h14_400()),
-                  Text('22.05.2022', style: h18_500()),
+                  Text(order.date!.dd_mm_yyyy.toString(), style: h18_500()),
                   const SizedBox(
                     height: 12,
                   ),

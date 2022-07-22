@@ -90,7 +90,7 @@ class CertainOrderWidget extends StatelessWidget {
                   shrinkWrap: true,
                   itemBuilder: (context, index) {
                     if (index == order.places!.length ) {
-                        return _EditAndCopyBtnsWidget(order);
+                        return _EditAndCopyBtnsWidget(order,state.selected_order);
                       
                     }
                     return _PlacesDietsList(
@@ -108,13 +108,18 @@ class CertainOrderWidget extends StatelessWidget {
 }
 
 class _EditAndCopyBtnsWidget extends StatelessWidget {
-  _EditAndCopyBtnsWidget(this.order);
+  _EditAndCopyBtnsWidget(this.order,this.selected);
   final order;
+  final selected;
 
   @override
   Widget build(BuildContext context) {
     final appBloc = BlocProvider.of<AppBloc>(context);
-    _edit_order() {}
+        _edit_order(){
+
+        appBloc.add(EditOrderEvent(selected));
+
+    }
     _copy_order() {
         appBloc.add(CopyAndCreateEvent());
     }
