@@ -274,6 +274,6 @@ class GameService {
   }
 
 
-  final String url = 'http://diet.dev41359.it-o.ru/api/auth/json_rpc/';
+  final String url = 'https://diet.dev41359.it-o.ru/api/auth/json_rpc/';
 
 }
