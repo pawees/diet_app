@@ -3,6 +3,7 @@ import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:game_app_training/repository/service.dart';
+import 'package:game_app_training/repository/session.dart';
 import 'package:game_app_training/ui/home_page.dart';
 import 'package:game_app_training/utils/app_bloc_oserver.dart';
 import 'package:hive/hive.dart';
@@ -33,6 +34,7 @@ Future<void> register_adapters() async {
 }
 
 Future main() async {
+
   await Jiffy.locale('ru');
 
   WidgetsFlutterBinding.ensureInitialized();

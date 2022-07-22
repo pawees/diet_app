@@ -22,7 +22,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   }
 
   final GameRepository appRepository;
-  final _token = SessionState();
+  //final _token = SessionState();
 
   void _initial() {
     on<AuthorizeEvent>(_loginButtonTapped);
@@ -35,10 +35,11 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     //FIXME вместо лоадинг нужна красивая картинка роспитание.
 
     try {
-      var refreshToken = await _token.token_data.getRefreshToken();
+      //var refreshToken = _token.token_data.getRefreshToken();
+      var refreshToken = token.refreshToken;
       final new_access_token =
           await appRepository.refreshAccessToken(refreshToken!);
-      _token.token_data.setAccessToken(new_access_token.access);
+      token.accessToken = new_access_token.access;
 
       await appRepository.getUserInfo();
 
@@ -104,8 +105,9 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       // from e.login/password
       // then e.passwordControlle.clean()
       final loginToken = await appRepository.getToken();
-      await _token.token_data.setAccessToken(loginToken.access);
-      await _token.token_data.setRefreshToken(loginToken.refresh);
+      token.accessToken = loginToken.access;
+      token.refreshToken = loginToken.refresh;
+
       emit(state.copyWith(status: LoginStatus.success));
     } catch (error, stacktrace) {
       if (error is ErrorConnection) {

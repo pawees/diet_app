@@ -28,13 +28,13 @@ class AppBloc extends Bloc<AppEvent, AppState> {
   }
 
   final GameRepository appRepository;
-  final _token = SessionState();
+  //final _token = SessionState();
 
   Future<void> _refresh_token() async {
-    var refreshToken = await _token.token_data.getRefreshToken();
+    var refreshToken = token.refreshToken;
     final new_access_token =
-        await appRepository.refreshAccessToken(refreshToken!);
-    _token.token_data.setAccessToken(new_access_token.access);
+          await appRepository.refreshAccessToken(refreshToken!);
+      token.accessToken = new_access_token.access;
   }
 
   Future<void> _exceptionsHandler(error,e,emit) async {

@@ -6,7 +6,6 @@ abstract class _Keys{
 
 }
 
-
 class Session {
   static const _secureStorage = FlutterSecureStorage();
   Future<void> setAccessToken(String value) =>
@@ -18,7 +17,22 @@ class Session {
   Future<String?> getRefreshToken() => _secureStorage.read(key: _Keys.refreshToken);      
 }
 
-
 class SessionState {
   final token_data = Session();
 }
+
+
+class SessionUsual {
+  String access = '';
+  String refresh = '';
+
+  String get refreshToken => refresh;
+  set refreshToken(String value) => refresh = value;
+  
+  
+  String get accessToken => access;
+  set accessToken(String value) => access= value;
+}
+
+
+SessionUsual token = SessionUsual();

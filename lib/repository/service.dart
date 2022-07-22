@@ -99,7 +99,7 @@ class GameService {
   }
 
   Future<String> getUserInfo() async {
-    var access_token = await SessionState().token_data.getAccessToken();
+    var access_token = token.accessToken;
     Map<String, String> token_header = {
       'Authorization': 'Bearer $access_token'
     };
@@ -116,7 +116,8 @@ class GameService {
   }
 
   Future<List<Order>> getOrders() async {
-    var access_token = await SessionState().token_data.getAccessToken();
+    var access_token = token.accessToken;
+
     Map details = {};
     Map<String, String> token_header = {
       'Authorization': 'Bearer $access_token'
@@ -132,7 +133,8 @@ class GameService {
   }
 
   Future<bool> sendOrder(order,state) async {
-    var access_token = await SessionState().token_data.getAccessToken();
+    var access_token = token.accessToken;
+
 
     List diets_list = [];
     for (final p in order.places) {
@@ -170,7 +172,8 @@ class GameService {
 
 
   Future<bool> sendEditedOrder(order,state) async {
-    var access_token = await SessionState().token_data.getAccessToken();
+    var access_token = token.accessToken;
+
 
     List diets_list = [];
     for (final p in order.places) {
@@ -209,7 +212,8 @@ class GameService {
 
 
   Future<List<CategoryDiet>> getPeopleCategory(agencyUid) async {
-    var access_token = await SessionState().token_data.getAccessToken();
+    var access_token = token.accessToken;
+
     Map details = {"uid_1c": "$agencyUid"};
     Map<String, String> token_header = {
       'Authorization': 'Bearer $access_token'
@@ -223,7 +227,8 @@ class GameService {
 
 
   Future<List<Diets>> getDiets(agencyUid) async {
-    var access_token = await SessionState().token_data.getAccessToken();
+    var access_token = token.accessToken;
+
     Map details = {"uid_1c": "$agencyUid"};
     Map<String, String> token_header = {
       'Authorization': 'Bearer $access_token'
@@ -238,7 +243,8 @@ class GameService {
 
 
   Future<List<Agency>> getAgencies() async {
-    var access_token = await SessionState().token_data.getAccessToken();
+       var access_token = token.accessToken;
+
     Map details = {};
     Map<String, String> token_header = {
       'Authorization': 'Bearer $access_token'
@@ -253,7 +259,8 @@ class GameService {
 
 
   Future<List<Places>> getPlaces(uid) async {
-    var access_token = await SessionState().token_data.getAccessToken();
+        var access_token = token.accessToken;
+
     Map details = {"uid_1c": uid};
     Map<String, String> token_header = {
       'Authorization': 'Bearer $access_token'
@@ -274,6 +281,6 @@ class GameService {
   }
 
 
-  final String url = 'https://diet.dev41359.it-o.ru/api/auth/json_rpc/';
+  final String url = 'http://diet.dev41359.it-o.ru/api/auth/json_rpc/';
 
 }
